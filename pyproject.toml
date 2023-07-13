@@ -41,7 +41,7 @@ priority = "primary"
 
 [tool.semantic_release]
 version_variable = "./codedog/version.py:VERSION"
-tag_commit = false
+build_command = false
 
 [build-system]
 requires = ["poetry-core"]
