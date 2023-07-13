@@ -1,0 +1,8 @@
+example/
+test/
+tmp/
+
+.github/
+.dockerignore
+Dockerfile
+poetry.lock

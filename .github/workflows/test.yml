@@ -1,0 +1,53 @@
+name: PyTest
+on:
+    pull_request:
+        branches:
+            - master
+    push:
+        branches:
+            - master
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v1
+              with:
+                fetch-depth: 1
+
+            - name: "Setup Python, Poetry and Dependencies"
+              uses: packetcoders/action-setup-cache-python-poetry@main
+              with:
+                python-version: '3.10'
+                poetry-version: '1.4.2'
+
+            - name: Install Dependencies
+              run: poetry install
+
+            - name: Run Test
+              run: poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=weaver test/ | tee pytest-coverage.txt
+
+            - name: Pytest coverage comment
+              id: coverageComment
+              uses: MishaKav/pytest-coverage-comment@main
+              with:
+                pytest-coverage-path: ./pytest-coverage.txt
+                junitxml-path: ./pytest.xml
+                default-branch: master
+
+            - name: Create Badge
+              if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+              uses: schneegans/dynamic-badges-action@v1.6.0
+              with:
+                auth: ${{ secrets.GH_TOKEN }}
+                gistID: ce38dae58995aeffef42065093fcfe84
+                filename: codedog_master.json
+                label: Coverage
+                message: ${{ steps.coverageComment.outputs.coverage }}
+                color: ${{ steps.coverageComment.outputs.color }}
+                namedLogo: python
