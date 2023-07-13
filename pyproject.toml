@@ -40,7 +40,8 @@ name = "PyPI"
 priority = "primary"
 
 [tool.semantic_release]
-version_variable = "codedog/version.py:VERSION"
+version_variable = "./codedog/version.py:VERSION"
+tag_commit = false
 
 [build-system]
 requires = ["poetry-core"]

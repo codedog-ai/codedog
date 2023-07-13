@@ -1,4 +1,4 @@
 # -- Project information -----------------------------------------------------
 
-PROJECT: str = "codedog"
-VERSION: str = "0.0.0"
+PROJECT = "codedog"
+VERSION = "0.0.0"
