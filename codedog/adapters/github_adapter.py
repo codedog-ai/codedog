@@ -26,7 +26,8 @@ logger = logging.getLogger(__name__)
 # TODO: connection watchdog
 
 github_token = env.get("GITHUB_TOKEN", "")
-gh = Github(github_token)
+
+gh = Github(github_token) if github_token else None
 
 
 issue_pattern = re.compile(r"#[0-9]+")

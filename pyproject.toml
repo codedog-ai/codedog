@@ -32,7 +32,7 @@ pytest-cov = "^4.0.0"
 python-semantic-release = "^7.34.6"
 
 [tool.poetry.scripts]
-start = "server:start"
+start = "codedog.server:start"
 
 [[tool.poetry.source]]
 name = "aliyun"

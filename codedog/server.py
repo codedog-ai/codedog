@@ -79,7 +79,7 @@ def start():
     log_config = get_logging_config(level=logging.INFO)
     dictConfig(log_config)
 
-    uvicorn.run("server:app", host=host, port=port, workers=worker_num, log_config=log_config)
+    uvicorn.run("codedog.server:app", host=host, port=port, workers=worker_num, log_config=log_config)
 
 
 if __name__ == "__main__":
