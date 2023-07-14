@@ -1,4 +1,3 @@
-"""This example is based on cloudwise gitlab"""
 import asyncio
 import logging
 import os

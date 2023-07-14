@@ -22,10 +22,10 @@ poetry install --with dev
 | CODEDOG_PORT                  | No  | 32167          | Server port                                  |
 | CODEDOG_WORKER_NUM            | No  | 1              | Server worker number                         |
 | GITHUB_TOKEN                  | No  |                | Retrive github project content and comment   |
-| OPENAI_API_KEY                | Yes |                | Api Key for calling openai api               |
+| OPENAI_API_KEY                | NO  |                | Api Key for calling openai api               |
 | OPENAI_PROXY                  | No  |                | openai proxy                                 |
 | OPENAI_MODEL                  | No  | gpt-3.5-turbo  | openai model                                 |
-| AZURE_OPENAI                  | No  |                | enable azure openai if not blank             |
+| AZURE_OPENAI                  | No  |                | use azure openai if not blank                |
 | AZURE_OPENAI_API_KEY          | No  |                | azure openai api key                         |
 | AZURE_OPENAI_API_BASE         | No  |                | azure openai api base                        |
 | AZURE_OPENAI_DEPLOYMENT_ID    | No  |                | azure openai deployment id                   |

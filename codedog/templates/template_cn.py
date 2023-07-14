@@ -16,7 +16,6 @@ T3_TITLE_LINE = """### {idx}. [{file_name}]({url})"""
 
 
 REPORT_HEADER = """# [{repo_name} #{pr_number}]({url}) 代码审查报告\n\n*powered by GPT3.5-Turbo and Codedog {version}*\n\n"""
-CLOUDWISE_HEADER = """# [{repo_name} #{pr_number}]({url}) 代码审查报告\n\n*powered by {source}*\n\n"""
 
 
 REPORT_TELEMETRY = """## 执行记录
@@ -24,12 +23,6 @@ REPORT_TELEMETRY = """## 执行记录
 - 审查耗时: {time_usage}秒
 - 审查文件数量: {files}
 - OPENAI API TOKEN数量: {tokens} (约${cost:.4f})\n\n
-"""
-
-CLOUDWISE_TELEMETRY = """## 执行记录
-- 开始时间: {start_time}
-- 审查耗时: {time_usage}秒
-- 审查文件数量: {files}
 """
 
 

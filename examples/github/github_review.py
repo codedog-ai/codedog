@@ -6,7 +6,7 @@ from codedog.adapters.github_adapter import (
 )
 from codedog.utils import init_local_logging
 
-init_local_logging(level=logging.INFO)
+init_local_logging(level=logging.DEBUG)
 
 repository_name_or_id = "ClickHouse/ClickHouse"
 pull_request_number = 49113

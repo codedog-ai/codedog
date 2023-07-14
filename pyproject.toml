@@ -10,7 +10,6 @@ include = ["codedog", "server.py"]
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.95.1"
-gradio = "^3.27.0"
 langchain = "^0.0.179"
 openai = "^0.27.4"
 pydantic = "^1.10.7"
@@ -33,11 +32,11 @@ pytest-cov = "^4.0.0"
 python-semantic-release = "^7.34.6"
 
 [tool.poetry.scripts]
-start = "server:start"
+start = "codedog.server:start"
 
 [[tool.poetry.source]]
-name = "PyPI"
-priority = "primary"
+name = "aliyun"
+url = "http://mirrors.aliyun.com/pypi/simple"
 
 [tool.semantic_release]
 version_variable = "./codedog/version.py:VERSION"

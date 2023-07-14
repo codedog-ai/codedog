@@ -1,5 +1,3 @@
 # flake8: noqa
 
-from .gitlab_adapter import handle_github_event, handle_gitlab_event
-from .review import Review
 from .version import VERSION

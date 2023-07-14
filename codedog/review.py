@@ -56,8 +56,6 @@ class Review:
         self._repr_dict["pull_request"] = self._pr.dict(exclude={"changes", "description", "issue_description"})
         self._repr_str = json.dumps(self._repr_dict)
 
-        self.source = kwargs.get("source", "")
-
         # --- telemetry ---------------
 
         self._meter_files(len(self._changes))
@@ -149,29 +147,17 @@ class Review:
             self._meter_api_call_tokens(cb.total_tokens)
 
     def _generate_report(self) -> str:
-        if not self.source:
-            header: str = TEMPLATE.REPORT_HEADER.format(
-                repo_name=self._pr.repository_name, pr_number=self._pr.pr_id, url=self._pr.url, version=VERSION
-            )
-        else:
-            header: str = TEMPLATE.CLOUDWISE_HEADER.format(
-                repo_name=self._pr.repository_name, pr_number=self._pr.pr_id, url=self._pr.url, source=self.source
-            )
+        header: str = TEMPLATE.REPORT_HEADER.format(
+            repo_name=self._pr.repository_name, pr_number=self._pr.pr_id, url=self._pr.url, version=VERSION
+        )
 
-        if not self.source:
-            telemetry: str = TEMPLATE.REPORT_TELEMETRY.format(
-                start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
-                time_usage=int(self._telemetry["time_usage"]),
-                files=self._telemetry["files"],
-                tokens=self._telemetry["tokens"],
-                cost=self._telemetry.get("cost", 0),
-            )
-        else:
-            telemetry: str = TEMPLATE.CLOUDWISE_TELEMETRY.format(
-                start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
-                time_usage=int(self._telemetry["time_usage"]),
-                files=self._telemetry["files"],
-            )
+        telemetry: str = TEMPLATE.REPORT_TELEMETRY.format(
+            start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
+            time_usage=int(self._telemetry["time_usage"]),
+            files=self._telemetry["files"],
+            tokens=self._telemetry["tokens"],
+            cost=self._telemetry.get("cost", 0),
+        )
 
         summary: str = TEMPLATE.REPORT_PR_SUMMARY.format(
             pr_summary=self._pr_summary,
