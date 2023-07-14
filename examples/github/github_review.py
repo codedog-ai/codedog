@@ -8,8 +8,8 @@ from codedog.utils import init_local_logging
 
 init_local_logging(level=logging.DEBUG)
 
-repository_name_or_id = "ClickHouse/ClickHouse"
-pull_request_number = 49113
+# repository_name_or_id = "ClickHouse/ClickHouse"
+# pull_request_number = 49113
 
 # repository_name_or_id = "gradio-app/gradio"
 # pull_request_number = 480
@@ -23,6 +23,8 @@ pull_request_number = 49113
 # repository_name_or_id = "apache/superset"
 # pull_request_number = 7416
 
+repository_name_or_id = "Arcadia822/codedog"
+pull_request_number = 2
 
 event = build_pull_request_event(repository_name_or_id=repository_name_or_id, pull_request_number=pull_request_number)
 
