@@ -44,6 +44,7 @@ class Review:
 
         self._telemetry: dict = {
             "tokens": 0,
+            "cost": 0.0,
             "files": 0,
             "start_time": time.time(),
         }
@@ -113,7 +114,7 @@ class Review:
                 change.summary = summary.summary
                 change.major = not summary.main_change_flag
 
-            self._meter_api_call_tokens(cb.total_tokens)
+            self._meter_api_call_tokens(cb.total_tokens, cb.total_cost)
 
     async def _changelist_summarize(self):
         with get_openai_callback() as cb:
@@ -130,7 +131,7 @@ class Review:
                     ),
                 }
             )
-            self._meter_api_call_tokens(cb.total_tokens)
+            self._meter_api_call_tokens(cb.total_tokens, cb.total_cost)
 
         self._pr_summary = result
 
@@ -144,7 +145,7 @@ class Review:
                 result = self._chains.feedback_chain.run({"text": change.content[:4000]})
                 change.feedback = result
 
-            self._meter_api_call_tokens(cb.total_tokens)
+            self._meter_api_call_tokens(cb.total_tokens, cb.total_cost)
 
     def _generate_report(self) -> str:
         header: str = TEMPLATE.REPORT_HEADER.format(
@@ -175,8 +176,9 @@ class Review:
         for callback in self._callbacks:
             await callback(self)
 
-    def _meter_api_call_tokens(self, tokens: int):
+    def _meter_api_call_tokens(self, tokens: int, cost: float = 0.0):
         self._telemetry["tokens"] += tokens
+        self._telemetry["cost"] += cost
 
     def _meter_files(self, files: int):
         self._telemetry["files"] += files
