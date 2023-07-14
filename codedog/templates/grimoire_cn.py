@@ -1,33 +1,5 @@
 # flake8: noqa
-
 """Grimoire of CodeDog. Chinese version."""
-
-
-# -- 通用模版 -----------------------------------------------------------
-
-# this template is used with langchain PydanticOutputParser
-FORMAT_OUTPUT_JSON_TEMPLATE = """
-请输出符合以下JSON模式的JSON实例
-
-例如，对于模式{{"properties": {{"foo": {{"title": "Foo", "description": "a list of strings", "type": "array", "items":
-{{"type": "string"}}}}}}, "required": ["foo"]}}}}
-对象{{"foo": ["bar", "baz"]}}是模式的格式良好的实例。对象{{"properties": {{"foo": ["bar", "baz"]}}}}不是格式良好的。
-
-以下是输出JSON模式：
-```
-{schema}
-```"""
-
-# this template is used for convert text.
-CONVERT_TEXT_TEMPLATE = """
-我会提供一些文本内容，请按以下格式说明要求将文本内容转换为架构化数据格式:
-{instructions}
-
-请对以下文本转换格式进行输出：
-```
-{text}
-```
-输出结果:"""
 
 
 # -- PR Review 模版 ---------------------------------------------------
@@ -102,6 +74,3 @@ PR_SIMPLE_FEEDBACK_TEMPLATE = """
 2. 不要用主观的口吻对代码质量进行评价
 3. 你的回复内容应当尽量的精确、简洁，每句话都做到言之有物
 """
-
-
-# -- PR Report Template -------------------------------------------------------

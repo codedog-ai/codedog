@@ -14,8 +14,7 @@ TABLE_LINE_NODATA = "无"
 
 T3_TITLE_LINE = """### {idx}. [{file_name}]({url})"""
 
-
-REPORT_HEADER = """# [{repo_name} #{pr_number}]({url}) 代码审查报告\n\n*powered by GPT3.5-Turbo and Codedog {version}*\n\n"""
+REPORT_HEADER = """# [{repo_name} #{pr_number}]({url}) 代码审查报告\n\n*powered by GPT and Codedog {version}*\n\n"""
 
 
 REPORT_TELEMETRY = """## 执行记录
@@ -24,7 +23,6 @@ REPORT_TELEMETRY = """## 执行记录
 - 审查文件数量: {files}
 - OPENAI API TOKEN数量: {tokens} (约${cost:.4f})\n\n
 """
-
 
 REPORT_PR_SUMMARY = """## PR概要
 {pr_summary}
