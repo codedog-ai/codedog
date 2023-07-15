@@ -41,6 +41,8 @@ url = "http://mirrors.aliyun.com/pypi/simple"
 [tool.semantic_release]
 version_variable = "./codedog/version.py:VERSION"
 build_command = false
+upload_to_pypi = false
+upload_to_repository = false
 
 [build-system]
 requires = ["poetry-core"]
