@@ -30,7 +30,16 @@ jobs:
               run: poetry install
 
             - name: Run Test
-              run: poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=weaver test/ | tee pytest-coverage.txt
+              run:
+                poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=codedog test/ | tee pytest-coverage.txt
+                python -m coverage html -i
+
+            - name: Upload coverage HTML
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                name: htmlcov
+                path: htmlcov
 
             - name: Pytest coverage comment
               id: coverageComment
