@@ -5,7 +5,6 @@ api server
 import logging
 import os
 import traceback
-from logging.config import dictConfig
 
 import uvicorn
 from fastapi import FastAPI
@@ -13,15 +12,17 @@ from pydantic import BaseModel
 
 from codedog.adapters.github_adapter import GithubEvent, handle_github_event
 from codedog.adapters.gitlab_adapter import GitlabEvent, handle_gitlab_event
-from codedog.utils import CodedogError, get_logging_config
+from codedog.utils import CodedogError, init_local_logging
+from codedog.version import VERSION
 
+init_local_logging()
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
 host = os.environ.get("CODEDOG_SERVER", "0.0.0.0")
 port = int(os.environ.get("CODEDOG_PORT", 32167))
-worker_num = os.environ.get("CODEDOG_WORKER_NUM", 1)
+worker_num = int(os.environ.get("CODEDOG_WORKER_NUM", 1))
 
 
 class Response(BaseModel):
@@ -76,10 +77,8 @@ async def github(
 
 
 def start():
-    log_config = get_logging_config(level=logging.INFO)
-    dictConfig(log_config)
-
-    uvicorn.run("codedog.server:app", host=host, port=port, workers=worker_num, log_config=log_config)
+    uvicorn.run("codedog.server:app", host=host, port=port, workers=worker_num)
+    logger.info(f"Codedog v{VERSION}: server start.")
 
 
 if __name__ == "__main__":
