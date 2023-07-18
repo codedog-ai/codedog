@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.1 (2023-07-18)
+
+### Fix
+
+* :bug: fix openai proxy init ([`3368bd4`](https://github.com/codedog-ai/codedog/commit/3368bd4a6ea4013e96587efd4871a720e00f27ff))
+
 ## v0.2.0 (2023-07-15)
 
 ### Feature
