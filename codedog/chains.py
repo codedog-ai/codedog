@@ -1,6 +1,5 @@
 import os
 
-import openai
 from langchain import LLMChain, PromptTemplate
 from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
 from langchain.chat_models.base import BaseChatModel
@@ -65,10 +64,6 @@ class Chains:
 
 
 def load_llm() -> BaseChatModel:
-    openai_proxy = (os.environ.get("OPENAI_PROXY", ""),)
-    if openai_proxy:
-        openai.proxy = openai_proxy
-
     if os.environ.get("AZURE_OPENAI"):
         llm = AzureChatOpenAI(
             openai_api_type="azure",

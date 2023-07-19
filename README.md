@@ -23,7 +23,6 @@ poetry install --with dev
 | CODEDOG_WORKER_NUM            | No  | 1              | Server worker number                         |
 | GITHUB_TOKEN                  | No  |                | Retrive github project content and comment   |
 | OPENAI_API_KEY                | NO  |                | Api Key for calling openai api               |
-| OPENAI_PROXY                  | No  |                | openai proxy                                 |
 | OPENAI_MODEL                  | No  | gpt-3.5-turbo  | openai model                                 |
 | AZURE_OPENAI                  | No  |                | use azure openai if not blank                |
 | AZURE_OPENAI_API_KEY          | No  |                | azure openai api key                         |
