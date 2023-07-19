@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.2 (2023-07-19)
+
+### Fix
+
+* :bug: disable openai proxy configuration ([`1008ba2`](https://github.com/codedog-ai/codedog/commit/1008ba2267f4a4fe7754fa7807ef028563f7e643))
+
 ## v0.2.1 (2023-07-18)
 
 ### Fix
