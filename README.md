@@ -14,23 +14,26 @@ Review your Github/Gitlab PR with ChatGPT
 ```shell
 poetry install --with dev
 ```
+
 ## Configuration
 
-| Environment Variable | Necessary | Default | Description |
-|---|---|---|---|
-| CODEDOG_SERVER                | No  | 0.0.0.0        | Server address                               |
-| CODEDOG_PORT                  | No  | 32167          | Server port                                  |
-| CODEDOG_WORKER_NUM            | No  | 1              | Server worker number                         |
-| GITHUB_TOKEN                  | No  |                | Retrive github project content and comment   |
-| OPENAI_API_KEY                | NO  |                | Api Key for calling openai api               |
-| OPENAI_MODEL                  | No  | gpt-3.5-turbo  | openai model                                 |
-| AZURE_OPENAI                  | No  |                | use azure openai if not blank                |
-| AZURE_OPENAI_API_KEY          | No  |                | azure openai api key                         |
-| AZURE_OPENAI_API_BASE         | No  |                | azure openai api base                        |
-| AZURE_OPENAI_DEPLOYMENT_ID    | No  |                | azure openai deployment id                   |
-| AZURE_OPENAI_MODEL            | No  | gpt-3.5-turbo  | azure openai model                           |
+settings:
+
+| 环境变量                | 是否必要 | 默认值                 | 说明                                |
+| ----------------------- | -------- | ---------------------- | ----------------------------------- |
+| CODEDOG_WORKER_NUM      | 否       | 1                      | 服务线程数                          |
+| CODEDOG_ENV             | 否       | "unknown"              | 表明 codedog 实例所属环境           |
+| DATADOG_METRIC          | 否       |                        | 值为 True 时向 datadog 发送统计指标 |
+| DATADOG_AGENT_HOST      | 否       | localhost              | datadog agent host                  |
+| DATADOG_DOGSTATSD_PORT  | 否       | 8125                   | datadog agent dogstatsd port        |
+| GITHUB_TOKEN            | 否       |                        | 用于连接 github 和评论              |
+| GITHUB_APP_ID           | 否       | 0                      | 用于配置 github app id              |
+| GITHUB_PRIVATE_KEY_PATH | 否       | "/app/private_key.pem" | 用于生成 github app jwt token       |
+| OPENAI_API_KEY          | 是       |                        | 调用 OPENAI 的 API KEY              |
+| OPENAI_PROXY            | 否       |                        | 设置到 openai.proxy                 |
 
 ## Start Server
+
 ```shell
 poetry run start
 ```

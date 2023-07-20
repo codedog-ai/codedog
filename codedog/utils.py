@@ -6,6 +6,11 @@ import logging
 import time
 from logging.config import dictConfig
 
+import jwt
+import requests
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+
 # -- Logging ------------------------------------------------------------------
 
 
@@ -64,3 +69,48 @@ def get_sha256(text: str) -> str:
 
 def get_sha1(text: str) -> str:
     return hashlib.sha1(text.encode("utf-8", errors="ignore")).hexdigest()
+
+
+def get_jwt_token(private_key, app_id):
+    # 获取当前时间
+    now = int(time.time())
+
+    # 准备 JWT 的 payload
+    payload = {
+        # 发行人
+        "iat": now,
+        # JWT 的过期时间，这里设置为1分钟后
+        "exp": now + (10 * 60),
+        # GitHub App 的 ID
+        "iss": app_id
+    }
+
+    # 生成JWT
+    jwt_token = jwt.encode(payload, private_key, algorithm='RS256')
+    return jwt_token
+
+
+def get_access_token_by_installation_id(installation_id: int, jwt_token: str):
+    if installation_id is None:
+        return None
+    # 使用installation_id生成访问令牌
+    token_url = f"https://api.github.com/app/installations/{installation_id}/access_tokens"
+    headers = {
+        "Authorization": "Bearer {}".format(jwt_token),
+        "Accept": "application/vnd.github.machine-man-preview+json",
+    }
+    response = requests.post(token_url, headers=headers)
+    response.raise_for_status()
+    token_info = response.json()
+    return token_info['token']
+
+
+def load_private_key(filename):
+    # 从文件中读取你的私钥
+    with open(filename, 'rb') as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None,
+            backend=default_backend()
+        )
+    return private_key
