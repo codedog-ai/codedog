@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2023-07-20)
+
+### Feature
+
+* :sparkles: support github app ([`3834bfc`](https://github.com/codedog-ai/codedog/commit/3834bfc7a085317d7e7cf16c7199067fd84cf36f))
+
 ## v0.2.2 (2023-07-19)
 
 ### Fix
