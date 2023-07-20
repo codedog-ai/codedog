@@ -19,15 +19,27 @@ from pydantic import BaseModel
 from codedog.annotations import IGNORE_ANNOTATION
 from codedog.model import Change, PullRequest
 from codedog.review import Review
-from codedog.utils import CodedogError, get_sha256, get_ttl_hash
+from codedog.utils import (
+    CodedogError,
+    get_access_token_by_installation_id,
+    get_jwt_token,
+    get_sha256,
+    get_ttl_hash,
+    load_private_key,
+)
 
 logger = logging.getLogger(__name__)
 
 # TODO: connection watchdog
 
+# default github client when installation_id is not provided
 github_token = env.get("GITHUB_TOKEN", "")
+default_gh = Github(github_token)
 
-gh = Github(github_token) if github_token else None
+# used for github app
+github_app_id = env.get("GITHUB_APP_ID", 0)
+github_private_key = load_private_key(
+    env.get("GITHUB_PRIVATE_KEY_PATH", "/app/private_key.pem"))
 
 
 issue_pattern = re.compile(r"#[0-9]+")
@@ -46,28 +58,44 @@ def handle_github_event(event: GithubEvent, local=False, **args) -> str:
 
     repository_id: int = event.repository.get("id", 0)
     pull_request_number: int = event.number
+    installation_id: int = event.repository.get("installation", {}).get("id", 0)
 
     assert repository_id
     assert pull_request_number
 
-    return handle_pull_request(repository_id, pull_request_number, local, get_ttl_hash(120), **args)  # TODO: config
+    # TODO: config
+    return handle_pull_request(repository_id, pull_request_number, installation_id, local, get_ttl_hash(120), **args)
+
+
+def get_github_client(installation_id: int):
+    if installation_id is None or installation_id == 0:
+        return default_gh
+    jwt_token = get_jwt_token(github_private_key, github_app_id)
+    access_token = get_access_token_by_installation_id(
+        installation_id, jwt_token)
+    github_client = Github(access_token)
+    return github_client
 
 
 @lru_cache()
-def handle_pull_request(repository_id: int, pull_request_number: int, local=False, ttl_hash=None, **args):
+def handle_pull_request(repository_id: int, pull_request_number: int, installation_id: int,
+                        local=False, ttl_hash=None, **args):
     del ttl_hash
     logger.info(
         "Retrive pull request from Github",
-        extra={"github.repo.id": repository_id, "github.pull.number": pull_request_number},
+        extra={"github.repo.id": repository_id,
+               "github.pull.number": pull_request_number,
+               "github.installation_id": installation_id},
     )
-
-    pr = get_pr(repository_id, pull_request_number)
+    github_client = get_github_client(installation_id)
+    pr = get_pr(github_client, repository_id, pull_request_number)
 
     changes = pr.changes
 
     callbacks = []
     if not local:
-        callbacks = [_comment_callback(gh.get_repo(repository_id).get_pull(pull_request_number))]
+        callbacks = [_comment_callback(github_client.get_repo(
+            repository_id).get_pull(pull_request_number))]
 
     thread = threading.Thread(target=asyncio.run, args=(_review_wrapper(pr, changes, callbacks, **args),))
     thread.start()
@@ -75,8 +103,8 @@ def handle_pull_request(repository_id: int, pull_request_number: int, local=Fals
     return "Review Submitted."
 
 
-def get_pr(repository_id, pull_request_number):
-    repository: Repository = gh.get_repo(repository_id)
+def get_pr(github_client: Github, repository_id, pull_request_number):
+    repository: Repository = github_client.get_repo(repository_id)
     pull_request: GithubPullRequest = repository.get_pull(pull_request_number)
     issue: Issue = get_potential_issue(repository, pull_request)
     url = pull_request.html_url
@@ -197,7 +225,7 @@ def _event_filter(event: GithubEvent) -> bool:
 
 
 def build_pull_request_event(repository_name_or_id: int | str, pull_request_number: int):
-    repository: Repository = gh.get_repo(repository_name_or_id)
+    repository: Repository = get_github_client(0).get_repo(repository_name_or_id)
     pull_request: GithubPullRequest = repository.get_pull(pull_request_number)
 
     event = {
