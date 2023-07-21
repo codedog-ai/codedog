@@ -56,9 +56,7 @@ async def gitlab(event: GitlabEvent, url: str, token: str, source: str = "") -> 
 
 
 @app.post("/v1/webhook/github", response_model=Response)
-async def github(
-    event: GithubEvent,
-) -> Response:
+async def github(event: GithubEvent, lang: str = "en") -> Response:
     """Github webhook.
 
     Args:
@@ -67,7 +65,7 @@ async def github(
         Response: message.
     """
     try:
-        message = handle_github_event(event)
+        message = handle_github_event(event, lang=lang)
     except CodedogError as e:
         return Response(message=e.message, code=e.code)
     except Exception:

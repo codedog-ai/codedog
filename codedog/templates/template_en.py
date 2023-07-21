@@ -16,7 +16,7 @@ T3_TITLE_LINE = """### {idx}. [{file_name}]({url})"""
 
 
 REPORT_HEADER = (
-    """# [{repo_name} #{pr_number}]({url}) Code Review Report\n\n* powered by GPT and Codedog {version}*\n\n"""
+    """# [{repo_name} #{pr_number}]({url}) Code Review Report\n\n*powered by GPT and Codedog {version}*\n\n"""
 )
 
 REPORT_TELEMETRY = """## Execution Record
@@ -44,7 +44,7 @@ REPORT_PR_CHANGES_SUMMARY = """
 
 REPORT_PR_CHANGE_SUMMARY = """{idx}. [{path}]({url})\n\n{summary}\n\n"""
 
-REPORT_NO_CHANGES = "-"
+REPORT_NO_CHANGES = ""
 
 REPORT_FEEDBACK = """## Suggestions (preview)
 

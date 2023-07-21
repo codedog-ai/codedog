@@ -5,18 +5,16 @@ import datetime
 import json
 import logging
 import time
+import traceback
 
 from langchain.callbacks import get_openai_callback
 from langchain.schema import OutputParserException
 
 from codedog.chains import Chains
 from codedog.model import Change, ChangeSummary, PullRequest
-from codedog.report import generate_change_summary, generate_feedback
-from codedog.templates import grimoire_cn, template_cn
+from codedog.templates import template_cn, template_en
 from codedog.version import VERSION
 
-GRIMOIRE = grimoire_cn
-TEMPLATE = template_cn
 logger = logging.getLogger(__name__)
 
 # TODO: unit test
@@ -30,11 +28,13 @@ class Review:
         pr: PullRequest,
         changes: list[Change],
         callbacks: list | None = None,
-        chains: Chains = None,
+        lang: str = "cn",
         **kwargs,
     ):
-        self._chains: Chains = chains if isinstance(chains, Chains) else Chains.init_chains()
-
+        assert lang in ("cn", "en")
+        self.language = lang
+        self._chains = Chains.init_chains(lang=lang)
+        self._template = template_cn if lang == "cn" else template_en
         # --- data --------------------
         self._pr = pr
         self._changes: list[Change] = changes
@@ -84,7 +84,7 @@ class Review:
 
             logger.info("Success code review %s", self.json_str())
         except Exception as ex:
-            logger.warn("Fail code review %s %s", ex, self.json_str())
+            logger.warn("Fail code review %s %s %s", ex, self.json_str(), traceback.format_exc().replace("\n", "\\n"))
 
     def print_report(self) -> None:
         print(self.report())
@@ -148,11 +148,11 @@ class Review:
             self._meter_api_call_tokens(cb.total_tokens, cb.total_cost)
 
     def _generate_report(self) -> str:
-        header: str = TEMPLATE.REPORT_HEADER.format(
+        header: str = self._template.REPORT_HEADER.format(
             repo_name=self._pr.repository_name, pr_number=self._pr.pr_id, url=self._pr.url, version=VERSION
         )
 
-        telemetry: str = TEMPLATE.REPORT_TELEMETRY.format(
+        telemetry: str = self._template.REPORT_TELEMETRY.format(
             start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
             time_usage=int(self._telemetry["time_usage"]),
             files=self._telemetry["files"],
@@ -160,14 +160,87 @@ class Review:
             cost=self._telemetry.get("cost", 0),
         )
 
-        summary: str = TEMPLATE.REPORT_PR_SUMMARY.format(
+        summary: str = self._template.REPORT_PR_SUMMARY.format(
             pr_summary=self._pr_summary,
-            pr_changes_summary=generate_change_summary(self._changes),
+            pr_changes_summary=self._generate_change_summary(),
         )
-        feedback: str = TEMPLATE.REPORT_FEEDBACK.format(feedback=generate_feedback(self._changes))
+        feedback: str = self._template.REPORT_FEEDBACK.format(feedback=self._generate_feedback())
 
         report = "\n".join([header, telemetry, summary, feedback])
         return report
+
+    def _generate_change_summary(self) -> str:
+        """format change summary
+
+        Args:
+            changes (list[Change]): pr changes and reviews
+        Returns:
+            str: format markdown table string of change summary
+        """
+        changes = self._changes
+        important_changes = []
+        housekeeping_changes = []
+
+        important_idx = 1
+        housekeeping_idx = 1
+        for change in changes:
+            file_name = change.file_name or ""
+            url = change.url or ""
+            summary = change.summary or ""
+
+            text = summary.replace("\n", "<br/>") if summary else ""
+            text_template: str = self._template.TABLE_LINE.format(file_name=file_name, url=url, text=text)
+
+            if not change.major:
+                text = text_template.format(idx=important_idx)
+                important_idx += 1
+                important_changes.append(text)
+            else:
+                text = text_template.format(idx=housekeeping_idx)
+                housekeeping_idx += 1
+                housekeeping_changes.append(text)
+
+        important_changes = "\n".join(important_changes) if important_changes else self._template.TABLE_LINE_NODATA
+        housekeeping_changes = (
+            "\n".join(housekeeping_changes) if housekeeping_changes else self._template.TABLE_LINE_NODATA
+        )
+        text = self._template.CHANGE_SUMMARY.format(
+            important_changes=important_changes, housekeeping_changes=housekeeping_changes
+        )
+        return text
+
+    def _generate_feedback(self) -> str:
+        """format feedback
+
+        Args:
+            changes (list[Change]): pr changes and reviews
+        Returns:
+            str: format markdown table string of feedback
+        """
+        changes = self._changes
+
+        texts = []
+
+        idx = 1
+        for change in changes:
+            file_name = change.file_name
+            url = change.url
+
+            feedback = change.feedback
+            if (
+                not feedback
+                or feedback in ("ok", "OK")
+                or (len(feedback) < 30 and "ok" in feedback.lower())  # 移除ok + 其他短语的回复
+            ):
+                continue
+
+            text = f"{self._template.T3_TITLE_LINE.format(idx=idx, file_name=file_name, url=url)}\n\n{feedback}"
+
+            texts.append(text)
+            idx += 1
+
+        concat_feedback_text = "\n\n".join(texts) if texts else self._template.TABLE_LINE_NODATA
+        return concat_feedback_text
 
     async def _execute_callback(self):
         if not self._callbacks:

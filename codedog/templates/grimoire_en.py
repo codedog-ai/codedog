@@ -31,34 +31,33 @@ do not include the results of the first step, just summarize the content of the 
 
 {format_instructions}
 
+Please act as a code reviewer, review the file {name} change. I want you to give:
+1. Determine whether the file contains major logic changes. Generally speaking,
+2. A brief summary of the diff change, no more than 100 words. Do not include the results of the first step
 
-
-
-请你扮演代码审查者，我会作为你的助手，为你提供一个change list中一个文件的代码改动，请按照以下要求对这段代码改动内容进行审查：
-1. 判断该文件是否是一个包含大量的业务逻辑改动的代码文件，一般来说，这样的文件中往往会有一些函数逻辑变动
-
-2. 用中文简要概括该diff改动的内容，不超过100字，不要包含第一步的结果，只概括改动内容即可
-
+review the code according to the instructions:
 
 {format_instructions}
 
-请注意，在概括内容中只概括代码改动的内容即可，不要提任何判断改动是否为housekeeping改动的结论
-根据以上指示，审查文件{name}变更:
+here is the diff content:
 ```
 {text}
 ```"""
 
-PR_CHANGE_REVIEW_FALLBACK_TEMPLATE = """请你扮演代码审查者，我会作为你的助手，将一段代码文件的diff提供给你，
-请用中文简要概括该diff改动的内容，不超过100字
+PR_CHANGE_REVIEW_FALLBACK_TEMPLATE = """
+Please act as a code reviewer, review the file {name} change. I want you to give:
 
-根据指示审查文件{name}变更:
+give a brief summary of the diff change, no more than 100 words.
+
+here is the diff content:
 ```
 {text}
 ```"""
 
 # this template is for starting sequentially summarize PR content.
 PR_SUMMARIZE_TEMPLATE = """
-请根据以下我提供的信息，概括一次git pull request的内容:
+Summarize a git pull request by the given information:
+
 pull request information (for better understand the context, not part of the pull request):
 ```
 {pull_request_info}
@@ -68,22 +67,24 @@ related issue information (for better understand the context, not part of the pu
 {issue_info}
 ```
 
-主要改动:
+changes summary:
 ```
 {summary}
 ```
-请注意，我希望你对整个pull request进行概括，不要具体说明某个文件做了什么事情，在你的概括中不应当具体提到某个文件
-概括结果应为不超过200字的中文内容:"""
+
+Please note that I want you to summarize the entire pull request, not specific files.
+The summary should be no more than 200 words:"""
 
 
 PR_SIMPLE_FEEDBACK_TEMPLATE = """
-请你扮演代码审查者，我会作为你的助手，发给你一个文件的diff改动，请说明你觉得代码中需要修复的部分
-如果代码看起来没什么问题或者你无法判断，请回复ok，并且除ok外不要回复任何其他的内容
+Act as a code reviewer, I will be your assistant, provide you a file diff from a change list,
+please review the code change according to the following requirements:
 
+1. Don't give subjective comments on the code quality, such as "this code is bad", "this code is good", etc.
+2. Don't give general suggestions that are not specific to the code, such as "this code needs to be refactored", "this code needs to be optimized", etc.
+
+If you can't judge whether the code is good or bad, please reply "ok" and don't reply any other content except "ok".
+
+Here's the code:
 {text}
-
-关于你的修改意见，请遵守以下几条规则：
-1. 禁止提出不涉及具体代码，概括性、指导性的意见
-2. 不要用主观的口吻对代码质量进行评价
-3. 你的回复内容应当尽量的精确、简洁，每句话都做到言之有物
 """

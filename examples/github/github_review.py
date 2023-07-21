@@ -29,4 +29,4 @@ pull_request_number = 2
 event = build_pull_request_event(repository_name_or_id=repository_name_or_id, pull_request_number=pull_request_number)
 
 # handle_github_event(event, local=False)
-handle_github_event(event, local=True)
+handle_github_event(event, local=True, lang="en")
