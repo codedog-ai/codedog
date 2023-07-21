@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2023-07-21)
+
+### Fix
+
+* :bug: Unable to fetch installation_id ([`f170bfb`](https://github.com/codedog-ai/codedog/commit/f170bfb161b65c384bcb0e94a51717bfbd4cae12))
+
 ## v0.3.0 (2023-07-20)
 
 ### Feature
