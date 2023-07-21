@@ -82,11 +82,11 @@ def get_jwt_token(private_key, app_id):
         # JWT 的过期时间，这里设置为1分钟后
         "exp": now + (10 * 60),
         # GitHub App 的 ID
-        "iss": app_id
+        "iss": app_id,
     }
 
     # 生成JWT
-    jwt_token = jwt.encode(payload, private_key, algorithm='RS256')
+    jwt_token = jwt.encode(payload, private_key, algorithm="RS256")
     return jwt_token
 
 
@@ -102,15 +102,11 @@ def get_access_token_by_installation_id(installation_id: int, jwt_token: str):
     response = requests.post(token_url, headers=headers)
     response.raise_for_status()
     token_info = response.json()
-    return token_info['token']
+    return token_info["token"]
 
 
 def load_private_key(filename):
     # 从文件中读取你的私钥
-    with open(filename, 'rb') as key_file:
-        private_key = serialization.load_pem_private_key(
-            key_file.read(),
-            password=None,
-            backend=default_backend()
-        )
+    with open(filename, "rb") as key_file:
+        private_key = serialization.load_pem_private_key(key_file.read(), password=None, backend=default_backend())
     return private_key

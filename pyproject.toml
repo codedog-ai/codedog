@@ -39,6 +39,12 @@ start = "codedog.server:start"
 [[tool.poetry.source]]
 name = "aliyun"
 url = "http://mirrors.aliyun.com/pypi/simple"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
 
 [tool.semantic_release]
 version_variable = "./codedog/version.py:VERSION"
