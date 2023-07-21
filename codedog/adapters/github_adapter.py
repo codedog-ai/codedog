@@ -38,8 +38,7 @@ default_gh = Github(github_token)
 
 # used for github app
 github_app_id = env.get("GITHUB_APP_ID", 0)
-github_private_key = load_private_key(
-    env.get("GITHUB_PRIVATE_KEY_PATH", "/app/private_key.pem"))
+github_private_key = load_private_key(env.get("GITHUB_PRIVATE_KEY_PATH", "/app/private_key.pem"))
 
 
 issue_pattern = re.compile(r"#[0-9]+")
@@ -53,7 +52,7 @@ class GithubEvent(BaseModel):
     installation: dict = {}
 
 
-def handle_github_event(event: GithubEvent, local=False, **args) -> str:
+def handle_github_event(event: GithubEvent, local=False, **kwargs) -> str:
     # TODO: parse event related exception
     _event_filter(event)
 
@@ -64,40 +63,42 @@ def handle_github_event(event: GithubEvent, local=False, **args) -> str:
     assert repository_id
     assert pull_request_number
     # TODO: config
-    return handle_pull_request(repository_id, pull_request_number, installation_id, local, get_ttl_hash(120), **args)
+    return handle_pull_request(repository_id, pull_request_number, installation_id, local, get_ttl_hash(120), **kwargs)
 
 
 def get_github_client(installation_id: int):
     if installation_id is None or installation_id == 0:
         return default_gh
     jwt_token = get_jwt_token(github_private_key, github_app_id)
-    access_token = get_access_token_by_installation_id(
-        installation_id, jwt_token)
+    access_token = get_access_token_by_installation_id(installation_id, jwt_token)
     github_client = Github(access_token)
     return github_client
 
 
 @lru_cache()
-def handle_pull_request(repository_id: int, pull_request_number: int, installation_id: int,
-                        local=False, ttl_hash=None, **args):
+def handle_pull_request(
+    repository_id: int, pull_request_number: int, installation_id: int, local=False, ttl_hash=None, **kwargs
+):
     del ttl_hash
     logger.info(
         "Retrive pull request from Github",
-        extra={"github.repo.id": repository_id,
-               "github.pull.number": pull_request_number,
-               "github.installation_id": installation_id},
+        extra={
+            "github.repo.id": repository_id,
+            "github.pull.number": pull_request_number,
+            "github.installation_id": installation_id,
+        },
     )
-    github_client = get_github_client(installation_id)
+    github_client = default_gh if local else get_github_client(installation_id)
+
     pr = get_pr(github_client, repository_id, pull_request_number)
 
     changes = pr.changes
 
     callbacks = []
     if not local:
-        callbacks = [_comment_callback(github_client.get_repo(
-            repository_id).get_pull(pull_request_number))]
+        callbacks = [_comment_callback(github_client.get_repo(repository_id).get_pull(pull_request_number))]
 
-    thread = threading.Thread(target=asyncio.run, args=(_review_wrapper(pr, changes, callbacks, **args),))
+    thread = threading.Thread(target=asyncio.run, args=(_review_wrapper(pr, changes, callbacks, **kwargs),))
     thread.start()
 
     return "Review Submitted."
@@ -192,8 +193,8 @@ def get_potential_issue(repo: Repository, pull: GithubPullRequest) -> Issue:
     return issue
 
 
-async def _review_wrapper(pr: PullRequest, changes: list[Change], callbacks: list[callable] = [], **args):
-    review = Review(pr=pr, changes=changes, callbacks=callbacks, **args)
+async def _review_wrapper(pr: PullRequest, changes: list[Change], callbacks: list[callable] = [], **kwargs):
+    review = Review(pr=pr, changes=changes, callbacks=callbacks, **kwargs)
     await review.execute()
 
 

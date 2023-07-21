@@ -6,20 +6,20 @@ from langchain.chat_models.base import BaseChatModel
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 
 from codedog.model import ChangeSummary
-from codedog.templates import grimoire_cn
-
-GRIMOIRE = grimoire_cn
+from codedog.templates import grimoire_cn, grimoire_en
 
 
 class Chains:
-    def __init__(self, llm: BaseChatModel):
-        self._review_fallback_prompt = PromptTemplate.from_template(GRIMOIRE.PR_CHANGE_REVIEW_FALLBACK_TEMPLATE)
-        self._summary_prompt = PromptTemplate.from_template(GRIMOIRE.PR_SUMMARIZE_TEMPLATE)
-        self._feedback_prompt = PromptTemplate.from_template(GRIMOIRE.PR_SIMPLE_FEEDBACK_TEMPLATE)
+    def __init__(self, llm: BaseChatModel, lang: str = "cn"):
+        grimoire = grimoire_cn if lang == "cn" else grimoire_en
+
+        self._review_fallback_prompt = PromptTemplate.from_template(grimoire.PR_CHANGE_REVIEW_FALLBACK_TEMPLATE)
+        self._summary_prompt = PromptTemplate.from_template(grimoire.PR_SUMMARIZE_TEMPLATE)
+        self._feedback_prompt = PromptTemplate.from_template(grimoire.PR_SIMPLE_FEEDBACK_TEMPLATE)
         self._raw_review_parser = PydanticOutputParser(pydantic_object=ChangeSummary)
         self._review_parser = OutputFixingParser.from_llm(llm=llm, parser=self._raw_review_parser)
         self._review_prompt = PromptTemplate(
-            template=GRIMOIRE.PR_CHANGE_REVIEW_TEMPLATE,
+            template=grimoire.PR_CHANGE_REVIEW_TEMPLATE,
             input_variables=["text", "name"],
             partial_variables={"format_instructions": self._raw_review_parser.get_format_instructions()},
         )
@@ -30,9 +30,9 @@ class Chains:
         self._feedback_chain = LLMChain(llm=llm, prompt=self._feedback_prompt)
 
     @staticmethod
-    def init_chains():
+    def init_chains(lang: str = "cn"):
         llm = load_llm()
-        return Chains(llm=llm)
+        return Chains(llm=llm, lang=lang)
 
     @property
     def llm(self):
