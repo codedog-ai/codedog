@@ -50,6 +50,7 @@ class GithubEvent(BaseModel):
     number: int
     pull_request: dict
     repository: dict
+    installation: dict = {}
 
 
 def handle_github_event(event: GithubEvent, local=False, **args) -> str:
@@ -58,11 +59,10 @@ def handle_github_event(event: GithubEvent, local=False, **args) -> str:
 
     repository_id: int = event.repository.get("id", 0)
     pull_request_number: int = event.number
-    installation_id: int = event.repository.get("installation", {}).get("id", 0)
+    installation_id: int = event.installation.get("id", 0)
 
     assert repository_id
     assert pull_request_number
-
     # TODO: config
     return handle_pull_request(repository_id, pull_request_number, installation_id, local, get_ttl_hash(120), **args)
 
