@@ -28,7 +28,7 @@ class DiffContent(BaseModel):
     """Removed lines count."""
     diff_content: str = Field()
     """Diff content."""
-    segs: list[DiffSegment] = Field(default_factory=list)
+    diff_segments: list[DiffSegment] = Field(default_factory=list, exclude=True)
     """Diff segments."""
     patched_file: Optional[PatchedFile] = Field(default=None, exclude=True)
     """Unidiff patched file object."""

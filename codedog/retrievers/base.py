@@ -1,32 +1,25 @@
-from abc import ABC, abstractmethod, abstractstaticmethod
-from typing import Callable
+from abc import ABC, abstractmethod
 
-from pydantic import BaseModel, Field
-
-import codedog
-from codedog.models import ChangeFile, Commit, DiffContent, PullRequest, Repository
+from codedog.models import Blob, ChangeFile, Commit, PullRequest, Repository
 
 
-def _get_verbosity() -> bool:
-    return codedog.verbose
-
-
-class Retriever(BaseModel, ABC):
+class Retriever(ABC):
     """Base class for git repository pull request retrievers.
 
     Retrievers are responsible for retrieving pr related commits, branchs, issues and code data from
     Github, Gitlab, Bitbucket etc. It defines the interface codedog uses to retrieve data from
     from repository, wrapped the different client api of platforms.
-
-    The main methods exposed by chains are:
     """
 
-    callbacks: Callable = Field(default=None, exclude=True)
-    verbose: bool = Field(default_factory=_get_verbosity)
+    @property
+    @abstractmethod
+    def retriever_type(self) -> str:
+        """Return the retriever type."""
 
     @property
-    def retriever_type(self) -> str:
-        raise NotImplementedError
+    @abstractmethod
+    def pull_request(self) -> PullRequest:
+        """Return the pull request object."""
 
     @property
     @abstractmethod
@@ -35,17 +28,18 @@ class Retriever(BaseModel, ABC):
 
     @property
     @abstractmethod
-    def pull_request(self) -> PullRequest:
-        """Return the pull request object."""
+    def source_repository(self) -> Repository:
+        """Return the pull request source repository object."""
 
+    @property
     @abstractmethod
-    def get_pull_request_commits(self) -> list[Commit]:
-        """Return the commit list in pr."""
-
-    @abstractmethod
-    def get_pull_request_changed_files(self) -> list[ChangeFile]:
+    def changed_files(self) -> list[ChangeFile]:
         """Return the changed file list between end commit and start commit."""
 
     @abstractmethod
-    def get_diff_content(self, file: ChangeFile) -> DiffContent:
-        """Return the diff content of the specified file between end commit and start commit."""
+    def get_blob(self, blob_sha: str or id) -> Blob:
+        """Get blob by id."""
+
+    @abstractmethod
+    def get_commit(self, commit_sha: str or id) -> Commit:
+        """Get commit by id."""
