@@ -51,10 +51,18 @@ class ChangeFile(BaseModel):
 
     name: str = Field(default="")
     """File name without path."""
+    source_full_name: str = Field(default="")
+    """File name and path in source repository.
+
+    If change status is rename or copy, this will be different from full_name.
+    """
     diff_url: str = Field(default="")
     """Url of this change file in pull request."""
     blob_url: str = Field(default="")
-    """Url of this change file blob in end commit. If change file type is deleted, this will be none."""
+    """Url of this change file blob in end commit.
+
+    If change file type is deleted, this will be none.
+    """
     diff_content: DiffContent = Field(default="", exclude=True)
     """The diff content of this file."""
 

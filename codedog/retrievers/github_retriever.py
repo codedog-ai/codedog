@@ -157,6 +157,7 @@ class GithubRetriever(Retriever):
             sha=git_file.sha,
             full_name=git_file.filename,
             name=git_file.filename.split("/")[-1],
+            source_full_name=git_file.previous_filename if git_file.previous_filename else git_file.filename,
             status=self._convert_status(git_file.status),
             pull_request_id=git_pr.id,
             repository_id=git_pr.head.repo.id,
