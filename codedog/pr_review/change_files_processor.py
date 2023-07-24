@@ -17,7 +17,7 @@ STATUS_HEADER_MAPPING = {
 }
 
 
-class PullRequestPreProcess:
+class ChangeFilesProcessor:
     def __init__(self):
         self._status_template_functions = {
             ChangeStatus.copy: self._build_status_template_copy,
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     retriever = GithubRetriever(client, "codedog-ai/codedog", 2)
     pull_request = retriever.pull_request
 
-    pr_preprocess = PullRequestPreProcess()
+    pr_preprocess = ChangeFilesProcessor()
     print(pr_preprocess.generate_change_filename_template(pull_request.change_files))
 
     code_files = pr_preprocess.get_diff_code_files(pull_request.change_files)
