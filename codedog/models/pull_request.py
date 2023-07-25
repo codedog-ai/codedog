@@ -1,4 +1,7 @@
-from pydantic import BaseModel, Field
+from typing import Any
+
+from pydantic import BaseModel, Field, validator
+from pydantic.fields import ModelField
 
 from codedog.models.change_file import ChangeFile
 from codedog.models.issue import Issue
@@ -30,3 +33,13 @@ class PullRequest(BaseModel):
     """git PR source repository"""
     _raw: object = Field(default=None, exclude=True)
     """git PR raw object"""
+
+    @validator("*", pre=True)
+    def none_to_default(value: Any, field: ModelField):
+        if value is not None or field.type_ not in [str, int, float, bool, list, dict]:
+            return value
+        if field.default:
+            return field.default
+        if field.default_factory:
+            return (field.default_factory)()
+        raise ValueError(f"Field {field.name} is None.")

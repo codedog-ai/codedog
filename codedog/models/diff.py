@@ -26,7 +26,7 @@ class DiffContent(BaseModel):
     """Added lines count."""
     remove_count: int = Field()
     """Removed lines count."""
-    diff_content: str = Field()
+    content: str = Field()
     """Diff content."""
     diff_segments: list[DiffSegment] = Field(default_factory=list, exclude=True)
     """Diff segments."""

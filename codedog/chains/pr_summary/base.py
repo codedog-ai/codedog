@@ -106,7 +106,7 @@ class PRSummaryChain(Chain):
 
         code_summary_inputs = self._process_code_summary_inputs(pr)
         code_summary_outputs = (
-            await self.code_summary_chain.aapply(code_summary_inputs, callbacks=run_manager.get_child())
+            await self.code_summary_chain.aapply(code_summary_inputs, callbacks=_run_manager.get_child())
             if code_summary_inputs
             else []
         )
@@ -114,7 +114,7 @@ class PRSummaryChain(Chain):
         code_summaries = self.processor.build_code_summaries(code_summary_inputs, code_summary_outputs)
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output: PRSummary = await self.pr_summary_chain.apredict_and_parse(pr_summary_input)
+        pr_summary_output: PRSummary = await self.pr_summary_chain(pr_summary_input, callbacks=_run_manager.get_child())
 
         return self._process_result(pr_summary_output, code_summaries)
 
@@ -127,7 +127,7 @@ class PRSummaryChain(Chain):
         code_files = self.processor.get_diff_code_files(pr)
         for code_file in code_files:
             input_item = {
-                "content": code_file.diff_content,
+                "content": code_file.diff_content.content[:2000],  # TODO: handle long diff
                 "name": code_file.full_name,
                 "language": SUFFIX_LANGUAGE_MAPPING.get(code_file.suffix, ""),
             }

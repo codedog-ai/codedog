@@ -126,8 +126,8 @@ class GithubRetriever(Retriever):
         return [self._get_and_build_issue(issue_number) for issue_number in issue_numbers]
 
     def _parse_issue_numbers(self, title, body) -> list[int]:
-        body_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, body)
-        title_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, title)
+        body_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, body) if body else []
+        title_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, title) if title else []
         issue_numbers = [int(match.group(0).lstrip("#")) for match in itertools.chain(body_matches, title_matches)]
         return issue_numbers
 
@@ -187,7 +187,7 @@ class GithubRetriever(Retriever):
         return DiffContent(
             add_count=patched_file.added,
             remove_count=patched_file.removed,
-            diff_content=git_file.patch if git_file.patch else "",
+            content=git_file.patch if git_file.patch else "",
             diff_segments=patched_segs,
             _raw=git_file,
             _patched_file=patched_file,
