@@ -14,7 +14,7 @@ from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 
 github_token = os.environ.get("GITHUB_TOKEN", "")
 gh = Github(github_token)
-retriever = GithubRetriever(gh, "codedog-ai/codedog", 9)
+retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
 # retriever = GithubRetriever(gh, "ClickHouse/ClickHouse", 49113)
 # retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
 
