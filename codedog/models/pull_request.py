@@ -13,7 +13,7 @@ class PullRequest(BaseModel):
 
     title: str = Field(default="")
     """Pull Request title."""
-    description: str = Field(default="")
+    body: str = Field(default="")
     """Pull Request description."""
     url: str = Field(default="")
     """Pull Request url."""

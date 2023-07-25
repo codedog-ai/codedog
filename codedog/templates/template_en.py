@@ -52,3 +52,23 @@ REPORT_FEEDBACK = """## Suggestions (preview)
 
 {feedback}\n\n
 """
+
+
+# --- pr summary --------------------------------------------------------------
+MATERIAL_CODE_SUMMARY = """File `{name}` Change: {summary}"""
+
+MATERIAL_PR_METADATA = """Pull Request Metadata:
+---
+1. Title: {pr_title}
+
+2. Body:
+```text
+{pr_body}
+```
+
+3. Issues:
+```text
+{issues}
+```
+---
+"""

@@ -152,18 +152,22 @@ class GithubRetriever(Retriever):
         return change_files
 
     def _build_change_file(self, git_file: GithubFile, git_pr: GHPullRequest) -> ChangeFile:
+        full_name = git_file.filename
+        name = full_name.split("/")[-1]
+        suffix = name.split(".")[-1]
+        source_full_name = git_file.previous_filename if git_file.previous_filename else full_name
+
         return ChangeFile(
             blob_id=int(git_file.sha, 16),
             sha=git_file.sha,
-            full_name=git_file.filename,
-            name=git_file.filename.split("/")[-1],
-            source_full_name=git_file.previous_filename if git_file.previous_filename else git_file.filename,
+            full_name=full_name,
+            source_full_name=source_full_name,
+            name=name,
+            suffix=suffix,
             status=self._convert_status(git_file.status),
             pull_request_id=git_pr.id,
-            repository_id=git_pr.head.repo.id,
-            source_repository_id=git_pr.base.repo.id,
-            start_commit_id=git_pr.base.sha,
-            end_commit_id=git_pr.head.sha,
+            start_commit_id=int(git_pr.base.sha, 16),
+            end_commit_id=int(git_pr.head.sha, 16),
             diff_url=self._build_change_file_diff_url(git_file, git_pr),
             blob_url=git_file.blob_url,
             diff_content=self._parse_and_build_diff_content(git_file),
@@ -183,7 +187,7 @@ class GithubRetriever(Retriever):
         return DiffContent(
             add_count=patched_file.added,
             remove_count=patched_file.removed,
-            diff_content=git_file.patch,
+            diff_content=git_file.patch if git_file.patch else "",
             diff_segments=patched_segs,
             _raw=git_file,
             _patched_file=patched_file,

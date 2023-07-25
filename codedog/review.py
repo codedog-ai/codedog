@@ -10,7 +10,7 @@ import traceback
 from langchain.callbacks import get_openai_callback
 from langchain.schema import OutputParserException
 
-from codedog.chains import Chains
+from codedog.chains_old import Chains
 from codedog.model import Change, ChangeSummary, PullRequest
 from codedog.templates import template_cn, template_en
 from codedog.version import VERSION

@@ -88,3 +88,47 @@ If you can't judge whether the code is good or bad, please reply "ok" and don't 
 Here's the code:
 {text}
 """
+
+
+# --- PR Summary --------------------------------------------------------------
+
+CODE_SUMMARY = """Act as a Code Reviewer Assistant. I will give a code diff content.
+And I want you to briefly summarize the content of the diff to helper reviewers understand what happened in this file
+faster and more convienently.
+
+Your summary must be totaly objective and contains no opinions or suggestions.
+For example: ```This diff contains change in functions `create_database`,`delete_database`,
+it add a parameter `force` to these functions.
+```
+
+Here's the diff of file {name}:
+```{language}
+{content}
+```
+"""
+
+PR_SUMMARY = """Act as a Code Reviewer Assistant. I want you to provide some information aboud below Pull Request(PR)
+to help reviewers understand it better and review it faster.
+
+The items I want you to provide are:
+- Describe the changes of this PR and it's objective.
+- Categorize this PR into one of the following types: Feature,Fix,Refactor,Perf,Doc,Test,Ci,Style,Housekeeping
+- If it's a feature/refactor PR. List the important change files which you believe
+    contains the major logical changes of this PR.
+
+Below is informations about this PR I can provide to you:
+PR Metadata:
+```text
+{metadata}
+```
+Change Files (with status):
+```text
+{change_files}
+```
+Code change summaries (if this pr contains no code files, this will be empty):
+```text
+{code_summaries}
+```
+
+{format_instructions}
+"""

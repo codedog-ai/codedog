@@ -36,26 +36,21 @@ class ChangeFile(BaseModel):
     """Blob sha."""
     full_name: str = Field()
     """File name and path."""
+    source_full_name: str = Field()
+    """File name and path in source repository."""
     status: ChangeStatus = Field()
     """Change status. see more information in ChangeStatus."""
     pull_request_id: int = Field()
     """Id of pull request this change belongs to."""
-    repository_id: int = Field()
-    """Id of pull request target repository this change file belongs to."""
-    source_repository_id: int = Field()
-    """Id of pull request source repository this change file belongs to."""
-    start_commit_id: str = Field()
+    start_commit_id: int = Field()
     """Start commit id"""
-    end_commit_id: str = Field()
+    end_commit_id: int = Field()
     """End commit id"""
 
-    name: str = Field(default="")
-    """File name without path."""
-    source_full_name: str = Field(default="")
-    """File name and path in source repository.
-
-    If change status is rename or copy, this will be different from full_name.
-    """
+    name: str = Field()
+    """File name."""
+    suffix: str = Field()
+    """File suffix."""
     diff_url: str = Field(default="")
     """Url of this change file in pull request."""
     blob_url: str = Field(default="")
@@ -63,6 +58,7 @@ class ChangeFile(BaseModel):
 
     If change file type is deleted, this will be none.
     """
+
     diff_content: DiffContent = Field(default="", exclude=True)
     """The diff content of this file."""
 
