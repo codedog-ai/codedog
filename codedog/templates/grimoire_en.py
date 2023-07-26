@@ -90,8 +90,6 @@ Here's the code:
 """
 
 
-# --- PR Summary --------------------------------------------------------------
-
 CODE_SUMMARY = """Act as a Code Reviewer Assistant. I will give a code diff content.
 And I want you to briefly summarize the content of the diff to helper reviewers understand what happened in this file
 faster and more convienently.
@@ -131,4 +129,13 @@ Code change summaries (if this pr contains no code files, this will be empty):
 ```
 
 {format_instructions}
+"""
+
+CODE_SUGGESTION = """Act as a Code Reviewer Assistant. I will give a code diff content.
+And I want you to check whether the code change is correct and give some suggestions to the author.
+
+Here's the code diff from file {name}:
+```{language}
+{content}
+```
 """
