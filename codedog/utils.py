@@ -8,8 +8,6 @@ from logging.config import dictConfig
 
 import jwt
 import requests
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
 
 # -- Logging ------------------------------------------------------------------
 
@@ -103,10 +101,3 @@ def get_access_token_by_installation_id(installation_id: int, jwt_token: str):
     response.raise_for_status()
     token_info = response.json()
     return token_info["token"]
-
-
-def load_private_key(filename):
-    # 从文件中读取你的私钥
-    with open(filename, "rb") as key_file:
-        private_key = serialization.load_pem_private_key(key_file.read(), password=None, backend=default_backend())
-    return private_key
