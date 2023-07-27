@@ -25,7 +25,6 @@ from codedog.utils import (
     get_jwt_token,
     get_sha256,
     get_ttl_hash,
-    load_private_key,
 )
 
 logger = logging.getLogger(__name__)
@@ -38,7 +37,7 @@ default_gh = Github(github_token)
 
 # used for github app
 github_app_id = env.get("GITHUB_APP_ID", 0)
-github_private_key = load_private_key(env.get("GITHUB_PRIVATE_KEY_PATH", "/app/private_key.pem"))
+github_private_key = env.get("GITHUB_APP_PRIVATE_KEY", "")
 
 
 issue_pattern = re.compile(r"#[0-9]+")
