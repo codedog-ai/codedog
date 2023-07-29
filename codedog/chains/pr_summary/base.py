@@ -13,12 +13,12 @@ from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 from langchain.schema import BaseOutputParser
 from pydantic import Extra, Field
 
-from codedog.chains.pr_summary.processor import (
-    SUFFIX_LANGUAGE_MAPPING,
-    PRSummaryProcessor,
-)
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT
 from codedog.models import ChangeSummary, PRSummary, PullRequest
+from codedog.processors.pull_request_processor import (
+    SUFFIX_LANGUAGE_MAPPING,
+    PullRequestProcessor,
+)
 
 
 class PRSummaryChain(Chain):
@@ -33,7 +33,7 @@ class PRSummaryChain(Chain):
     """
 
     # TODO: localization
-    # TODO: prompt input keys validation
+    # TODO: input keys validation
 
     code_summary_chain: LLMChain = Field(exclude=True)
     """Chain to use to summarize code change."""
@@ -41,7 +41,7 @@ class PRSummaryChain(Chain):
     """Chain to use to summarize PR."""
     parser: BaseOutputParser = Field(exclude=True)
     """Parse pr summarized result to PRSummary object."""
-    processor: PRSummaryProcessor = Field(exclude=True, default_factory=PRSummaryProcessor)
+    processor: PullRequestProcessor = Field(exclude=True, default_factory=PullRequestProcessor.build)
     """PR data process."""
     _input_keys: List[str] = ["pull_request"]
     _output_keys: List[str] = ["pr_summary", "code_summaries"]
@@ -73,8 +73,6 @@ class PRSummaryChain(Chain):
         return self._output_keys
 
     def _call(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManagerForChainRun] = None) -> Dict[str, Any]:
-        # TODO: handle callbacks
-
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         _run_manager.on_text(inputs["pull_request"].json() + "\n")
 
@@ -90,7 +88,9 @@ class PRSummaryChain(Chain):
         code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output: PRSummary = self.pr_summary_chain(pr_summary_input, callbacks=_run_manager.get_child())
+        pr_summary_output: PRSummary = self.pr_summary_chain(
+            pr_summary_input, callbacks=_run_manager.get_child(tag="PRSummary")
+        )
 
         return self._process_result(pr_summary_output, code_summaries)
 
@@ -146,9 +146,9 @@ class PRSummaryChain(Chain):
             "metadata": pr_metadata_material,
         }
 
-    def _process_result(self, pr_summary: PRSummary, code_summaries: List[ChangeSummary]):
+    def _process_result(self, pr_summary_output: Dict[str, Any], code_summaries: List[ChangeSummary]):
         return {
-            "pr_summary": pr_summary,
+            "pr_summary": pr_summary_output["text"],
             "code_summaries": code_summaries,
         }
 

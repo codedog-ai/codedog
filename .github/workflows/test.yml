@@ -27,11 +27,11 @@ jobs:
                 poetry-version: '1.5.1'
 
             - name: Install Dependencies
-              run: poetry install
+              run: poetry install --with dev
 
             - name: Run Test
               run:
-                poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=codedog test/ | tee pytest-coverage.txt
+                poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=codedog tests/ | tee pytest-coverage.txt
 
             - name: Pytest coverage comment
               id: coverageComment

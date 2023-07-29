@@ -10,9 +10,10 @@ from codedog.models.repository import Repository
 
 class PullRequest(BaseModel):
     pull_request_id: int = Field()
-    """Pull Request id."""
+    """Pull Request id (Global id. Not number/iid)"""
     repository_id: int = Field()
     """Repository id this pull request belongs to."""
+    pull_request_number: int = Field(default=0)
 
     title: str = Field(default="")
     """Pull Request title."""

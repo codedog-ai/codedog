@@ -1,8 +1,11 @@
-import itertools
-from typing import Dict, List
+from __future__ import annotations
 
+import itertools
+from functools import lru_cache
+from typing import Callable, Dict, List
+
+from codedog.localization import Localization
 from codedog.models import ChangeFile, ChangeStatus, ChangeSummary, PullRequest
-from codedog.templates import template_cn, template_en
 
 CONTENT_CHANGE_STATUS = [ChangeStatus.addition, ChangeStatus.modified]
 
@@ -22,27 +25,12 @@ SUFFIX_LANGUAGE_MAPPING = {
     "rs": "rust",
 }
 
-STATUS_HEADER_MAPPING = {
-    ChangeStatus.addition: "Added files:",
-    ChangeStatus.copy: "Copied files:",
-    ChangeStatus.deletion: "Deleted files:",
-    ChangeStatus.modified: "Modified files:",
-    ChangeStatus.renaming: "Renamed files:",
-    ChangeStatus.type_change: "Type changed files:",
-    ChangeStatus.unknown: "Other files:",
-}
 
+class PullRequestProcessor(Localization):
+    def __init__(self):
+        self._status_template_functions = None
 
-class PRSummaryProcessor:
-    # TODO: localization
-    def __init__(self, language: str = "en"):
-        self._status_template_functions = {
-            ChangeStatus.copy: self._build_status_template_copy,
-            ChangeStatus.renaming: self._build_status_template_rename,
-        }
-
-        self.language = language
-        self.template = template_en if language == "en" else template_cn
+        super().__init__()
 
     def is_code_file(self, change_file: ChangeFile):
         return change_file.suffix in SUPPORT_CODE_FILE_SUFFIX
@@ -56,14 +44,14 @@ class PRSummaryProcessor:
         return diff_code_files
 
     def gen_material_change_files(self, change_files: list[ChangeFile]) -> str:
-        files_by_status = itertools.groupby(change_files, lambda change_file: change_file.status)
+        files_by_status = itertools.groupby(sorted(change_files, key=lambda x: x.status), lambda x: x.status)
         summary_by_status = []
 
         for status, files in files_by_status:
             summary_by_status.append(
-                f"{STATUS_HEADER_MAPPING.get(status, ChangeStatus.unknown)}\n"
+                f"{self.template.MATERIAL_STATUS_HEADER_MAPPING.get(status, ChangeStatus.unknown)}\n"
                 + "\n".join(
-                    self._status_template_functions.get(status, self._build_status_template_default)(file)
+                    self.status_template_functions.get(status, self._build_status_template_default)(file)
                     for file in files
                 )
                 + "\n"
@@ -105,21 +93,16 @@ class PRSummaryProcessor:
     def _build_status_template_rename(self, change_file: ChangeFile):
         return f"- {change_file.full_name} (renamed from {change_file.source_full_name})"
 
+    @property
+    def status_template_functions(self) -> dict[ChangeStatus, Callable]:
+        if not self._status_template_functions:
+            self._status_template_functions = {
+                ChangeStatus.copy: self._build_status_template_copy,
+                ChangeStatus.renaming: self._build_status_template_rename,
+            }
+        return self._status_template_functions
 
-if __name__ == "__main__":
-    import os
-
-    from github import Github
-
-    from codedog.retrievers import GithubRetriever
-
-    client = Github(os.environ.get("GITHUB_TOKEN"))
-    retriever = GithubRetriever(client, "codedog-ai/codedog", 2)
-    pull_request = retriever.pull_request
-
-    pr_preprocess = PRSummaryProcessor()
-    print(pr_preprocess.gen_material_change_files(pull_request.change_files))
-
-    code_files = pr_preprocess.get_diff_code_files(pull_request.change_files)
-    for code_file in code_files:
-        print(code_file.full_name)
+    @classmethod
+    @lru_cache(maxsize=1)
+    def build(cls) -> PullRequestProcessor:
+        return cls()

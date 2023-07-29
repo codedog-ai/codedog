@@ -10,32 +10,49 @@ Review your Github/Gitlab PR with ChatGPT
 
 ## Setup Project
 
+Development
+
 ```shell
-poetry install --with dev
+poetry install --with dev, http
 ```
 
 ## Configuration
 
+Codedog currently load config from environment variables .
+
 settings:
 
-| 环境变量               | 是否必要 | 默认值    | 说明                                |
-| ---------------------- | -------- | --------- | ----------------------------------- |
-| CODEDOG_WORKER_NUM     | 否       | 1         | 服务线程数                          |
-| CODEDOG_ENV            | 否       | "unknown" | 表明 codedog 实例所属环境           |
-| DATADOG_METRIC         | 否       |           | 值为 True 时向 datadog 发送统计指标 |
-| DATADOG_AGENT_HOST     | 否       | localhost | datadog agent host                  |
-| DATADOG_DOGSTATSD_PORT | 否       | 8125      | datadog agent dogstatsd port        |
-| GITHUB_TOKEN           | 否       |           | 用于连接 github 和评论              |
-| GITHUB_APP_ID          | 否       | 0         | 用于配置 github app id              |
-| GITHUB_APP_PRIVATE_KEY | 否       | ""        | 用于认证 github app                 |
-| OPENAI_API_KEY         | 是       |           | 调用 OPENAI 的 API KEY              |
-| OPENAI_PROXY           | 否       |           | 设置到 openai.proxy                 |
+| Config Name                   | Required | Default           | Description                             |
+| ----------------------------- | -------- | ----------------- | --------------------------------------- |
+| CODEDOG_SERVER                | No       | 0.0.0.0           | Server address                          |
+| CODEDOG_PORT                  | No       | 32167             | Server port                             |
+| CODEDOG_WORKER_NUM            | No       | 1                 | Server thread number                    |
+| OPENAI_API_KEY                | Yes      |                   | Api Key for calling openai gpt4 api     |
+| OPENAI_PROXY                  | No       |                   | Openai proxy                            |
+| AZURE_OPENAI                  | No       |                   | Use azure openai gpt 3.5 if not blank   |
+| AZURE_OPENAI_API_KEY          | No       |                   | Azure openai api key                    |
+| AZURE_OPENAI_API_BASE         | No       |                   | Azure openai api base                   |
+| AZURE_OPENAI_DEPLOYMENT_ID    | No       |                   | Azure openai deployment id for gpt 3.5  |
+| AZURE_OPENAI_EMBEDDING_DEP_ID | No       |                   | Azure openai deployment id for embedding|
+| GITHUB_TOKEN                  | No       |                   | Retrieve github pr data and comment     |
 
-## Start Server
+## Usage
 
-```shell
-poetry run start
-```
+### Github Example with GPT4
+
+check `example/github_review.py`
+
+### server
+
+We have a demo server for you to try.
+
+1. Run server with:
+
+    ```bash
+    poetry install --with http
+
+    poetry run demoserver
+    ```
 
 ## How To Use
 

@@ -30,7 +30,7 @@ class ChangeStatus(str, Enum):
 class ChangeFile(BaseModel):
     """A changed file between two commit."""
 
-    blob_id: str = Field()
+    blob_id: int = Field()
     """Blob id. Converted from sha."""
     sha: str = Field()
     """Blob sha."""

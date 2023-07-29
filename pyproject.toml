@@ -9,13 +9,10 @@ include = ["codedog", "server.py"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.95.1"
 langchain = "^0.0.240"
 openai = "^0.27.4"
 pydantic = "^1.10.7"
 python-gitlab = "^3.14.0"
-tenacity = "^8.2.2"
-uvicorn = "^0.21.1"
 pygithub = "^1.58.2"
 unidiff = "^0.7.5"
 pyjwt = "^2.8.0"
@@ -34,8 +31,15 @@ python-semantic-release = "^7.34.6"
 python-dateutil = "^2.8.2"
 langchain-visualizer = "^0.0.28"
 
+[tool.poetry.group.http]
+optional = true
+
+[tool.poetry.group.http.dependencies]
+fastapi = "^0.100.1"
+uvicorn = "^0.23.1"
+
 [tool.poetry.scripts]
-start = "codedog.server:start"
+demoserver = "codedog.server:start"
 
 [[tool.poetry.source]]
 name = "aliyun"
