@@ -19,7 +19,6 @@ from codedog.chains.code_review.base import CodeReviewChain
 from codedog.chains.pr_summary.base import PRSummaryChain
 from codedog.retrievers.github_retriever import GithubRetriever
 from codedog.utils import init_local_logging
-from codedog.utils.errors import CodedogError
 from codedog.utils.github_utils import load_github_client
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 from codedog.version import VERSION
@@ -51,6 +50,12 @@ class GithubEvent(BaseModel):
 class Response(BaseModel):
     message: str
     code: int = 0
+
+
+class CodedogError(Exception):
+    def __init__(self, message: str = None, code: int = -1):
+        self.message = "" if message is None else message
+        self.code = code
 
 
 @app.post("/github", response_model=Response)
