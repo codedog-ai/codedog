@@ -19,7 +19,7 @@ class PRType(str, Enum):
 
 
 class PRSummary(BaseModel):
-    summary: str = ""
+    overview: str = ""
     """Pull request summarization."""
 
     pr_type: PRType = PRType.unknown

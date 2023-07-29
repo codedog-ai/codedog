@@ -13,12 +13,12 @@ from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 from langchain.schema import BaseOutputParser
 from pydantic import Extra, Field
 
-from codedog.chains.pr_summary.processor import (
-    SUFFIX_LANGUAGE_MAPPING,
-    PRSummaryProcessor,
-)
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT
 from codedog.models import ChangeSummary, PRSummary, PullRequest
+from codedog.processors.pull_request_processor import (
+    SUFFIX_LANGUAGE_MAPPING,
+    PullRequestProcessor,
+)
 
 
 class PRSummaryChain(Chain):
@@ -41,7 +41,7 @@ class PRSummaryChain(Chain):
     """Chain to use to summarize PR."""
     parser: BaseOutputParser = Field(exclude=True)
     """Parse pr summarized result to PRSummary object."""
-    processor: PRSummaryProcessor = Field(exclude=True, default_factory=PRSummaryProcessor)
+    processor: PullRequestProcessor = Field(exclude=True, default_factory=PullRequestProcessor.from_args)
     """PR data process."""
     _input_keys: List[str] = ["pull_request"]
     _output_keys: List[str] = ["pr_summary", "code_summaries"]

@@ -1,20 +1,20 @@
 import unittest
 from unittest.mock import MagicMock
 
-from codedog.chains.pr_summary.processor import (
-    SUPPORT_CODE_FILE_SUFFIX,
-    PRSummaryProcessor,
-)
 from codedog.models import ChangeFile, ChangeStatus, ChangeSummary, PullRequest
+from codedog.processors.pull_request_processor import (
+    SUPPORT_CODE_FILE_SUFFIX,
+    PullRequestProcessor,
+)
 
 
 class TestPRSummaryProcessor(unittest.TestCase):
     def setUp(self):
-        self.pr_processor = PRSummaryProcessor()
+        self.pr_processor = PullRequestProcessor()
 
     def test_is_code_file(self):
         code_file = ChangeFile(
-            blob_id="",
+            blob_id=1,
             sha="",
             full_name="path/test.py",
             name="test.py",
@@ -28,7 +28,7 @@ class TestPRSummaryProcessor(unittest.TestCase):
             end_commit_id=0,
         )
         non_code_file = ChangeFile(
-            blob_id="",
+            blob_id=1,
             sha="",
             full_name="path/test.txt",
             name="test.txt",
@@ -47,7 +47,7 @@ class TestPRSummaryProcessor(unittest.TestCase):
     def test_get_diff_code_files(self):
         change_files = [
             ChangeFile(
-                blob_id="",
+                blob_id=1,
                 sha="",
                 full_name=f"path/file{i}.{ext}",
                 name=f"file{i}.{ext}",
@@ -69,7 +69,7 @@ class TestPRSummaryProcessor(unittest.TestCase):
     def test_gen_material_change_files(self):
         change_files = [
             ChangeFile(
-                blob_id="",
+                blob_id=1,
                 sha="",
                 full_name="path/test.py",
                 name="test.py",
@@ -113,7 +113,7 @@ class TestPRSummaryProcessor(unittest.TestCase):
 
     def test_build_status_template_default(self):
         change_file = ChangeFile(
-            blob_id="",
+            blob_id=1,
             sha="",
             full_name="path/test.py",
             name="test.py",
