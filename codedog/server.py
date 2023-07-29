@@ -14,9 +14,7 @@ from fastapi import FastAPI
 from langchain.callbacks import get_openai_callback
 from pydantic import BaseModel
 
-from codedog.actors.reporters.pull_request_review import (
-    PullRequestReviewMarkdownReporter,
-)
+from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains.code_review.base import CodeReviewChain
 from codedog.chains.pr_summary.base import PRSummaryChain
 from codedog.retrievers.github_retriever import GithubRetriever
@@ -117,7 +115,7 @@ async def handle_pull_request(
         summary_result = summary_chain({"pull_request": retriever.pull_request})
         review_result = review_chain({"pull_request": retriever.pull_request})
 
-        reporter = PullRequestReviewMarkdownReporter(
+        reporter = PullRequestReporter(
             pr_summary=summary_result["pr_summary"],
             code_summaries=summary_result["code_summaries"],
             pull_request=retriever.pull_request,
