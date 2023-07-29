@@ -28,8 +28,15 @@ pytest = "^7.2.1"
 pytest-asyncio = "^0.20.3"
 pytest-cov = "^4.0.0"
 python-semantic-release = "^7.34.6"
-python-dateutil = "^2.8.2"
 langchain-visualizer = "^0.0.28"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest-asyncio = "^0.20.3"
+pytest-cov = "^4.0.0"
+python-dateutil = "^2.8.2"
 
 [tool.poetry.group.http]
 optional = true
@@ -57,10 +64,11 @@ priority = "supplemental"
 
 [tool.semantic_release]
 version_variable = ["./codedog/version.py:VERSION", "pyproject.toml:version"]
-build_command = false
+branch = "master"
+build_command = "poetry build"
 upload_to_pypi = false
 upload_to_repository = false
-upload_to_release = false
+upload_to_release = true
 commit_message = 'chore(release): release version {version}'
 
 [build-system]
