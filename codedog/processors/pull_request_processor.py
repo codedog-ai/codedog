@@ -103,6 +103,6 @@ class PullRequestProcessor(Localization):
         return self._status_template_functions
 
     @classmethod
-    @lru_cache(maxsize=10)
-    def from_args(cls, lang="en") -> PullRequestProcessor:
-        return cls(lang)
+    @lru_cache(maxsize=1)
+    def build(cls) -> PullRequestProcessor:
+        return cls()

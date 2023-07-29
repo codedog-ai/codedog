@@ -5,8 +5,7 @@ from codedog.processors import PullRequestProcessor
 from codedog.templates import template_en
 
 
-class PRSummaryMDReporter(Reporter, Localization):
-    # TODO:localization
+class PRSummaryMarkdownReporter(Reporter, Localization):
     pr_processor = PullRequestProcessor()
 
     def __init__(
@@ -63,7 +62,9 @@ class PRSummaryMDReporter(Reporter, Localization):
                 curr_report
             )
 
-        return self.template.REPORT_FILE_CHANGES.format(
-            major_changes="\n".join(major_changes_report),
-            changes="\n".join(changes_report),
+        report_major = self.template.REPORT_FILE_CHANGES_MAJOR.format(
+            major_changes="\n".join(major_changes_report) if major_changes_report else "",
         )
+        report = self.template.REPORT_FILE_CHANGES.format(changes="\n".join(changes_report) if changes_report else "")
+
+        return f"{report_major}\n{report}\n"

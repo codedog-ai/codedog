@@ -82,7 +82,31 @@ MATERIAL_PR_METADATA = """Pull Request Metadata:
 ---
 """
 
+# --- PR Markdown Report ------------------------------------------------------
+REPORT_PR_REVIEW = """# [{repo_name} #{pr_number} - {pr_name}]({url}) Pull Request Report
+
+*powered by GPT and {project} {version}*
+
+{telemetry}
+
+
+{pr_report}
+
+
+{cr_report}
+
+"""
+
+
+REPORT_TELEMETRY = """## Execution
+- Start at: {start_time}
+- Time usage: {time_usage:.2f}s
+- Openai api tokens: {tokens}
+- Openai api costs: ${cost:.4f}
+"""
+
 # --- PR Summary Markdown Report ----------------------------------------------
+
 REPORT_PR_SUMMARY = """
 ## PR Summary
 
@@ -92,11 +116,12 @@ REPORT_PR_SUMMARY = """
 ### Change Details
 {file_changes}
 
-<detail>
-<summary> Change File List </summary>
+<details>
+<summary><h3>Change File List</h3></summary>
+
 {change_overview}
-</detail>
----
+
+</details>
 """
 
 REPORT_PR_SUMMARY_OVERVIEW = """{type_desc}
@@ -121,12 +146,27 @@ REPORT_PR_TYPE_DESC_MAPPING = {
 
 REPORT_CHANGE_OVERVIEW = """| **[{name}]({url} "{full_name}")** | {content} |"""
 
-REPORT_FILE_CHANGES = """
-| Main Changes | Description |
+REPORT_FILE_CHANGES_MAJOR = """
+| Major Changes | Description |
 |---|---|
 {major_changes}
+"""
 
+REPORT_FILE_CHANGES = """
 | Changes | Description |
 |---|---|
 {changes}
+"""
+
+# --- Code Review Markdown Report ---------------------------------------------
+REPORT_CODE_REVIEW = """## Code Review (preview)
+
+*This feature is still under test. Suggestions are given by AI and might be incorrect.*
+
+{feedback}
+
+"""
+REPORT_CODE_REVIEW_SEGMENT = """**[{full_name}]({url})**
+
+{review}
 """

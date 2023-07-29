@@ -13,17 +13,18 @@ class Localization:
     }
 
     def __init__(self, language="en"):
-        assert language in self.templates
-        assert language in self.grimoires
-        self._lang = language
+        if language not in self.templates or language not in self.grimoires:
+            raise ValueError(f"Unsupported Language: {language}")
+        self._language = language
 
     @property
-    def lang(self):
-        return self.lang
+    def language(self):
+        return self._language
 
     @property
     def template(self):
-        return self.templates[self._lang]
+        return self.templates[self.language]
 
+    @property
     def grimoire(self):
-        return self.grimoires[self._lang]
+        return self.grimoires[self.language]

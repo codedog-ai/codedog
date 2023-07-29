@@ -1,22 +1,23 @@
-import json
 import os
 import time
 
 import openai
-from fastapi.encoders import jsonable_encoder
 from github import Github
 from langchain.callbacks import get_openai_callback
 from langchain_visualizer import visualize
 
+from codedog.actors.reporters.pull_request_review import (
+    PullRequestReviewMarkdownReporter,
+)
 from codedog.chains import CodeReviewChain, PRSummaryChain
 from codedog.retrievers import GithubRetriever
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 
 github_token = os.environ.get("GITHUB_TOKEN", "")
 gh = Github(github_token)
-retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
+# retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
 # retriever = GithubRetriever(gh, "ClickHouse/ClickHouse", 49113)
-# retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
+retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
 
 openai_proxy = os.environ.get("OPENAI_PROXY", "")
 if openai_proxy:
@@ -27,24 +28,44 @@ review_chain = CodeReviewChain.from_llm(llm=load_gpt_llm(), verbose=True)
 
 
 def pr_summary():
-    with get_openai_callback() as cb:
-        result = summary_chain({"pull_request": retriever.pull_request}, include_run_info=True)
-        print(json.dumps(jsonable_encoder(result), ensure_ascii=False, indent=4))
-        print(f"Summary cost is: ${cb.total_cost:.4f}")
+    result = summary_chain({"pull_request": retriever.pull_request}, include_run_info=True)
+    return result
 
 
 def code_review():
+    result = review_chain({"pull_request": retriever.pull_request}, include_run_info=True)
+    return result
+
+
+def report():
+    t = time.time()
     with get_openai_callback() as cb:
-        result = review_chain({"pull_request": retriever.pull_request}, include_run_info=True)
-        print(json.dumps(jsonable_encoder(result), ensure_ascii=False, indent=4))
-        print(f"Review cost is: ${cb.total_cost:.4f}")
+        p = pr_summary()
+        p_cost = cb.total_cost
+        print(f"Summary cost is: ${p_cost:.4f}")
+
+        c = code_review()
+        c_cost = cb.total_cost - p_cost
+
+        print(f"Review cost is: ${c_cost:.4f}")
+        reporter = PullRequestReviewMarkdownReporter(
+            pr_summary=p["pr_summary"],
+            code_summaries=p["code_summaries"],
+            pull_request=retriever.pull_request,
+            code_reviews=c["code_reviews"],
+            telemetry={
+                "start_time": t,
+                "time_usage": time.time() - t,
+                "cost": cb.total_cost,
+                "tokens": cb.total_tokens,
+            },
+        )
+    return reporter.report()
 
 
 async def run():
-    with get_openai_callback() as cb:
-        # pr_summary()
-        code_review()
-        print(f"Total cost is: ${cb.total_cost:.4f}")
+    result = report()
+    print(result)
 
 
 visualize(run)

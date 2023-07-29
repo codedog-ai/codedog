@@ -1,6 +1,6 @@
 import unittest
 
-from codedog.actors import PRSummaryMDReporter  # 请替换为你的模块
+from codedog.actors import PRSummaryMarkdownReporter  # 请替换为你的模块
 from codedog.actors.reporters.base import Reporter
 from codedog.localization import Localization
 from codedog.models import ChangeFile, ChangeSummary, PRSummary, PRType, PullRequest
@@ -41,10 +41,10 @@ mock_pull_request = PullRequest(
 
 class TestPRSummaryMDReporter(unittest.TestCase):
     def setUp(self):
-        self.reporter = PRSummaryMDReporter(mock_pr_summary, mock_code_summaries, mock_pull_request)
+        self.reporter = PRSummaryMarkdownReporter(mock_pr_summary, mock_code_summaries, mock_pull_request)
 
     def test_init(self):
-        self.assertIsInstance(self.reporter, PRSummaryMDReporter)
+        self.assertIsInstance(self.reporter, PRSummaryMarkdownReporter)
         self.assertIsInstance(self.reporter, Reporter)
         self.assertIsInstance(self.reporter, Localization)
         self.assertEqual(self.reporter._pr_summary, mock_pr_summary)

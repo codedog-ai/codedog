@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import itertools
 import re
+from os import environ as env
 
 from github import Github
 from github.Commit import Commit as GithubCommit
@@ -23,6 +26,7 @@ from codedog.models import (
 from codedog.models.diff import DiffSegment
 from codedog.retrievers.base import Retriever
 from codedog.utils.diff_utils import parse_patch_file
+from codedog.utils.github_utils import load_github_client
 
 
 class GithubRetriever(Retriever):
@@ -43,20 +47,19 @@ class GithubRetriever(Retriever):
         self,
         client: Github,
         repository_name_or_id: str or int,
-        pull_request_id: int,
+        pull_request_number: int,
     ):
-        """_summary_
+        """Connect to github remote server and retrieve pull request data.
 
         Args:
-            client (Github): _description_
-            repository_name_or_id (strorint): _description_
-            pull_request_id (int): _description_
-            base_url (str, optional): _description_. Defaults to None.
+            client (github.Github): github client from pyGithub
+            repository_name_or_id (str or int): repository name or id
+            pull_request_number (int): pull request number (not global id)
         """
 
         # --- github model ---
         self._git_repository: GHRepo = client.get_repo(repository_name_or_id)
-        self._git_pull_request: GHPullRequest = self._git_repository.get_pull(pull_request_id)
+        self._git_pull_request: GHPullRequest = self._git_repository.get_pull(pull_request_number)
 
         # --- codedog model ---
         self._repository: Repository = self._build_repository(self._git_repository)
@@ -107,6 +110,7 @@ class GithubRetriever(Retriever):
         return PullRequest(
             pull_request_id=git_pr.id,
             repository_id=git_pr.head.repo.id,
+            pull_request_number=git_pr.number,
             title=git_pr.title,
             description=git_pr.body if git_pr is not None else "",
             url=git_pr.html_url,
@@ -184,6 +188,7 @@ class GithubRetriever(Retriever):
         patched_file: PatchedFile = self._build_patched_file(git_file)
         patched_segs: list[DiffSegment] = self._build_patched_file_segs(patched_file)
 
+        # TODO: retrive long content from blob.
         return DiffContent(
             add_count=patched_file.added,
             remove_count=patched_file.removed,
@@ -233,11 +238,16 @@ class GithubRetriever(Retriever):
             message=git_commit.commit.message,
         )
 
+    @classmethod
+    def from_intallation_id(
+        cls, installation_id: int, repository_name_or_id: str or int, pull_request_number: int
+    ) -> GithubRetriever:
+        client = load_github_client(installation_id=installation_id)
+        return cls(client, repository_name_or_id, pull_request_number)
+
 
 if __name__ == "__main__":
     import os
-
-    from github import Github
 
     client = Github(os.environ.get("GITHUB_TOKEN"))
     retriever = GithubRetriever(client, "codedog-ai/codedog", 2)
