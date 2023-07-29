@@ -1,5 +1,5 @@
-import os
 import time
+from os import environ as env
 
 import openai
 from github import Github
@@ -13,13 +13,13 @@ from codedog.chains import CodeReviewChain, PRSummaryChain
 from codedog.retrievers import GithubRetriever
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 
-github_token = os.environ.get("GITHUB_TOKEN", "")
+github_token = env.get("GITHUB_TOKEN", "")
 gh = Github(github_token)
-# retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
+retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
+# retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
 # retriever = GithubRetriever(gh, "ClickHouse/ClickHouse", 49113)
-retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
 
-openai_proxy = os.environ.get("OPENAI_PROXY", "")
+openai_proxy = env.get("OPENAI_PROXY", "")
 if openai_proxy:
     openai.proxy = openai_proxy
 

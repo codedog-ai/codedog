@@ -237,21 +237,3 @@ class GithubRetriever(Retriever):
             url=git_commit.url,
             message=git_commit.commit.message,
         )
-
-    @classmethod
-    def from_intallation_id(
-        cls, installation_id: int, repository_name_or_id: str or int, pull_request_number: int
-    ) -> GithubRetriever:
-        client = load_github_client(installation_id=installation_id)
-        return cls(client, repository_name_or_id, pull_request_number)
-
-
-if __name__ == "__main__":
-    import os
-
-    client = Github(os.environ.get("GITHUB_TOKEN"))
-    retriever = GithubRetriever(client, "codedog-ai/codedog", 2)
-    print(retriever.pull_request.json(ensure_ascii=False, indent=4))
-    print(retriever.changed_files[0].json(ensure_ascii=False, indent=4))
-    print(retriever.get_blob(retriever._git_pull_request.get_files()[0].sha))
-    print(retriever.get_commit(retriever._git_pull_request.head.sha))
