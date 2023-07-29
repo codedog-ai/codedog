@@ -1,21 +1,21 @@
 [tool.poetry]
 name = "codedog"
-version = "0.0.0"
-description = "Review your Github/Gitlab pr using ChatGPT."
-authors = ["Arcadia822 <arcadia822@gmail.com>"]
+authors = ["Arcadia <arcadia822@gmail.com>", "Linpp "]
+version = "0.5.0"
+description = "Codedog reviews your pull request using llm."
 license = "MIT"
 readme = "README.md"
-include = ["codedog", "server.py"]
+repository = "https://www.github.com/codedog-ai/codedog"
+include = ["codedog"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-langchain = "^0.0.240"
-openai = "^0.27.4"
+langchain = "^0.0.247"
+openai = "^0.27.8"
 pydantic = "^1.10.7"
 python-gitlab = "^3.14.0"
 pygithub = "^1.58.2"
 unidiff = "^0.7.5"
-pyjwt = "^2.8.0"
 
 [tool.poetry.group.dev]
 optional = true
@@ -56,7 +56,7 @@ name = "PyPI"
 priority = "supplemental"
 
 [tool.semantic_release]
-version_variable = "./codedog/version.py:VERSION"
+version_variable = ["./codedog/version.py:VERSION", "pyproject.toml:version"]
 build_command = false
 upload_to_pypi = false
 upload_to_repository = false
