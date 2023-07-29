@@ -53,9 +53,3 @@ We have a demo server for you to try.
 
     poetry run demoserver
     ```
-
-## How To Use
-
-### Github
-
-### Gitlab
