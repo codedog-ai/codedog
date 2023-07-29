@@ -49,18 +49,8 @@ uvicorn = "^0.23.1"
 demoserver = "codedog.server:start"
 
 [[tool.poetry.source]]
-name = "aliyun"
-url = "http://mirrors.aliyun.com/pypi/simple"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "Tsinghua"
-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
-priority = "primary"
-
-[[tool.poetry.source]]
 name = "PyPI"
-priority = "supplemental"
+priority = "default"
 
 [tool.semantic_release]
 version_variable = ["./codedog/version.py:VERSION", "pyproject.toml:version"]

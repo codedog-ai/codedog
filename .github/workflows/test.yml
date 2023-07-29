@@ -27,7 +27,7 @@ jobs:
                 poetry-version: '1.5.1'
 
             - name: Install Dependencies
-              run: poetry install --with dev
+              run: poetry install --with test
 
             - name: Run Test
               run:
