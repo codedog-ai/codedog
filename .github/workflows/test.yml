@@ -14,20 +14,24 @@ permissions:
 jobs:
     test:
         runs-on: ubuntu-latest
-
+        strategy:
+            matrix:
+              python-version:
+                - "3.10"
+        name: Python ${{ matrix.python-version }}
         steps:
             - uses: actions/checkout@v1
               with:
                 fetch-depth: 1
 
-            - name: "Setup Python, Poetry and Dependencies"
-              uses: packetcoders/action-setup-cache-python-poetry@main
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: "./.github/actions/poetry_setup"
               with:
-                python-version: '3.10'
-                poetry-version: '1.5.1'
-
-            - name: Install Dependencies
-              run: poetry install --with test
+                python-version: ${{ matrix.python-version }}
+                poetry-version: "1.5.1"
+                install-command: |
+                    echo "Installing dependencies with poetry..."
+                    poetry install --with test
 
             - name: Run Test
               run:
