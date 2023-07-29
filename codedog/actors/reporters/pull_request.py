@@ -9,29 +9,33 @@ from codedog.models import ChangeSummary, CodeReview, PRSummary, PullRequest
 from codedog.version import PROJECT, VERSION
 
 
-class PullRequestReviewMarkdownReporter(Reporter, Localization):
+class PullRequestReporter(Reporter, Localization):
     def __init__(
         self,
         pr_summary: PRSummary,
         code_summaries: list[ChangeSummary],
         pull_request: PullRequest,
         code_reviews: List[CodeReview],
-        telemetry: Dict[str, Any],
+        telemetry: Dict[str, Any] = None,
         language="en",
     ):
         self._pr_summary = pr_summary
         self._code_summaries = code_summaries
         self._pull_request = pull_request
         self._code_reviews = code_reviews
-        self._telemetry = telemetry
+        self._telemetry = telemetry if telemetry else {}
         super().__init__(language=language)
 
     def report(self) -> str:
-        telemetry = self.template.REPORT_TELEMETRY.format(
-            start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
-            time_usage=self._telemetry["time_usage"],
-            cost=self._telemetry["cost"],
-            tokens=self._telemetry["tokens"],
+        telemetry = (
+            self.template.REPORT_TELEMETRY.format(
+                start_time=datetime.datetime.fromtimestamp(self._telemetry["start_time"]).strftime("%Y-%m-%d %H:%M:%S"),
+                time_usage=self._telemetry["time_usage"],
+                cost=self._telemetry["cost"],
+                tokens=self._telemetry["tokens"],
+            )
+            if self._telemetry
+            else ""
         )
         pr_report = PRSummaryMarkdownReporter(
             pr_summary=self._pr_summary,

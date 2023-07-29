@@ -1,6 +1,6 @@
 import unittest
 
-from codedog.actors import CodeReviewMarkdownReporter
+from codedog.actors.reporters.code_review import CodeReviewMarkdownReporter
 from codedog.models.change_file import ChangeFile, ChangeStatus
 from codedog.models.code_review import CodeReview
 

@@ -1,8 +1,6 @@
 import unittest
 
-from codedog.actors.reporters.pull_request_review import (
-    PullRequestReviewMarkdownReporter,
-)
+from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.models import (
     ChangeFile,
     ChangeSummary,
@@ -75,7 +73,7 @@ class TestPullRequestReviewMarkdownReporter(unittest.TestCase):
         self.mock_telemetry = {"start_time": 1618417791, "time_usage": 0.232, "cost": 0.1234, "tokens": 123}
 
         # 创建测试对象
-        self.reporter = PullRequestReviewMarkdownReporter(
+        self.reporter = PullRequestReporter(
             pr_summary=self.mock_pr_summary,
             code_summaries=self.mock_code_summary,
             pull_request=self.mock_pull_request,

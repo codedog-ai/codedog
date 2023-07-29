@@ -38,9 +38,9 @@ settings:
 
 ## Usage
 
-### local test
+### Github Example with GPT4
 
-- see `examples/github_review.py`
+check `example/github_review.py`
 
 ### server
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import itertools
 import re
-from os import environ as env
 
 from github import Github
 from github.Commit import Commit as GithubCommit
@@ -26,7 +25,6 @@ from codedog.models import (
 from codedog.models.diff import DiffSegment
 from codedog.retrievers.base import Retriever
 from codedog.utils.diff_utils import parse_patch_file
-from codedog.utils.github_utils import load_github_client
 
 
 class GithubRetriever(Retriever):

@@ -6,9 +6,7 @@ from github import Github
 from langchain.callbacks import get_openai_callback
 from langchain_visualizer import visualize
 
-from codedog.actors.reporters.pull_request_review import (
-    PullRequestReviewMarkdownReporter,
-)
+from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains import CodeReviewChain, PRSummaryChain
 from codedog.retrievers import GithubRetriever
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
@@ -48,7 +46,7 @@ def report():
         c_cost = cb.total_cost - p_cost
 
         print(f"Review cost is: ${c_cost:.4f}")
-        reporter = PullRequestReviewMarkdownReporter(
+        reporter = PullRequestReporter(
             pr_summary=p["pr_summary"],
             code_summaries=p["code_summaries"],
             pull_request=retriever.pull_request,

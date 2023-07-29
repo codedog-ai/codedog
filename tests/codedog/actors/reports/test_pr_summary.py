@@ -1,7 +1,7 @@
 import unittest
 
-from codedog.actors import PRSummaryMarkdownReporter  # 请替换为你的模块
 from codedog.actors.reporters.base import Reporter
+from codedog.actors.reporters.pr_summary import PRSummaryMarkdownReporter
 from codedog.localization import Localization
 from codedog.models import ChangeFile, ChangeSummary, PRSummary, PRType, PullRequest
 from codedog.models.change_file import ChangeStatus
