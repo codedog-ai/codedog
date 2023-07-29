@@ -8,17 +8,9 @@ Review your Github/Gitlab PR with ChatGPT
 
 ![Design](docs/design.png)
 
-## Setup Project
-
-Development
-
-```shell
-poetry install --with dev, http
-```
-
 ## Configuration
 
-Codedog currently load config from environment variables .
+Codedog currently load config from environment variables.
 
 settings:
 
@@ -53,3 +45,8 @@ We have a demo server for you to try.
 
     poetry run demoserver
     ```
+## Development
+
+```shell
+poetry install --with dev, test, http
+```

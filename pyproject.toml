@@ -1,12 +1,17 @@
 [tool.poetry]
 name = "codedog"
-authors = ["Arcadia <arcadia822@gmail.com>", "Linpp "]
 version = "0.5.0"
-description = "Codedog reviews your pull request using llm."
 license = "MIT"
 readme = "README.md"
+authors = ["Arcadia <arcadia822@gmail.com>", "Linpp "]
+description = "Codedog reviews your pull request using llm."
 repository = "https://www.github.com/codedog-ai/codedog"
-include = ["codedog"]
+homepage = "https://www.codedog.ai"
+keywords = ["code review", "langchain", "llm"]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/codedog-ai/codedog/issues"
+"Discord" = "https://discord.gg/8TfqpFC4"
 
 [tool.poetry.dependencies]
 python = "^3.10"
