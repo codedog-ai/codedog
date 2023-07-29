@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2023-07-29)
+
+### Feature
+
+* :sparkles: read github private key from env ([`1c388f3`](https://github.com/codedog-ai/codedog/commit/1c388f3bc5117f89fb8fa68d239d3eb837eeec7d))
+
+### Fix
+
+* **PR Summary:** :bug: Handle github event none value ([`7fbe9f3`](https://github.com/codedog-ai/codedog/commit/7fbe9f3ff216cdbfc4f1681c1dfb8990ea46f9d1))
+
 ## v0.4.0 (2023-07-21)
 
 ### Fix
