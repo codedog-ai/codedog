@@ -16,17 +16,12 @@ settings:
 
 | Config Name                   | Required | Default           | Description                             |
 | ----------------------------- | -------- | ----------------- | --------------------------------------- |
-| CODEDOG_SERVER                | No       | 0.0.0.0           | Server address                          |
-| CODEDOG_PORT                  | No       | 32167             | Server port                             |
-| CODEDOG_WORKER_NUM            | No       | 1                 | Server thread number                    |
-| OPENAI_API_KEY                | Yes      |                   | Api Key for calling openai gpt4 api     |
-| OPENAI_PROXY                  | No       |                   | Openai proxy                            |
+| OPENAI_API_KEY                | Yes      |                   | Api Key for calling openai gpt api      |
 | AZURE_OPENAI                  | No       |                   | Use azure openai gpt 3.5 if not blank   |
 | AZURE_OPENAI_API_KEY          | No       |                   | Azure openai api key                    |
 | AZURE_OPENAI_API_BASE         | No       |                   | Azure openai api base                   |
 | AZURE_OPENAI_DEPLOYMENT_ID    | No       |                   | Azure openai deployment id for gpt 3.5  |
 | AZURE_OPENAI_EMBEDDING_DEP_ID | No       |                   | Azure openai deployment id for embedding|
-| GITHUB_TOKEN                  | No       |                   | Retrieve github pr data and comment     |
 
 ## Usage
 

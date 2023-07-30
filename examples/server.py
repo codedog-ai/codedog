@@ -5,12 +5,10 @@ import asyncio
 import logging
 import threading
 import time
-import traceback
-from os import environ as env
 
-import openai
 import uvicorn
 from fastapi import FastAPI
+from github import Github
 from langchain.callbacks import get_openai_callback
 from pydantic import BaseModel
 
@@ -19,7 +17,6 @@ from codedog.chains.code_review.base import CodeReviewChain
 from codedog.chains.pr_summary.base import PRSummaryChain
 from codedog.retrievers.github_retriever import GithubRetriever
 from codedog.utils import init_local_logging
-from codedog.utils.github_utils import load_github_client
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 from codedog.version import VERSION
 
@@ -28,13 +25,12 @@ init_local_logging()
 logger = logging.getLogger(__name__)
 
 # config
-host = env.get("CODEDOG_SERVER", "0.0.0.0")
-port = int(env.get("CODEDOG_PORT", 32167))
-worker_num = int(env.get("CODEDOG_WORKER_NUM", 1))
-openai_proxy = env.get("OPENAI_PROXY", "")
-if openai_proxy:
-    openai.proxy = openai_proxy
-github_token = env.get("GITHUB_TOKEN", "")
+host = "127.0.0.1"
+port = 32167
+worker_num = 1
+
+
+github_token = "your github token here"
 
 # fastapi
 app = FastAPI()
@@ -47,19 +43,8 @@ class GithubEvent(BaseModel):
     repository: dict
 
 
-class Response(BaseModel):
-    message: str
-    code: int = 0
-
-
-class CodedogError(Exception):
-    def __init__(self, message: str = None, code: int = -1):
-        self.message = "" if message is None else message
-        self.code = code
-
-
-@app.post("/github", response_model=Response)
-async def github(event: GithubEvent) -> Response:
+@app.post("/github")
+async def github(event: GithubEvent):
     """Github webhook.
 
     Args:
@@ -69,12 +54,9 @@ async def github(event: GithubEvent) -> Response:
     """
     try:
         message = handle_github_event(event)
-    except CodedogError as e:
-        return Response(message=e.message, code=e.code)
-    except Exception:
-        logger.fatal("Internal Service Error:\n%s", traceback.format_exc())
-        return Response(message="Internal Service Error", code=-2)
-    return Response(message=message, code=0)
+    except Exception as e:
+        return str(e)
+    return message
 
 
 def handle_github_event(event: GithubEvent, **kwargs) -> str:
@@ -107,7 +89,7 @@ async def handle_pull_request(
     **kwargs,
 ):
     t = time.time()
-    client = load_github_client(token=github_token)
+    client = Github(github_token)
     retriever = GithubRetriever(
         client=client,
         repository_name_or_id=repository_id,
@@ -152,17 +134,17 @@ def _github_event_filter(event: GithubEvent) -> bool:
     pull_request = event.pull_request
 
     if not pull_request:
-        raise CodedogError("Not a pull request event.", 1)
+        raise RuntimeError("Not a pull request event.")
     if event.action not in ("opened"):
-        raise CodedogError("Not a pull request open event.", 1)
+        raise RuntimeError("Not a pull request open event.")
     if pull_request.get("state", "") != "open":
-        raise CodedogError("Pull request status is not open.", 1)
+        raise RuntimeError("Pull request status is not open.")
     if pull_request.get("draft", False):
-        raise CodedogError("Pull request is a draft", 1)
+        raise RuntimeError("Pull request is a draft")
 
 
 def start():
-    uvicorn.run("codedog.server:app", host=host, port=port, workers=worker_num)
+    uvicorn.run("examples.server:app", host=host, port=port, workers=worker_num)
     logger.info(f"Codedog v{VERSION}: server start.")
 
 
