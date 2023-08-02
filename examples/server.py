@@ -16,13 +16,8 @@ from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains.code_review.base import CodeReviewChain
 from codedog.chains.pr_summary.base import PRSummaryChain
 from codedog.retrievers.github_retriever import GithubRetriever
-from codedog.utils import init_local_logging
 from codedog.utils.langchain_utils import load_gpt4_llm, load_gpt_llm
 from codedog.version import VERSION
-
-# logging
-init_local_logging()
-logger = logging.getLogger(__name__)
 
 # config
 host = "127.0.0.1"
@@ -65,13 +60,7 @@ def handle_github_event(event: GithubEvent, **kwargs) -> str:
     repository_id: int = event.repository.get("id", 0)
     pull_request_number: int = event.number
 
-    logger.info(
-        "Retrive pull request from Github",
-        extra={
-            "github.repo.id": repository_id,
-            "github.pull.number": pull_request_number,
-        },
-    )
+    logging.info(f"Retrive pull request from Github {repository_id} {pull_request_number}")
 
     thread = threading.Thread(
         target=asyncio.run, args=(handle_pull_request(repository_id, pull_request_number, **kwargs),)
@@ -145,7 +134,7 @@ def _github_event_filter(event: GithubEvent) -> bool:
 
 def start():
     uvicorn.run("examples.server:app", host=host, port=port, workers=worker_num)
-    logger.info(f"Codedog v{VERSION}: server start.")
+    logging.info(f"Codedog v{VERSION}: server start.")
 
 
 if __name__ == "__main__":
