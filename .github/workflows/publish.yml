@@ -1,0 +1,22 @@
+name: Build and publish to pypi
+on:
+    push:
+        tags:
+            - v*
+
+
+jobs:
+    build_and_publish_to_pypi:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v1
+              with:
+                fetch-depth: 1
+
+            - name: Build and publish to pypi
+              uses: JRubics/poetry-publish@v1.17
+              with:
+                python_version: "3.10.10"
+                poetry_version: "==1.5.1" # (PIP version specifier syntax)
+                pypi_token: ${{ secrets.PYPI_TOKEN }}
