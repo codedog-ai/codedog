@@ -2,4 +2,4 @@
 in-project = true
 
 [installer]
-modern-installation = false
+modern-installation = true

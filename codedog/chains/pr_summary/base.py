@@ -78,7 +78,7 @@ class PRSummaryChain(Chain):
 
         pr: PullRequest = inputs["pull_request"]
 
-        code_summary_inputs = self._process_code_summary_inputs(pr, run_manager)
+        code_summary_inputs = self._process_code_summary_inputs(pr, _run_manager)
         code_summary_outputs = (
             self.code_summary_chain.apply(code_summary_inputs, callbacks=_run_manager.get_child(tag="CodeSummary"))
             if code_summary_inputs
@@ -104,7 +104,7 @@ class PRSummaryChain(Chain):
 
         pr: PullRequest = inputs["pull_request"]
 
-        code_summary_inputs = self._process_code_summary_inputs(pr)
+        code_summary_inputs = self._process_code_summary_inputs(pr, _run_manager)
         code_summary_outputs = (
             await self.code_summary_chain.aapply(code_summary_inputs, callbacks=_run_manager.get_child())
             if code_summary_inputs
@@ -119,9 +119,7 @@ class PRSummaryChain(Chain):
         return self._process_result(pr_summary_output, code_summaries)
 
     def _process_code_summary_inputs(
-        self,
-        pr: PullRequest,
-        run_manager: Optional[CallbackManagerForChainRun] = None,
+        self, pr: PullRequest, run_manager: CallbackManagerForChainRun
     ) -> List[Dict[str, str]]:
         input_data = []
         code_files = self.processor.get_diff_code_files(pr)
