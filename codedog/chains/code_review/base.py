@@ -53,7 +53,7 @@ class CodeReviewChain(Chain):
         pr: PullRequest = inputs["pull_request"]
         code_files: List[ChangeFile] = self.processor.get_diff_code_files(pr)
 
-        code_review_inputs = self._process_code_review_inputs(code_files, _run_manager)
+        code_review_inputs = self._process_code_review_inputs(code_files)
         code_review_outputs = (
             self.chain.apply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
             if code_review_inputs
@@ -68,12 +68,12 @@ class CodeReviewChain(Chain):
         run_manager: Optional[AsyncCallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
         _run_manager = run_manager or AsyncCallbackManagerForChainRun.get_noop_manager()
-        _run_manager.on_text(inputs["pull_request"].json() + "\n")
+        await _run_manager.on_text(inputs["pull_request"].json() + "\n")
 
         pr: PullRequest = inputs["pull_request"]
         code_files: List[ChangeFile] = self.processor.get_diff_code_files(pr)
 
-        code_review_inputs = self._process_code_review_inputs(code_files, _run_manager)
+        code_review_inputs = self._process_code_review_inputs(code_files)
         code_review_outputs = (
             await self.chain.aapply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
             if code_review_inputs
@@ -85,7 +85,6 @@ class CodeReviewChain(Chain):
     def _process_code_review_inputs(
         self,
         code_files: List[ChangeFile],
-        run_manager: CallbackManagerForChainRun or AsyncCallbackManagerForChainRun,
     ) -> List[Dict[str, str]]:
         input_data = []
         for code_file in code_files:
@@ -96,7 +95,6 @@ class CodeReviewChain(Chain):
             }
             input_data.append(input_item)
 
-        run_manager.on_text(f"Prepare code diff content for {len(input_data)} files.\n")
         return input_data
 
     def _process_result(self, code_files: List[ChangeFile], code_review_outputs: List):

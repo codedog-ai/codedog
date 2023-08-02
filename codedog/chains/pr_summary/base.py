@@ -78,7 +78,7 @@ class PRSummaryChain(Chain):
 
         pr: PullRequest = inputs["pull_request"]
 
-        code_summary_inputs = self._process_code_summary_inputs(pr, _run_manager)
+        code_summary_inputs = self._process_code_summary_inputs(pr)
         code_summary_outputs = (
             self.code_summary_chain.apply(code_summary_inputs, callbacks=_run_manager.get_child(tag="CodeSummary"))
             if code_summary_inputs
@@ -100,11 +100,11 @@ class PRSummaryChain(Chain):
         run_manager: Optional[AsyncCallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
-        _run_manager.on_text(inputs["pull_request"].json() + "\n")
+        await _run_manager.on_text(inputs["pull_request"].json() + "\n")
 
         pr: PullRequest = inputs["pull_request"]
 
-        code_summary_inputs = self._process_code_summary_inputs(pr, _run_manager)
+        code_summary_inputs = self._process_code_summary_inputs(pr)
         code_summary_outputs = (
             await self.code_summary_chain.aapply(code_summary_inputs, callbacks=_run_manager.get_child())
             if code_summary_inputs
@@ -118,9 +118,7 @@ class PRSummaryChain(Chain):
 
         return self._process_result(pr_summary_output, code_summaries)
 
-    def _process_code_summary_inputs(
-        self, pr: PullRequest, run_manager: CallbackManagerForChainRun
-    ) -> List[Dict[str, str]]:
+    def _process_code_summary_inputs(self, pr: PullRequest) -> List[Dict[str, str]]:
         input_data = []
         code_files = self.processor.get_diff_code_files(pr)
         for code_file in code_files:
@@ -131,7 +129,6 @@ class PRSummaryChain(Chain):
             }
             input_data.append(input_item)
 
-        run_manager.on_text(f"Prepare code diff content for {len(input_data)} files.\n")
         return input_data
 
     def _process_pr_summary_input(self, pr: PullRequest, code_summaries: List[ChangeSummary]) -> Dict[str, str]:
