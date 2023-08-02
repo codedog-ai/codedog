@@ -2,14 +2,20 @@
 
 
 
-## v0.5.2 (2023-08-02)
+## v0.5.3 (2023-08-02)
 
 ### Fix
 
-* fix(Chain): :bug: fix asyncio missing await ([`3845382`](https://github.com/codedog-ai/codedog/commit/3845382499b65b2d60b58ffbaa7fcf7f522ef859))
+* fix(actor): :bug: fix report changes file print table even with no file change (#21)
+
+fix(actor): :bug: fix report changes file print table even with no file change ([`577745f`](https://github.com/codedog-ai/codedog/commit/577745fbd93c876bfcdcbe48a755a3db2856ff72))
+
+* fix(chain): :bug: fix async call broken (#20)
+
+fix(chain): :bug: fix async call broken ([`7b29ddd`](https://github.com/codedog-ai/codedog/commit/7b29ddd51068987e5df0a95c4e86e9a3bb1544a2))
 
 
-## v0.5.1 (2023-08-02)
+## v0.5.2 (2023-08-02)
 
 ### Build
 
@@ -18,6 +24,8 @@
 * build: :memo: improve documentation ([`fd0d8bf`](https://github.com/codedog-ai/codedog/commit/fd0d8bf36796f48bfd721879583bff680de1656b))
 
 ### Chore
+
+* chore(release): release version v0.5.2 ([`29e647c`](https://github.com/codedog-ai/codedog/commit/29e647cec3669ceac7947648b73b087bef306a24))
 
 * chore(release): release version v0.5.1 ([`f10558e`](https://github.com/codedog-ai/codedog/commit/f10558eb0b42068ccf0df341463a6604d7c1574f))
 
@@ -28,6 +36,8 @@
 * ci: :green_heart: add poetry cache ([`5c977de`](https://github.com/codedog-ai/codedog/commit/5c977dec2c7dce01da3ddeadd15116fc1df8e483))
 
 ### Fix
+
+* fix(Chain): :bug: fix asyncio missing await ([`3845382`](https://github.com/codedog-ai/codedog/commit/3845382499b65b2d60b58ffbaa7fcf7f522ef859))
 
 * fix(Chain): :bug: Fix callback manager usage
 
@@ -72,10 +82,10 @@ feat: :sparkles: read github private key from env ([`7bc2c84`](https://github.co
 
 * Feature: Github Retriever and PR Summary Chain (#9)
 
-* feat: :sparkles: Retriever, Github Retriever, PR Summary Chain
-
-1. Extract code files (by suffix whitelist) from pr change list
-2. Summarize changed file list and there status
+* feat: :sparkles: Retriever, Github Retriever, PR Summary Chain
+
+1. Extract code files (by suffix whitelist) from pr change list
+2. Summarize changed file list and there status
 3. Summarize PR with description, PR Type, major files ([`3105595`](https://github.com/codedog-ai/codedog/commit/310559526480b3be18e3cdce8c3da1a33b1dc654))
 
 * Update issue templates ([`b62ddea`](https://github.com/codedog-ai/codedog/commit/b62ddea805d72c1f3e82134f91a10318c4c96104))
