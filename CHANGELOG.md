@@ -2,6 +2,13 @@
 
 
 
+## v0.5.2 (2023-08-02)
+
+### Fix
+
+* fix(Chain): :bug: fix asyncio missing await ([`3845382`](https://github.com/codedog-ai/codedog/commit/3845382499b65b2d60b58ffbaa7fcf7f522ef859))
+
+
 ## v0.5.1 (2023-08-02)
 
 ### Build
@@ -11,6 +18,8 @@
 * build: :memo: improve documentation ([`fd0d8bf`](https://github.com/codedog-ai/codedog/commit/fd0d8bf36796f48bfd721879583bff680de1656b))
 
 ### Chore
+
+* chore(release): release version v0.5.1 ([`f10558e`](https://github.com/codedog-ai/codedog/commit/f10558eb0b42068ccf0df341463a6604d7c1574f))
 
 * chore: :arrow_up: ([`cc2d3f9`](https://github.com/codedog-ai/codedog/commit/cc2d3f971acfb48d9aeb6d2614831964ed874fd6))
 
