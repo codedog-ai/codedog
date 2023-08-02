@@ -60,13 +60,17 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 priority = "supplemental"
 
 [tool.semantic_release]
-version_variable = ["./codedog/version.py:VERSION", "pyproject.toml:version"]
 branch = "master"
 build_command = "poetry build"
-upload_to_pypi = true
-upload_to_repository = false
-upload_to_release = true
-commit_message = 'chore(release): release version {version}'
+commit_message = 'chore(release): release version v{version}'
+version_variable = ["codedog/version.py:VERSION"]
+version_toml = ["pyproject.toml:tool.poetry.version"]
+
+[tool.semantic_release.remote]
+ignore_token_for_push = true
+
+[tool.semantic_release.publish]
+upload_to_vcs_release = true
 
 [build-system]
 requires = ["poetry-core"]

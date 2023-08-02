@@ -1,49 +1,146 @@
-# Changelog
+# CHANGELOG
 
-<!--next-version-placeholder-->
+
+
+
 
 ## v0.5.0 (2023-07-29)
 
 ### Feature
 
-* :sparkles: read github private key from env ([`1c388f3`](https://github.com/codedog-ai/codedog/commit/1c388f3bc5117f89fb8fa68d239d3eb837eeec7d))
+* feat: :sparkles: read github private key from env ([`1c388f3`](https://github.com/codedog-ai/codedog/commit/1c388f3bc5117f89fb8fa68d239d3eb837eeec7d))
 
 ### Fix
 
-* **PR Summary:** :bug: Handle github event none value ([`7fbe9f3`](https://github.com/codedog-ai/codedog/commit/7fbe9f3ff216cdbfc4f1681c1dfb8990ea46f9d1))
+* fix(PR Summary): :bug: Handle github event none value ([`7fbe9f3`](https://github.com/codedog-ai/codedog/commit/7fbe9f3ff216cdbfc4f1681c1dfb8990ea46f9d1))
 
-## v0.4.0 (2023-07-21)
+### Unknown
+
+* 0.5.0
+
+chore(release): release version 0.5.0 ([`4e74e2e`](https://github.com/codedog-ai/codedog/commit/4e74e2e1d7efb048bea2d5fd7bade5dda8739841))
+
+* Use New Implementation and remove server things. (#11)
+
+* feat(PR Reivew): :sparkles: New implementation of Pull Request Review Chains and Reports ([`449adb8`](https://github.com/codedog-ai/codedog/commit/449adb8bf32335bd3f8d4759198b79acd5372350))
+
+* Merge pull request #10 from codedog-ai/feature/read-private-key-from-env
+
+feat: :sparkles: read github private key from env ([`7bc2c84`](https://github.com/codedog-ai/codedog/commit/7bc2c845a0cf8a0275b6df23a839e1ba4ef7d026))
+
+* Feature: Github Retriever and PR Summary Chain (#9)
+
+* feat: :sparkles: Retriever, Github Retriever, PR Summary Chain
+
+1. Extract code files (by suffix whitelist) from pr change list
+2. Summarize changed file list and there status
+3. Summarize PR with description, PR Type, major files ([`3105595`](https://github.com/codedog-ai/codedog/commit/310559526480b3be18e3cdce8c3da1a33b1dc654))
+
+* Update issue templates ([`b62ddea`](https://github.com/codedog-ai/codedog/commit/b62ddea805d72c1f3e82134f91a10318c4c96104))
+
+* Feature/#1/localization (#7)
+
+* feat: :globe_with_meridians: Localization: support review in English ([`b8efbbc`](https://github.com/codedog-ai/codedog/commit/b8efbbcd1aabd1512fafd1ed3beb9e7a3f5f6423))
+
+
+## v0.4.0 (2023-07-20)
 
 ### Fix
 
-* :bug: Unable to fetch installation_id ([`f170bfb`](https://github.com/codedog-ai/codedog/commit/f170bfb161b65c384bcb0e94a51717bfbd4cae12))
+* fix: :bug: Unable to fetch installation_id ([`f170bfb`](https://github.com/codedog-ai/codedog/commit/f170bfb161b65c384bcb0e94a51717bfbd4cae12))
+
+### Unknown
+
+* 0.4.0
+
+chore(release): release version 0.4.0 ([`961ec78`](https://github.com/codedog-ai/codedog/commit/961ec785de4a08289f37fd81a7c9da0a68ab8de2))
+
 
 ## v0.3.0 (2023-07-20)
 
 ### Feature
 
-* :sparkles: support github app ([`3834bfc`](https://github.com/codedog-ai/codedog/commit/3834bfc7a085317d7e7cf16c7199067fd84cf36f))
+* feat: :sparkles: support github app ([`3834bfc`](https://github.com/codedog-ai/codedog/commit/3834bfc7a085317d7e7cf16c7199067fd84cf36f))
 
-## v0.2.2 (2023-07-19)
+### Unknown
+
+* 0.3.0
+
+chore(release): release version 0.3.0 ([`4399b23`](https://github.com/codedog-ai/codedog/commit/4399b2324bf55a998f6daa76ea7101c8396b826b))
+
+* Merge pull request #6 from codedog-ai/feature/support-github-app
+
+feat: :sparkles: support github app ([`23b70ae`](https://github.com/codedog-ai/codedog/commit/23b70aef0af2f36ab558f624976d19970638aa23))
+
+
+## v0.2.2 (2023-07-18)
 
 ### Fix
 
-* :bug: disable openai proxy configuration ([`1008ba2`](https://github.com/codedog-ai/codedog/commit/1008ba2267f4a4fe7754fa7807ef028563f7e643))
+* fix: :bug: disable openai proxy configuration ([`1008ba2`](https://github.com/codedog-ai/codedog/commit/1008ba2267f4a4fe7754fa7807ef028563f7e643))
+
+### Unknown
+
+* 0.2.2
+
+chore(release): release version 0.2.2 ([`424f8a3`](https://github.com/codedog-ai/codedog/commit/424f8a3ef450885b2b0762c704c51e01ce1efe8e))
+
 
 ## v0.2.1 (2023-07-18)
 
+### Ci
+
+* ci: :green_heart: fix ci ([`04b7026`](https://github.com/codedog-ai/codedog/commit/04b7026c77a609b98e4d95a60402cdc718b27f8d))
+
+* ci: :construction_worker: add version commit message ([`3fcdb95`](https://github.com/codedog-ai/codedog/commit/3fcdb951a68e2b95f6056228c815ad3d2c1c6a84))
+
 ### Fix
 
-* :bug: fix openai proxy init ([`3368bd4`](https://github.com/codedog-ai/codedog/commit/3368bd4a6ea4013e96587efd4871a720e00f27ff))
+* fix: :bug: fix openai proxy init ([`3368bd4`](https://github.com/codedog-ai/codedog/commit/3368bd4a6ea4013e96587efd4871a720e00f27ff))
 
-## v0.2.0 (2023-07-15)
+### Unknown
+
+* 0.2.1
+
+chore(release): release version 0.2.1 ([`542ac48`](https://github.com/codedog-ai/codedog/commit/542ac487e6d173758a879030125dbc93b455250f))
+
+
+## v0.2.0 (2023-07-14)
+
+### Ci
+
+* ci: :green_heart: upload test report ([`a5599cd`](https://github.com/codedog-ai/codedog/commit/a5599cdabd68e6a6fc75442b8d9fd8c0fde2d53f))
+
+* ci: :green_heart: fix permission issue ([`be63524`](https://github.com/codedog-ai/codedog/commit/be635242211578ac6ae1f80931d92723897eb09f))
+
+* ci: 👷 setup auto tagging and release (#4) ([`158ddc2`](https://github.com/codedog-ai/codedog/commit/158ddc217044c739c7cb324c29f6cecfd8071af8))
+
+* ci: :construction_worker: setup semantic release ([`126d3a0`](https://github.com/codedog-ai/codedog/commit/126d3a06866816c07aed6208f8c88d54c0caeeba))
+
+* ci: :green_heart: config semantic release ([`d07566a`](https://github.com/codedog-ai/codedog/commit/d07566a5de24c6cbd0383603777083d88612e5e4))
+
+* ci: :green_heart: update poetry version ([`8127d3e`](https://github.com/codedog-ai/codedog/commit/8127d3e47f1e8be6ff51fe9e8ee7358aef00b68a))
 
 ### Feature
 
-* **telemetry:** :sparkles: collect gpt api cost ([#2](https://github.com/codedog-ai/codedog/issues/2)) ([`14dc92c`](https://github.com/codedog-ai/codedog/commit/14dc92c73b0ade2c6e6754f0a941995f33b1726f))
+* feat(telemetry): :sparkles: collect gpt api cost (#2)
 
-## v0.1.0 (2023-07-14)
+* feat(telemetry): :sparkles: collect gpt api cost ([`14dc92c`](https://github.com/codedog-ai/codedog/commit/14dc92c73b0ade2c6e6754f0a941995f33b1726f))
 
-### Feature
+* feat: :tada: init commit ([`1d6fc33`](https://github.com/codedog-ai/codedog/commit/1d6fc33aefb697fd9fa2423867206906c79094b2))
 
-* :tada: init commit ([`1d6fc33`](https://github.com/Arcadia822/codedog/commit/1d6fc33aefb697fd9fa2423867206906c79094b2))
+### Unknown
+
+* 0.2.0
+
+Automatically generated by python-semantic-release ([`c52bbd6`](https://github.com/codedog-ai/codedog/commit/c52bbd69083663a3ad53991621b2ce25ae7bca62))
+
+* Fix/housekeeping (#3)
+
+housekeeping ([`4d11ac7`](https://github.com/codedog-ai/codedog/commit/4d11ac7d9d3a5a48f2eb2ca11ceb7499ecf7905c))
+
+* housekeeping ([`d5ad367`](https://github.com/codedog-ai/codedog/commit/d5ad36797c99f46ad3747ae7de3af5575192be66))
+
+* 0.1.0
+
+Automatically generated by python-semantic-release ([`d0f10da`](https://github.com/codedog-ai/codedog/commit/d0f10da954d654d91f0191ddaeaf5c02a05c3c42))
