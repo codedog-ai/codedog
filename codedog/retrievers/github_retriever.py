@@ -44,14 +44,14 @@ class GithubRetriever(Retriever):
     def __init__(
         self,
         client: Github,
-        repository_name_or_id: str or int,
+        repository_name_or_id: str | int,
         pull_request_number: int,
     ):
         """Connect to github remote server and retrieve pull request data.
 
         Args:
             client (github.Github): github client from pyGithub
-            repository_name_or_id (str or int): repository name or id
+            repository_name_or_id (str | int): repository name or id
             pull_request_number (int): pull request number (not global id)
         """
 
