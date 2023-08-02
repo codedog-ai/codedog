@@ -2,6 +2,39 @@
 
 
 
+## v0.5.1 (2023-08-02)
+
+### Build
+
+* build: fix build ([`abbf4fc`](https://github.com/codedog-ai/codedog/commit/abbf4fc05c44360bc61fdf7a71c72dd587fc21c1))
+
+* build: :memo: improve documentation ([`fd0d8bf`](https://github.com/codedog-ai/codedog/commit/fd0d8bf36796f48bfd721879583bff680de1656b))
+
+### Chore
+
+* chore: :arrow_up: ([`cc2d3f9`](https://github.com/codedog-ai/codedog/commit/cc2d3f971acfb48d9aeb6d2614831964ed874fd6))
+
+### Ci
+
+* ci: :green_heart: add poetry cache ([`5c977de`](https://github.com/codedog-ai/codedog/commit/5c977dec2c7dce01da3ddeadd15116fc1df8e483))
+
+### Fix
+
+* fix(Chain): :bug: Fix callback manager usage
+
+Other changes: fix build issue and remove logging related codes in server example. ([`452b483`](https://github.com/codedog-ai/codedog/commit/452b48374c3705d4baf335c2da8df36866f91d27))
+
+### Refactor
+
+* refactor: :heavy_minus_sign: remove useless code ([`c404d7f`](https://github.com/codedog-ai/codedog/commit/c404d7fde2e7997fbefecbe915c4cf632e80a9e8))
+
+### Unknown
+
+* Update README.md ([`d2609c5`](https://github.com/codedog-ai/codedog/commit/d2609c559924f3b4c5670ff4a17c8e820a035379))
+
+* Build (#12)
+
+* refactor: :fire: Remove useless dependency and prepare for build ([`45768a7`](https://github.com/codedog-ai/codedog/commit/45768a784e1b3788a73d38c487036a2b8faac7eb))
 
 
 ## v0.5.0 (2023-07-29)
