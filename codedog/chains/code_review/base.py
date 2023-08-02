@@ -75,7 +75,7 @@ class CodeReviewChain(Chain):
 
         code_review_inputs = self._process_code_review_inputs(code_files, _run_manager)
         code_review_outputs = (
-            self.chain.aapply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
+            await self.chain.aapply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
             if code_review_inputs
             else []
         )
@@ -99,7 +99,7 @@ class CodeReviewChain(Chain):
         run_manager.on_text(f"Prepare code diff content for {len(input_data)} files.\n")
         return input_data
 
-    def _process_result(self, code_files: List[ChangeFile], code_review_outputs):
+    def _process_result(self, code_files: List[ChangeFile], code_review_outputs: List):
         code_reviews = []
         for i, o in zip_longest(code_files, code_review_outputs):
             code_reviews.append(CodeReview(file=i, review=o["text"]))
