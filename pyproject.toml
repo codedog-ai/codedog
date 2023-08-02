@@ -70,7 +70,7 @@ version_toml = ["pyproject.toml:tool.poetry.version"]
 ignore_token_for_push = true
 
 [tool.semantic_release.publish]
-upload_to_vcs_release = false
+upload_to_vcs_release = true
 
 [build-system]
 requires = ["poetry-core"]
