@@ -42,8 +42,8 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
         return self.pr_processor.gen_material_change_files(self._pull_request.change_files)
 
     def _generate_file_changes(self) -> str:
-        major_changes_report = []
-        changes_report = []
+        major_changes = []
+        secondary_changes = []
 
         major_files = set(self._pr_summary.major_files)
         self._pull_request.change_files
@@ -58,13 +58,14 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
                 content=self._code_summaries[change_file.full_name].summary,
             )
 
-            major_changes_report.append(curr_report) if change_file.full_name in major_files else changes_report.append(
-                curr_report
-            )
+            _target_changes = major_changes if change_file.full_name in major_files else secondary_changes
+            _target_changes.append(curr_report)
 
-        report_major = self.template.REPORT_FILE_CHANGES_MAJOR.format(
-            major_changes="\n".join(major_changes_report) if major_changes_report else "",
+        major_change_report = self.template.REPORT_FILE_CHANGES_MAJOR.format(
+            major_changes="\n".join(major_changes) if major_changes else ""
         )
-        report = self.template.REPORT_FILE_CHANGES.format(changes="\n".join(changes_report) if changes_report else "")
+        secondary_change_report = self.template.REPORT_FILE_CHANGES.format(
+            changes="\n".join(secondary_changes) if secondary_changes else ""
+        )
 
-        return f"{report_major}\n{report}\n"
+        return f"{major_change_report}\n{secondary_change_report}\n"
