@@ -53,7 +53,7 @@ class CodeReviewChain(Chain):
         pr: PullRequest = inputs["pull_request"]
         code_files: List[ChangeFile] = self.processor.get_diff_code_files(pr)
 
-        code_review_inputs = self._process_code_review_inputs(code_files, run_manager)
+        code_review_inputs = self._process_code_review_inputs(code_files, _run_manager)
         code_review_outputs = (
             self.chain.apply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
             if code_review_inputs
@@ -73,7 +73,7 @@ class CodeReviewChain(Chain):
         pr: PullRequest = inputs["pull_request"]
         code_files: List[ChangeFile] = self.processor.get_diff_code_files(pr)
 
-        code_review_inputs = self._process_code_review_inputs(code_files, run_manager)
+        code_review_inputs = self._process_code_review_inputs(code_files, _run_manager)
         code_review_outputs = (
             self.chain.aapply(code_review_inputs, callbacks=_run_manager.get_child(tag="CodeReview"))
             if code_review_inputs
