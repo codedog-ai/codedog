@@ -111,7 +111,7 @@ class PRSummaryChain(Chain):
             else []
         )
 
-        code_summaries = self.processor.build_code_summaries(code_summary_inputs, code_summary_outputs)
+        code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
         pr_summary_output: PRSummary = await self.pr_summary_chain(pr_summary_input, callbacks=_run_manager.get_child())
