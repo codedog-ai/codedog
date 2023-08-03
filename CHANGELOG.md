@@ -2,7 +2,18 @@
 
 
 
-## v0.5.4 (2023-08-03)
+## v0.5.5 (2023-08-03)
+
+### Fix
+
+* fix(chain): :bug: fix async call ([`a680841`](https://github.com/codedog-ai/codedog/commit/a680841e79c4165056b7397b9ef08ca9f7d2e416))
+
+
+## v0.5.4 (2023-08-02)
+
+### Chore
+
+* chore(release): release version v0.5.4 ([`7449dea`](https://github.com/codedog-ai/codedog/commit/7449dea528634c74b4315c4224a421f1c644f41d))
 
 ### Ci
 
