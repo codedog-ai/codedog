@@ -1,3 +1,4 @@
+import asyncio
 import time
 from os import environ as env
 
@@ -25,24 +26,24 @@ summary_chain = PRSummaryChain.from_llm(code_summary_llm=load_gpt_llm(), pr_summ
 review_chain = CodeReviewChain.from_llm(llm=load_gpt_llm(), verbose=True)
 
 
-def pr_summary():
-    result = summary_chain({"pull_request": retriever.pull_request}, include_run_info=True)
+async def pr_summary():
+    result = await summary_chain.acall({"pull_request": retriever.pull_request}, include_run_info=True)
     return result
 
 
-def code_review():
-    result = review_chain({"pull_request": retriever.pull_request}, include_run_info=True)
+async def code_review():
+    result = await review_chain.acall({"pull_request": retriever.pull_request}, include_run_info=True)
     return result
 
 
 def report():
     t = time.time()
     with get_openai_callback() as cb:
-        p = pr_summary()
+        p = asyncio.run(pr_summary())
         p_cost = cb.total_cost
         print(f"Summary cost is: ${p_cost:.4f}")
 
-        c = code_review()
+        c = asyncio.run(code_review())
         c_cost = cb.total_cost - p_cost
 
         print(f"Review cost is: ${c_cost:.4f}")
@@ -68,4 +69,4 @@ async def run():
 
 visualize(run)
 
-time.sleep(30)
+time.sleep(60)
