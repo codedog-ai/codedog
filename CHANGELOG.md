@@ -2,7 +2,26 @@
 
 
 
+## v0.5.4 (2023-08-03)
+
+### Ci
+
+* ci: :construction_worker: auto publish to pypi ([`bd3273c`](https://github.com/codedog-ai/codedog/commit/bd3273c0181bcb14522cc2b999d68dd901e6187a))
+
+### Fix
+
+* fix(chain): :bug: fix async call ([`df97e6a`](https://github.com/codedog-ai/codedog/commit/df97e6a56270945e31a43cd62990db77a9be9dbc))
+
+### Unknown
+
+* fix ci ([`af04580`](https://github.com/codedog-ai/codedog/commit/af04580ae5020cc4b59bd4395410ced31b3e051d))
+
+
 ## v0.5.3 (2023-08-02)
+
+### Chore
+
+* chore(release): release version v0.5.3 ([`7696435`](https://github.com/codedog-ai/codedog/commit/76964359dfb4caf51381ca6f0643f85f9edd72b0))
 
 ### Fix
 
