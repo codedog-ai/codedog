@@ -2,7 +2,18 @@
 
 
 
-## v0.5.5 (2023-08-03)
+## v0.6.0 (2023-08-11)
+
+### Feature
+
+* feat(retriever): :sparkles: add gitlab retriever ([`ebd8134`](https://github.com/codedog-ai/codedog/commit/ebd81345242e131342de32a87f0faad0dff0cb62))
+
+
+## v0.5.5 (2023-08-02)
+
+### Chore
+
+* chore(release): release version v0.5.5 ([`20efb9b`](https://github.com/codedog-ai/codedog/commit/20efb9b27230828ca8c9b2684bac256f4be27e05))
 
 ### Fix
 
