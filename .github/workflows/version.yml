@@ -31,6 +31,7 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "action@github.com"
+        python -m semantic_release version --changelog
         python -m semantic_release publish -D commit_author="github-actions <action@github.com>"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
