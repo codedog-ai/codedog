@@ -2,7 +2,56 @@
 
 
 
+## v0.7.0 (2023-08-12)
+
+### Ci
+
+* ci: Add auto version and release ([`c41e2af`](https://github.com/codedog-ai/codedog/commit/c41e2af50e921a5b01fb4c537b9ad325ec25837b))
+
+### Feature
+
+* feat: Enable using Azure GPT4 api ([`87a66dc`](https://github.com/codedog-ai/codedog/commit/87a66dce4cb8efe1968df0509de6800e8d90fcb4))
+
+### Fix
+
+* fix: :bug: fix #24
+
+Fix report change file table header with no item. ([`559c5cf`](https://github.com/codedog-ai/codedog/commit/559c5cfe09543c54e9f403faa0bf88d839d41cef))
+
+### Unknown
+
+* try fix version bump ci ([`7071155`](https://github.com/codedog-ai/codedog/commit/70711554d6cb2a7245034f3843ef9d218fa37aff))
+
+* try fix version bump ci ([`26aca20`](https://github.com/codedog-ai/codedog/commit/26aca20fe046edcf2b82955dfdc1d7786f5d3de3))
+
+* try fix version bump ci ([`a7df5ac`](https://github.com/codedog-ai/codedog/commit/a7df5ac6d62ee93634ecada0c0cf94f059eafe24))
+
+* try fix version bump ci ([`ca65a17`](https://github.com/codedog-ai/codedog/commit/ca65a176db83a0b9058efc97156d4a670a6a87d7))
+
+* try fix version bump ci ([`0a83cd8`](https://github.com/codedog-ai/codedog/commit/0a83cd8fba3efb395f47d1d153eb3c43d5521c61))
+
+* try fix version bump ci ([`e3a8ec8`](https://github.com/codedog-ai/codedog/commit/e3a8ec803c16ff93c67af2f984af6db56e8ab3cc))
+
+* try fix version bump ci ([`fd86ad4`](https://github.com/codedog-ai/codedog/commit/fd86ad4e650c0187e48af4b42456bdc6cb2f7466))
+
+* Merge pull request #27 from codedog-ai/ci
+
+Add auto version bump and release action ([`69edaf3`](https://github.com/codedog-ai/codedog/commit/69edaf398abd0ad9969e27b88415c05977d2c714))
+
+* fix template ([`7da01c5`](https://github.com/codedog-ai/codedog/commit/7da01c57b669c201556bde6f94a8fe1c385b2a00))
+
+* Merge pull request #26 from codedog-ai/dev1
+
+#23 #24 #25 ([`0856111`](https://github.com/codedog-ai/codedog/commit/085611139d0564a9729e6bd25030d32176583aa3))
+
+* Improve naming ([`75513c7`](https://github.com/codedog-ai/codedog/commit/75513c738b868968fb6a3e165cc5e76dcebe1c63))
+
+
 ## v0.6.0 (2023-08-11)
+
+### Chore
+
+* chore(release): release version v0.6.0 ([`aab3552`](https://github.com/codedog-ai/codedog/commit/aab35520703947fd42ad5e2981661afe15e08b91))
 
 ### Feature
 
