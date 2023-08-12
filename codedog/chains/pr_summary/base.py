@@ -88,9 +88,7 @@ class PRSummaryChain(Chain):
         code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output: PRSummary = self.pr_summary_chain(
-            pr_summary_input, callbacks=_run_manager.get_child(tag="PRSummary")
-        )
+        pr_summary_output = self.pr_summary_chain(pr_summary_input, callbacks=_run_manager.get_child(tag="PRSummary"))
 
         return self._process_result(pr_summary_output, code_summaries)
 
@@ -114,9 +112,7 @@ class PRSummaryChain(Chain):
         code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output: PRSummary = await self.pr_summary_chain.acall(
-            pr_summary_input, callbacks=_run_manager.get_child()
-        )
+        pr_summary_output = await self.pr_summary_chain.acall(pr_summary_input, callbacks=_run_manager.get_child())
 
         return self._process_result(pr_summary_output, code_summaries)
 

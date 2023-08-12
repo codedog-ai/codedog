@@ -22,8 +22,6 @@ class TestPRSummaryProcessor(unittest.TestCase):
             source_full_name="",
             status=ChangeStatus.addition,
             pull_request_id=0,
-            repository_id="",
-            source_repository_id="",
             start_commit_id=0,
             end_commit_id=0,
         )
@@ -36,8 +34,6 @@ class TestPRSummaryProcessor(unittest.TestCase):
             source_full_name="",
             status=ChangeStatus.addition,
             pull_request_id=0,
-            repository_id="",
-            source_repository_id="",
             start_commit_id=0,
             end_commit_id=0,
         )
@@ -55,8 +51,6 @@ class TestPRSummaryProcessor(unittest.TestCase):
                 source_full_name="",
                 status=ChangeStatus.addition,
                 pull_request_id=0,
-                repository_id="",
-                source_repository_id="",
                 start_commit_id=0,
                 end_commit_id=0,
             )
@@ -77,8 +71,6 @@ class TestPRSummaryProcessor(unittest.TestCase):
                 source_full_name="",
                 status=status,
                 pull_request_id=0,
-                repository_id="",
-                source_repository_id="",
                 start_commit_id=0,
                 end_commit_id=0,
             )
@@ -121,8 +113,6 @@ class TestPRSummaryProcessor(unittest.TestCase):
             source_full_name="source_path/source_test.py",
             status=ChangeStatus.addition,
             pull_request_id=0,
-            repository_id="",
-            source_repository_id="",
             start_commit_id=0,
             end_commit_id=0,
         )
