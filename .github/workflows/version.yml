@@ -1,0 +1,34 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: "./.github/actions/poetry_setup"
+      with:
+        python-version: "3.10"
+        poetry-version: "1.5.1"
+        install-command: |
+            echo "Installing dependencies with poetry..."
+            poetry install
+            poetry add python-semantic-release
+
+    - name: Python Semantic Release
+      uses: python-semantic-release/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
