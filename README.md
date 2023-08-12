@@ -14,14 +14,14 @@ Codedog currently load config from environment variables.
 
 settings:
 
-| Config Name                   | Required | Default           | Description                             |
-| ----------------------------- | -------- | ----------------- | --------------------------------------- |
-| OPENAI_API_KEY                | Yes      |                   | Api Key for calling openai gpt api      |
-| AZURE_OPENAI                  | No       |                   | Use azure openai gpt 3.5 if not blank   |
-| AZURE_OPENAI_API_KEY          | No       |                   | Azure openai api key                    |
-| AZURE_OPENAI_API_BASE         | No       |                   | Azure openai api base                   |
-| AZURE_OPENAI_DEPLOYMENT_ID    | No       |                   | Azure openai deployment id for gpt 3.5  |
-| AZURE_OPENAI_EMBEDDING_DEP_ID | No       |                   | Azure openai deployment id for embedding|
+| Config Name                    | Required | Default           | Description                             |
+| ------------------------------ | -------- | ----------------- | --------------------------------------- |
+| OPENAI_API_KEY                 | Yes      |                   | Api Key for calling openai gpt api      |
+| AZURE_OPENAI                   | No       |                   | Use azure openai if not blank           |
+| AZURE_OPENAI_API_KEY           | No       |                   | Azure openai api key                    |
+| AZURE_OPENAI_API_BASE          | No       |                   | Azure openai api base                   |
+| AZURE_OPENAI_DEPLOYMENT_ID     | No       |                   | Azure openai deployment id for gpt 3.5  |
+| AZURE_OPENAI_GPT4_DEPLOYMENT_ID| No       |                   | Azure openai deployment id for gpt 4    |
 
 ## Usage
 

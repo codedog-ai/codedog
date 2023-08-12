@@ -111,7 +111,7 @@ async def handle_pull_request(
             retriever._git_pull_request.create_issue_comment(report)
 
 
-def _github_event_filter(event: GithubEvent) -> bool:
+def _github_event_filter(event: GithubEvent):
     """filter github event.
 
     Args:

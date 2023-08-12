@@ -11,8 +11,8 @@ def load_gpt_llm() -> BaseChatModel:
     if env.get("AZURE_OPENAI"):
         llm = AzureChatOpenAI(
             openai_api_type="azure",
-            openai_api_key=env.get("AZURE_OPENAI_API_KEY"),
-            openai_api_base=env.get("AZURE_OPENAI_API_BASE"),
+            openai_api_key=env.get("AZURE_OPENAI_API_KEY", ""),
+            openai_api_base=env.get("AZURE_OPENAI_API_BASE", ""),
             openai_api_version="2023-05-15",
             deployment_name=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
             model="gpt-3.5-turbo",
@@ -32,10 +32,10 @@ def load_gpt4_llm():
     if env.get("AZURE_OPENAI"):
         llm = AzureChatOpenAI(
             openai_api_type="azure",
-            openai_api_key=env.get("AZURE_OPENAI_API_KEY"),
-            openai_api_base=env.get("AZURE_OPENAI_API_BASE"),
+            openai_api_key=env.get("AZURE_OPENAI_API_KEY", ""),
+            openai_api_base=env.get("AZURE_OPENAI_API_BASE", ""),
             openai_api_version="2023-05-15",
-            deployment_name=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-4"),
+            deployment_name=env.get("AZURE_OPENAI_GPT4_DEPLOYMENT_ID", "gpt-4"),
             model="gpt-4",
             temperature=0,
         )

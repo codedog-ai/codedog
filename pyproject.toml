@@ -63,7 +63,7 @@ priority = "supplemental"
 branch = "master"
 build_command = "poetry build"
 commit_message = 'chore(release): release version v{version}'
-version_variable = ["codedog/version.py:VERSION"]
+version_variables = ["codedog/version.py:VERSION"]
 version_toml = ["pyproject.toml:tool.poetry.version"]
 
 [tool.semantic_release.remote]

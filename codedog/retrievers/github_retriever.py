@@ -69,7 +69,7 @@ class GithubRetriever(Retriever):
         return "Github Retriever"
 
     @property
-    def repository(self) -> GHRepo:
+    def repository(self) -> Repository:
         return self._repository
 
     @property
@@ -77,7 +77,7 @@ class GithubRetriever(Retriever):
         return self._pull_request
 
     @property
-    def source_repository(self) -> GHRepo:
+    def source_repository(self) -> Repository:
         return self._source_repository
 
     @property
@@ -110,7 +110,7 @@ class GithubRetriever(Retriever):
             repository_id=git_pr.head.repo.id,
             pull_request_number=git_pr.number,
             title=git_pr.title,
-            description=git_pr.body if git_pr is not None else "",
+            body=git_pr.body if git_pr is not None else "",
             url=git_pr.html_url,
             repository_name=git_pr.head.repo.full_name,
             related_issues=related_issues,
@@ -176,8 +176,8 @@ class GithubRetriever(Retriever):
             _raw=git_file,
         )
 
-    def _convert_status(self, git_status: str) -> ChangeFile:
-        return GithubRetriever.GITHUB_STATUS_MAPPING.get(git_status, ChangeStatus.unknown)
+    def _convert_status(self, git_status: str) -> ChangeStatus:
+        return ChangeStatus[GithubRetriever.GITHUB_STATUS_MAPPING.get(git_status, "X")]
 
     def _build_change_file_diff_url(self, git_file: GithubFile, git_pr: GHPullRequest) -> str:
         return f"{git_pr.html_url}/files#diff-{git_file.sha}"
@@ -192,8 +192,6 @@ class GithubRetriever(Retriever):
             remove_count=patched_file.removed,
             content=git_file.patch if git_file.patch else "",
             diff_segments=patched_segs,
-            _raw=git_file,
-            _patched_file=patched_file,
         )
 
     def _build_patched_file(self, git_file: GithubFile) -> PatchedFile:
@@ -208,14 +206,13 @@ class GithubRetriever(Retriever):
 
     def _build_patch_segment(self, patched_hunk: Hunk) -> DiffSegment:
         return DiffSegment(
-            add_count=patched_hunk.added,
-            remove_count=patched_hunk.removed,
+            add_count=patched_hunk.added or 0,
+            remove_count=patched_hunk.removed or 0,
             content=str(patched_hunk),
             source_start_line_number=patched_hunk.source_start,
             source_length=patched_hunk.source_length,
             target_start_line_number=patched_hunk.target_start,
             target_length=patched_hunk.target_length,
-            _raw=patched_hunk,
         )
 
     def _build_blob(self, git_blob: GithubBlob) -> Blob:

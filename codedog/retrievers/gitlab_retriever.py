@@ -69,15 +69,19 @@ class GitlabRetriever(Retriever):
     def changed_files(self) -> list[ChangeFile]:
         return self._merge_request.change_files
 
-    @property
     def get_blob(self, blob_sha: str or id) -> Blob:
         git_blob = self._git_repository.repository_blob(blob_sha)
-        return self._build_blob(git_blob)
+        if isinstance(git_blob, dict):
+            return self._build_blob(git_blob)
+        else:
+            raise ValueError(f"Blob not found. {git_blob}")
 
-    @property
     def get_commit(self, commit_sha: str or id) -> Commit:
         git_commit = self._git_repository.commits.get(commit_sha)
-        return self._buid_commit(git_commit)
+        if isinstance(git_commit, ProjectCommit):
+            return self._build_commit(git_commit)
+        else:
+            raise ValueError(f"Commit not found. {git_commit}")
 
     def _build_repository(self, git_repo: Project) -> Repository:
         return Repository(
@@ -92,7 +96,7 @@ class GitlabRetriever(Retriever):
         return Blob(
             blob_id=int(git_blob["sha"], 16),
             sha=git_blob["sha"],
-            content=base64.b64decode(git_blob["content"]),
+            content=base64.b64decode(git_blob["content"]).decode("utf-8", errors="ignore"),
             encoding=git_blob["encoding"],
             size=git_blob["size"],
             url=git_blob.get("url", ""),  # TODO fix url
@@ -113,7 +117,7 @@ class GitlabRetriever(Retriever):
         pull_request = PullRequest(
             pull_request_id=git_pr.id,
             repository_id=git_pr.target_project_id,
-            pull_request_number=git_pr.get_id(),
+            pull_request_number=int(git_pr.get_id() or 0),
             title=git_pr.title,
             body=description,
             url=git_pr.web_url,
@@ -159,7 +163,7 @@ class GitlabRetriever(Retriever):
         source_full_name = diff.get("old_path", full_name)
         start_sha = git_mr.diff_refs["start_sha"]
         end_sha = git_mr.diff_refs["head_sha"]
-        mr_id = git_mr.get_id()
+        mr_id = int(git_mr.get_id() or 0)
         blob_url = f"{self._repository.repository_url}/-/blob/{end_sha}/{full_name}"
         change_file = ChangeFile(
             blob_id=int(end_sha, 16),
@@ -179,7 +183,7 @@ class GitlabRetriever(Retriever):
         )
         return change_file
 
-    def _convert_status(self, git_pr: dict) -> ChangeFile:
+    def _convert_status(self, git_pr: dict) -> ChangeStatus:
         if git_pr.get("new_file", False):
             return ChangeStatus.addition
         if git_pr.get("deleted_file", False):
@@ -205,8 +209,6 @@ class GitlabRetriever(Retriever):
             remove_count=patched_file.removed,
             content=patch,
             diff_segments=patched_segs,
-            _raw=diff,
-            _patched_file=patched_file,
         )
 
     def _build_patched_file(self, old_path, new_path, patch) -> PatchedFile:
@@ -220,14 +222,13 @@ class GitlabRetriever(Retriever):
 
     def _build_patch_segment(self, patched_hunk: Hunk) -> DiffSegment:
         return DiffSegment(
-            add_count=patched_hunk.added,
-            remove_count=patched_hunk.removed,
+            add_count=patched_hunk.added or 0,
+            remove_count=patched_hunk.removed or 0,
             content=str(patched_hunk),
             source_start_line_number=patched_hunk.source_start,
             source_length=patched_hunk.source_length,
             target_start_line_number=patched_hunk.target_start,
             target_length=patched_hunk.target_length,
-            _raw=patched_hunk,
         )
 
     def _get_and_build_issue(self, issue_number):
@@ -236,7 +237,7 @@ class GitlabRetriever(Retriever):
 
     def _build_issue(self, git_issue: ProjectIssue) -> Issue:
         return Issue(
-            issue_id=git_issue.get_id(),
+            issue_id=int(git_issue.get_id() or 0),
             title=git_issue.title,
             description=git_issue.description,
             url=git_issue.web_url,

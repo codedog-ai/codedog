@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from codedog.actors.reporters.base import Reporter
 from codedog.actors.reporters.code_review import CodeReviewMarkdownReporter
@@ -16,7 +16,7 @@ class PullRequestReporter(Reporter, Localization):
         code_summaries: list[ChangeSummary],
         pull_request: PullRequest,
         code_reviews: List[CodeReview],
-        telemetry: Dict[str, Any] = None,
+        telemetry: Optional[Dict[str, Any]] = None,
         language="en",
     ):
         self._pr_summary = pr_summary
