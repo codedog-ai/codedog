@@ -26,5 +26,12 @@ jobs:
             poetry config virtualenvs.create false
             poetry install
             poetry add python-semantic-release
-            semantic-release version --changelog
-            semantic-release publish
+
+    - name: Python Semantic Release
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "action@github.com"
+        semantic-release publish -D commit_author="github-actions <action@github.com>"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PyPI_TOKEN: ${{secrets.PyPI_TOKEN}}
