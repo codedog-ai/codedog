@@ -27,8 +27,5 @@ jobs:
             echo "Installing dependencies with poetry..."
             poetry install
             poetry add python-semantic-release
-
-    - name: Python Semantic Release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+            semantic-release version --changelog
+            semantic-release publish
