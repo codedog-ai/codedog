@@ -1,9 +1,7 @@
 name: Semantic Release
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   release:
@@ -25,6 +23,7 @@ jobs:
         poetry-version: "1.5.1"
         install-command: |
             echo "Installing dependencies with poetry..."
+            poetry config virtualenvs.create false
             poetry install
             poetry add python-semantic-release
             semantic-release version --changelog
