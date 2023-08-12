@@ -61,11 +61,13 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
             _target_changes = major_changes if change_file.full_name in major_files else secondary_changes
             _target_changes.append(curr_report)
 
-        major_change_report = self.template.REPORT_FILE_CHANGES_MAJOR.format(
-            major_changes="\n".join(major_changes) if major_changes else ""
+        major_change_report = (
+            self.template.REPORT_FILE_CHANGES_MAJOR.format(major_changes="\n".join(major_changes))
+            if major_changes
+            else ""
         )
-        secondary_change_report = self.template.REPORT_FILE_CHANGES.format(
-            changes="\n".join(secondary_changes) if secondary_changes else ""
+        secondary_change_report = (
+            self.template.REPORT_FILE_CHANGES.format(changes="\n".join(secondary_changes)) if secondary_changes else ""
         )
 
         return f"{major_change_report}\n{secondary_change_report}\n"
