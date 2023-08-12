@@ -23,29 +23,23 @@ from codedog.utils.diff_utils import parse_patch_file
 
 
 class GitlabRetriever(Retriever):
-
     ISSUE_PATTERN = r"#\d+"
     # NOTE Currently, all DIFFs are obtained through one call. Here, the maximum number of file DIFFs is set to 200
     LIST_DIFF_LIMIT = 200
 
-    def __init__(
-        self,
-        client: Gitlab,
-        repository_name_or_id: str | int,
-        merge_request_number: int
-    ) -> None:
+    def __init__(self, client: Gitlab, project_name_or_id: str | int, merge_request_iid: int) -> None:
         """
         Connect to gitlab remote server and retrieve merge request data.
 
         Args:
             client (gitlab.Gitlab): gitlab client from python-gitlab
-            repository_name_or_id (str | int): repository name or id
-            merge_request_number (int): merge request number (not global id)
+            project_name_or_id (str | int): project name (with full namespace) or id
+            merge_request_iid (int): merge request iid (not global id)
         """
 
         # --- gitlab model ---
-        self._git_repository: Project = client.projects.get(repository_name_or_id)
-        self._git_merge_request: ProjectMergeRequest = self._git_repository.mergerequests.get(merge_request_number)
+        self._git_repository: Project = client.projects.get(project_name_or_id)
+        self._git_merge_request: ProjectMergeRequest = self._git_repository.mergerequests.get(merge_request_iid)
 
         source_project: Project = client.projects.get(self._git_merge_request.source_project_id)
 
@@ -96,12 +90,12 @@ class GitlabRetriever(Retriever):
 
     def _build_blob(self, git_blob: Dict[str, Any]) -> Blob:
         return Blob(
-            blob_id=int(git_blob['sha'], 16),
-            sha=git_blob['sha'],
-            content=base64.b64decode(git_blob['content']),
-            encoding=git_blob['encoding'],
-            size=git_blob['size'],
-            url=git_blob.get('url', ""),  # TODO fix url
+            blob_id=int(git_blob["sha"], 16),
+            sha=git_blob["sha"],
+            content=base64.b64decode(git_blob["content"]),
+            encoding=git_blob["encoding"],
+            size=git_blob["size"],
+            url=git_blob.get("url", ""),  # TODO fix url
         )
 
     def _build_commit(self, git_commit: ProjectCommit) -> Commit:
@@ -153,7 +147,7 @@ class GitlabRetriever(Retriever):
 
         for diff_response in diffs_list:
             full_diff = git_mr.diffs.get(diff_response.id)
-            for diff in full_diff.attributes.get('diffs', []):
+            for diff in full_diff.attributes.get("diffs", []):
                 change_file = self._build_change_file(diff, git_mr)
                 change_files.append(change_file)
         return change_files
@@ -163,8 +157,8 @@ class GitlabRetriever(Retriever):
         name = full_name.split("/")[-1]
         suffix = name.split(".")[-1]
         source_full_name = diff.get("old_path", full_name)
-        start_sha = git_mr.diff_refs['start_sha']
-        end_sha = git_mr.diff_refs['head_sha']
+        start_sha = git_mr.diff_refs["start_sha"]
+        end_sha = git_mr.diff_refs["head_sha"]
         mr_id = git_mr.get_id()
         blob_url = f"{self._repository.repository_url}/-/blob/{end_sha}/{full_name}"
         change_file = ChangeFile(
@@ -199,9 +193,9 @@ class GitlabRetriever(Retriever):
         return ""
 
     def _parse_and_build_diff_content(self, diff: dict) -> DiffContent:
-        patch = diff.get('diff', "")
-        old_path = diff.get('old_path', "")
-        new_path = diff.get('new_path', "")
+        patch = diff.get("diff", "")
+        old_path = diff.get("old_path", "")
+        new_path = diff.get("new_path", "")
 
         patched_file: PatchedFile = self._build_patched_file(old_path, new_path, patch)
         patched_segs: list[DiffSegment] = self._build_patched_file_segs(patched_file)
