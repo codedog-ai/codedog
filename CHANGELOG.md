@@ -2,7 +2,30 @@
 
 
 
-## v0.7.0 (2023-08-12)
+## v0.7.1 (2023-08-12)
+
+### Fix
+
+* fix: :green_heart: Fix semantic release config key error ([`c1e0368`](https://github.com/codedog-ai/codedog/commit/c1e0368beffd4fec86a641b620a7ed0565cd788b))
+
+* fix: Improve report format ([`0101e3e`](https://github.com/codedog-ai/codedog/commit/0101e3e3da6b39b4db38494a52e23a12ce7f28e1))
+
+* fix: :bug: add a seperate deployment config key for azure gpt4 ([`fc42003`](https://github.com/codedog-ai/codedog/commit/fc4200391319412a30c498e8a7c15cbe1b90cb7c))
+
+### Unknown
+
+* Merge pull request #31 from codedog-ai/bugfix
+
+Bugfix ([`f165a5f`](https://github.com/codedog-ai/codedog/commit/f165a5f3b8208cb15b274e08f869c3f27d3556ab))
+
+* fix typing ([`6275b4e`](https://github.com/codedog-ai/codedog/commit/6275b4e5590fac5394ce6223fc9c0f49d0ace461))
+
+
+## v0.7.0 (2023-08-11)
+
+### Chore
+
+* chore(release): release version v0.7.0 ([`b69ce21`](https://github.com/codedog-ai/codedog/commit/b69ce215a44b5d124195185296b4de171c4b90b5))
 
 ### Ci
 
@@ -172,10 +195,10 @@ feat: :sparkles: read github private key from env ([`7bc2c84`](https://github.co
 
 * Feature: Github Retriever and PR Summary Chain (#9)
 
-* feat: :sparkles: Retriever, Github Retriever, PR Summary Chain
-
-1. Extract code files (by suffix whitelist) from pr change list
-2. Summarize changed file list and there status
+* feat: :sparkles: Retriever, Github Retriever, PR Summary Chain
+
+1. Extract code files (by suffix whitelist) from pr change list
+2. Summarize changed file list and there status
 3. Summarize PR with description, PR Type, major files ([`3105595`](https://github.com/codedog-ai/codedog/commit/310559526480b3be18e3cdce8c3da1a33b1dc654))
 
 * Update issue templates ([`b62ddea`](https://github.com/codedog-ai/codedog/commit/b62ddea805d72c1f3e82134f91a10318c4c96104))
