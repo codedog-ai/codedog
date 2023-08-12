@@ -21,9 +21,9 @@ jobs:
       with:
         python-version: "3.10"
         poetry-version: "1.5.1"
+        virtualenvs-create: false
         install-command: |
             echo "Installing dependencies with poetry..."
-            poetry config virtualenvs.create false
             poetry install --with dev --no-interaction --no-ansi
 
     - name: Python Semantic Release
