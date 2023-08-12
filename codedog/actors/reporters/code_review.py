@@ -28,5 +28,5 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             )
 
         return self.template.REPORT_CODE_REVIEW.format(
-            feedback="\n".join(code_review_segs),
+            feedback="\n".join(code_review_segs) if code_review_segs else self.template.REPORT_CODE_REVIEW_NO_FEEDBACK,
         )

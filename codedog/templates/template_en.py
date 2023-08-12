@@ -170,3 +170,5 @@ REPORT_CODE_REVIEW_SEGMENT = """**[{full_name}]({url})**
 
 {review}
 """
+
+REPORT_CODE_REVIEW_NO_FEEDBACK = """No suggestions for this PR."""
