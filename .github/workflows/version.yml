@@ -24,8 +24,7 @@ jobs:
         install-command: |
             echo "Installing dependencies with poetry..."
             poetry config virtualenvs.create false
-            poetry install
-            poetry add python-semantic-release
+            poetry install --with dev --no-interaction --no-ansi
 
     - name: Python Semantic Release
       run: |
