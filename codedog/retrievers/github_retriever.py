@@ -177,7 +177,7 @@ class GithubRetriever(Retriever):
         )
 
     def _convert_status(self, git_status: str) -> ChangeStatus:
-        return ChangeStatus[GithubRetriever.GITHUB_STATUS_MAPPING.get(git_status, "X")]
+        return ChangeStatus(GithubRetriever.GITHUB_STATUS_MAPPING.get(git_status, "X"))
 
     def _build_change_file_diff_url(self, git_file: GithubFile, git_pr: GHPullRequest) -> str:
         return f"{git_pr.html_url}/files#diff-{git_file.sha}"

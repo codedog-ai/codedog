@@ -17,7 +17,9 @@ PR_FILE_SUMMARY_HEADER = "{path}: {summary}"
 
 # this template is used for review single file change.
 PR_CHANGE_REVIEW_SUMMARY = "summary of diff"
-PR_CHANGE_REVIEW_MAIN_CHANGE = """this diff contains the major part of logical changes in this change list"""
+PR_CHANGE_REVIEW_MAIN_CHANGE = (
+    """this diff contains the major part of logical changes in this change list"""
+)
 
 PR_CHANGE_REVIEW_TEMPLATE = """
 Act as a code reviewer, I will be your assistant, provide you a file diff in a change list,
@@ -139,3 +141,16 @@ Here's the code diff from file {name}:
 {content}
 ```
 """
+
+
+TRANSLATE_PR_REVIEW = """Help me translate some content into {language}.
+It belongs to a pull request review and is about {description}.
+
+Content:
+---
+{content}
+---
+
+Note that the content might be used in markdown or other formatted text,
+so don't change the paragraph layout of the content or add symbols.
+Your translation:"""

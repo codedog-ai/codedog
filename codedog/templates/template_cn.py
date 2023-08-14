@@ -1,51 +1,122 @@
-CHANGE_SUMMARY = """
-| 主要变动 |
-|---|
-{important_changes}
+# --- PR Markdown Report ------------------------------------------------------
+REPORT_PR_REVIEW = """# [{repo_name} #{pr_number} - {pr_name}]({url}) Pull Request 分析报告
 
-| 次要变动 |
-|---|
-{housekeeping_changes}
+*powered by GPT and {project} {version}*
+
+{telemetry}
+
+
+{pr_report}
+
+
+{cr_report}
+
 """
 
-TABLE_LINE = """| {{idx}}. **[{file_name}]({url})** |\n| {text} |"""
 
-TABLE_LINE_NODATA = "无"
-
-T3_TITLE_LINE = """### {idx}. [{file_name}]({url})"""
-
-REPORT_HEADER = """# [{repo_name} #{pr_number}]({url}) 代码审查报告\n\n*powered by GPT and Codedog {version}*\n\n"""
-
-
-REPORT_TELEMETRY = """## 执行记录
+REPORT_TELEMETRY = """## 执行信息
 - 开始时间: {start_time}
-- 审查耗时: {time_usage}秒
-- 审查文件数量: {files}
-- OPENAI API TOKEN数量: {tokens} (约${cost:.4f})\n\n
+- 执行耗时: {time_usage:.2f}s
+- Openai Token 使用数量: {tokens}
+- Openai Api 调用成本: ${cost:.4f}
 """
 
-REPORT_PR_SUMMARY = """## PR概要
-{pr_summary}
+# --- PR Summary Markdown Report ----------------------------------------------
 
-{pr_changes_summary}\n\n
+REPORT_PR_SUMMARY = """
+## PR 概要
+
+### PR 总结
+{overview}
+
+### 变动文件说明
+{file_changes}
+
+<details>
+<summary><h3>改动列表</h3></summary>
+
+{change_overview}
+
+</details>
 """
-REPORT_PR_CHANGES_SUMMARY = """
-**主要改动**
 
-{important_changes}
+REPORT_PR_SUMMARY_OVERVIEW = """{type_desc}
 
-**次要改动**
+{overview}
 
-{housekeeping_changes}\n\n
 """
 
-REPORT_PR_CHANGE_SUMMARY = """{idx}. [{path}]({url})\n\n{summary}\n\n"""
 
-REPORT_NO_CHANGES = "无"
+REPORT_PR_TYPE_DESC_MAPPING = {
+    "feature": "该 PR 添加了新的功能、特性 :sparkles:",
+    "fix": "该 PR 修复了代码中的问题 :bug:",
+    "refactor": "该 PR 对代码进行重构 :hammer_and_wrench:",
+    "perf": "该 PR 尝试进行性能优化 :rocket:",
+    "test": "该 PR 主要添加了一些测试 :white_check_mark:",
+    "doc": "该 PR 主要为文档变动 :memo:",
+    "ci": "该 PR 主要为 CI/CD 变动 :gear:",
+    "style": "该 PR 主要为 code style 变动 :art:",
+    "chore": "该 PR 做了一些和项目本身无关的事务 :broom:",
+    "unknown": "该 PR 的主题未能被识别 :dog: :question:",
+}
 
-REPORT_FEEDBACK = """## PR改进建议 preview
+REPORT_CHANGE_OVERVIEW = """| **[{name}]({url} "{full_name}")** | {content} |"""
 
-** 目前改进建议功能仍在调试中，建议仅供参考 **
+REPORT_FILE_CHANGES_MAJOR = """
+| 主要变动 | 描述 |
+|---|---|
+{major_changes}
+"""
 
-{feedback}\n\n
+REPORT_FILE_CHANGES = """
+| 其他变动 | 描述 |
+|---|---|
+{changes}
+"""
+
+# --- Code Review Markdown Report ---------------------------------------------
+REPORT_CODE_REVIEW = """## 代码审查 (预览版)
+
+*该功能仍在测试中，由 AI 提供的建议可能不正确。*
+
+{feedback}
+
+"""
+REPORT_CODE_REVIEW_SEGMENT = """**[{full_name}]({url})**
+
+{review}
+"""
+
+REPORT_CODE_REVIEW_NO_FEEDBACK = """对该 PR 没有代码审查建议"""
+
+
+# --- Materials ---------------------------------------------------------------
+
+MATERIAL_STATUS_HEADER_MAPPING = {
+    "A": "Added files:",
+    "C": "Copied files:",
+    "D": "Deleted files:",
+    "M": "Modified files:",
+    "R": "Renamed files:",
+    "T": "Type changed files:",
+    "U": "Other files:",
+    "X": "Unknown(X) files:",
+}
+
+MATERIAL_CODE_SUMMARY = """File `{name}` Change: {summary}"""
+
+MATERIAL_PR_METADATA = """Pull Request Metadata:
+---
+1. Title: {pr_title}
+
+2. Body:
+```text
+{pr_body}
+```
+
+3. Issues:
+```text
+{issues}
+```
+---
 """

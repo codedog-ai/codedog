@@ -9,10 +9,16 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
     pr_processor = PullRequestProcessor()
 
     def __init__(
-        self, pr_summary: PRSummary, code_summaries: list[ChangeSummary], pull_request: PullRequest, language="en"
+        self,
+        pr_summary: PRSummary,
+        code_summaries: list[ChangeSummary],
+        pull_request: PullRequest,
+        language="en",
     ):
         self._pr_summary: PRSummary = pr_summary
-        self._code_summaries: dict[str, ChangeSummary] = {summary.full_name: summary for summary in code_summaries}
+        self._code_summaries: dict[str, ChangeSummary] = {
+            summary.full_name: summary for summary in code_summaries
+        }
         self._pull_request: PullRequest = pull_request
         self._markdown: str = ""
 
@@ -34,12 +40,16 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
 
     def _generate_pr_overview(self) -> str:
         return template_en.REPORT_PR_SUMMARY_OVERVIEW.format(
-            type_desc=self.template.REPORT_PR_TYPE_DESC_MAPPING[self._pr_summary.pr_type],
+            type_desc=self.template.REPORT_PR_TYPE_DESC_MAPPING[
+                self._pr_summary.pr_type
+            ],
             overview=self._pr_summary.overview,
         )
 
     def _generate_change_overivew(self) -> str:
-        return self.pr_processor.gen_material_change_files(self._pull_request.change_files)
+        return self.pr_processor.gen_material_change_files(
+            self._pull_request.change_files
+        )
 
     def _generate_file_changes(self) -> str:
         major_changes = []
@@ -55,19 +65,31 @@ class PRSummaryMarkdownReporter(Reporter, Localization):
                 name=change_file.name,
                 url=change_file.diff_url,
                 full_name=change_file.full_name,
-                content=self._code_summaries[change_file.full_name].summary,
+                content=self._code_summaries[change_file.full_name].summary.replace(
+                    "\n", "\t"
+                ),  # markdown table content is single line.
             )
 
-            _target_changes = major_changes if change_file.full_name in major_files else secondary_changes
+            _target_changes = (
+                major_changes
+                if change_file.full_name in major_files
+                else secondary_changes
+            )
             _target_changes.append(curr_report)
 
         major_change_report = (
-            self.template.REPORT_FILE_CHANGES_MAJOR.format(major_changes="\n".join(major_changes))
+            self.template.REPORT_FILE_CHANGES_MAJOR.format(
+                major_changes="\n".join(major_changes)
+            )
             if major_changes
             else ""
         )
         secondary_change_report = (
-            self.template.REPORT_FILE_CHANGES.format(changes="\n".join(secondary_changes)) if secondary_changes else ""
+            self.template.REPORT_FILE_CHANGES.format(
+                changes="\n".join(secondary_changes)
+            )
+            if secondary_changes
+            else ""
         )
 
         return f"{major_change_report}\n{secondary_change_report}\n"
