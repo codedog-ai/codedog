@@ -1,4 +1,4 @@
-from codedog.templates import grimoire_cn, grimoire_en, template_cn, template_en
+from codedog.templates import grimoire_en, template_cn, template_en
 
 
 class Localization:
@@ -9,7 +9,7 @@ class Localization:
 
     grimoires = {
         "en": grimoire_en,
-        "cn": grimoire_cn,
+        "cn": grimoire_en,
     }
 
     def __init__(self, language="en"):
