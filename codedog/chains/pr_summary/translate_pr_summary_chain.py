@@ -106,7 +106,7 @@ class TranslatePRSummaryChain(PRSummaryChain):
             for cs in code_summaries
             if cs.summary != ""
         ]
-        response = self.translate_chain.apply(data)
+        response = self.translate_chain.apply(data) if data else []
 
         for cs, r in zip_longest(code_summaries, response):
             if not cs or not r:
@@ -140,7 +140,7 @@ class TranslatePRSummaryChain(PRSummaryChain):
             for cs in code_summaries
             if cs.summary != ""
         ]
-        response = await self.translate_chain.aapply(data)
+        response = await self.translate_chain.aapply(data) if data else []
 
         for cs, r in zip_longest(code_summaries, response):
             if not cs or not r:
