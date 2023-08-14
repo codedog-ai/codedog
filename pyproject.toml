@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codedog"
-version = "0.7.1"
+version = "0.8.0"
 license = "MIT"
 readme = "README.md"
 authors = ["Arcadia <arcadia822@gmail.com>", "Linpp "]

@@ -2,7 +2,24 @@
 
 
 
+## v0.8.0 (2023-08-14)
+
+### Feature
+
+* feat: Support localize review content with llm translation ([`557bfe5`](https://github.com/codedog-ai/codedog/commit/557bfe501ea8f68a7444d496848b52f1673ef9f3))
+
+### Unknown
+
+* Merge pull request #32 from codedog-ai/feature/localization_chain
+
+feat: :sparkles: Support localization in chain and report ([`b5c98f7`](https://github.com/codedog-ai/codedog/commit/b5c98f75ee89d098044b7de09d81dfe38c802c47))
+
+
 ## v0.7.1 (2023-08-12)
+
+### Chore
+
+* chore(release): release version v0.7.1 ([`cf6ac3b`](https://github.com/codedog-ai/codedog/commit/cf6ac3b42ce77fc1a3b4835022636702b467737c))
 
 ### Fix
 
