@@ -73,7 +73,7 @@ class TranslateCodeReviewChain(CodeReviewChain):
             for cr in code_reviews
             if cr.review != ""
         ]
-        response = self.translate_chain.apply(data)
+        response = self.translate_chain.apply(data) if data else []
 
         for cr, r in zip_longest(code_reviews, response):
             if not cr or not r:
@@ -92,7 +92,7 @@ class TranslateCodeReviewChain(CodeReviewChain):
             for cr in code_reviews
             if cr.review != ""
         ]
-        response = await self.translate_chain.aapply(data)
+        response = await self.translate_chain.aapply(data) if data else []
 
         for cr, r in zip_longest(code_reviews, response):
             if not cr or not r:
