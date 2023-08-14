@@ -2,7 +2,24 @@
 
 
 
-## v0.8.0 (2023-08-14)
+## v0.8.1 (2023-08-14)
+
+### Fix
+
+* fix: Github client return None with empty pr / issue body cause exception ([`b408923`](https://github.com/codedog-ai/codedog/commit/b40892365de57bee9ad8d8f77f9a5338025f6c2f))
+
+* fix: llmchain.apply don&#39;t handle empty list input ([`e07091b`](https://github.com/codedog-ai/codedog/commit/e07091bc032c241ec52700c8c24d94759c0bcab6))
+
+### Unknown
+
+* Merge pull request #34 from codedog-ai/bugfix ([`5041ab5`](https://github.com/codedog-ai/codedog/commit/5041ab5e109dbd4ff543b7b1f52871f41c978ab6))
+
+
+## v0.8.0 (2023-08-13)
+
+### Chore
+
+* chore(release): release version v0.8.0 ([`39c0610`](https://github.com/codedog-ai/codedog/commit/39c06108123993926e88b6a7a0df7443916e003c))
 
 ### Feature
 
