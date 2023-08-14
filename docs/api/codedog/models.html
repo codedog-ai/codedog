@@ -1,0 +1,2547 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="pdoc 14.0.0"/>
+    <title>codedog.models API documentation</title>
+
+    <style>/*! * Bootstrap Reboot v5.0.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md) */*,::after,::before{box-sizing:border-box}@media (prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h1{font-size:calc(1.375rem + 1.5vw)}@media (min-width:1200px){h1{font-size:2.5rem}}h2{font-size:calc(1.325rem + .9vw)}@media (min-width:1200px){h2{font-size:2rem}}h3{font-size:calc(1.3rem + .6vw)}@media (min-width:1200px){h3{font-size:1.75rem}}h4{font-size:calc(1.275rem + .3vw)}@media (min-width:1200px){h4{font-size:1.5rem}}h5{font-size:1.25rem}h6{font-size:1rem}p{margin-top:0;margin-bottom:1rem}abbr[data-bs-original-title],abbr[title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;cursor:help;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}address{margin-bottom:1rem;font-style:normal;line-height:inherit}ol,ul{padding-left:2rem}dl,ol,ul{margin-top:0;margin-bottom:1rem}ol ol,ol ul,ul ol,ul ul{margin-bottom:0}dt{font-weight:700}dd{margin-bottom:.5rem;margin-left:0}blockquote{margin:0 0 1rem}b,strong{font-weight:bolder}small{font-size:.875em}mark{padding:.2em;background-color:#fcf8e3}sub,sup{position:relative;font-size:.75em;line-height:0;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}code,kbd,pre,samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em;direction:ltr;unicode-bidi:bidi-override}pre{display:block;margin-top:0;margin-bottom:1rem;overflow:auto;font-size:.875em}pre code{font-size:inherit;color:inherit;word-break:normal}code{font-size:.875em;color:#d63384;word-wrap:break-word}a>code{color:inherit}kbd{padding:.2rem .4rem;font-size:.875em;color:#fff;background-color:#212529;border-radius:.2rem}kbd kbd{padding:0;font-size:1em;font-weight:700}figure{margin:0 0 1rem}img,svg{vertical-align:middle}table{caption-side:bottom;border-collapse:collapse}caption{padding-top:.5rem;padding-bottom:.5rem;color:#6c757d;text-align:left}th{text-align:inherit;text-align:-webkit-match-parent}tbody,td,tfoot,th,thead,tr{border-color:inherit;border-style:solid;border-width:0}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button,select{text-transform:none}[role=button]{cursor:pointer}select{word-wrap:normal}select:disabled{opacity:1}[list]::-webkit-calendar-picker-indicator{display:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){cursor:pointer}::-moz-focus-inner{padding:0;border-style:none}textarea{resize:vertical}fieldset{min-width:0;padding:0;margin:0;border:0}legend{float:left;width:100%;padding:0;margin-bottom:.5rem;font-size:calc(1.275rem + .3vw);line-height:inherit}@media (min-width:1200px){legend{font-size:1.5rem}}legend+*{clear:left}::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-fields-wrapper,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-text,::-webkit-datetime-edit-year-field{padding:0}::-webkit-inner-spin-button{height:auto}[type=search]{outline-offset:-2px;-webkit-appearance:textfield}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-color-swatch-wrapper{padding:0}::file-selector-button{font:inherit}::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}output{display:inline-block}iframe{border:0}summary{display:list-item;cursor:pointer}progress{vertical-align:baseline}[hidden]{display:none!important}</style>
+    <style>/*! syntax-highlighting.css */pre{line-height:125%;}span.linenos{color:inherit; background-color:transparent; padding-left:5px; padding-right:20px;}.pdoc-code .hll{background-color:#ffffcc}.pdoc-code{background:#f8f8f8;}.pdoc-code .c{color:#3D7B7B; font-style:italic}.pdoc-code .err{border:1px solid #FF0000}.pdoc-code .k{color:#008000; font-weight:bold}.pdoc-code .o{color:#666666}.pdoc-code .ch{color:#3D7B7B; font-style:italic}.pdoc-code .cm{color:#3D7B7B; font-style:italic}.pdoc-code .cp{color:#9C6500}.pdoc-code .cpf{color:#3D7B7B; font-style:italic}.pdoc-code .c1{color:#3D7B7B; font-style:italic}.pdoc-code .cs{color:#3D7B7B; font-style:italic}.pdoc-code .gd{color:#A00000}.pdoc-code .ge{font-style:italic}.pdoc-code .gr{color:#E40000}.pdoc-code .gh{color:#000080; font-weight:bold}.pdoc-code .gi{color:#008400}.pdoc-code .go{color:#717171}.pdoc-code .gp{color:#000080; font-weight:bold}.pdoc-code .gs{font-weight:bold}.pdoc-code .gu{color:#800080; font-weight:bold}.pdoc-code .gt{color:#0044DD}.pdoc-code .kc{color:#008000; font-weight:bold}.pdoc-code .kd{color:#008000; font-weight:bold}.pdoc-code .kn{color:#008000; font-weight:bold}.pdoc-code .kp{color:#008000}.pdoc-code .kr{color:#008000; font-weight:bold}.pdoc-code .kt{color:#B00040}.pdoc-code .m{color:#666666}.pdoc-code .s{color:#BA2121}.pdoc-code .na{color:#687822}.pdoc-code .nb{color:#008000}.pdoc-code .nc{color:#0000FF; font-weight:bold}.pdoc-code .no{color:#880000}.pdoc-code .nd{color:#AA22FF}.pdoc-code .ni{color:#717171; font-weight:bold}.pdoc-code .ne{color:#CB3F38; font-weight:bold}.pdoc-code .nf{color:#0000FF}.pdoc-code .nl{color:#767600}.pdoc-code .nn{color:#0000FF; font-weight:bold}.pdoc-code .nt{color:#008000; font-weight:bold}.pdoc-code .nv{color:#19177C}.pdoc-code .ow{color:#AA22FF; font-weight:bold}.pdoc-code .w{color:#bbbbbb}.pdoc-code .mb{color:#666666}.pdoc-code .mf{color:#666666}.pdoc-code .mh{color:#666666}.pdoc-code .mi{color:#666666}.pdoc-code .mo{color:#666666}.pdoc-code .sa{color:#BA2121}.pdoc-code .sb{color:#BA2121}.pdoc-code .sc{color:#BA2121}.pdoc-code .dl{color:#BA2121}.pdoc-code .sd{color:#BA2121; font-style:italic}.pdoc-code .s2{color:#BA2121}.pdoc-code .se{color:#AA5D1F; font-weight:bold}.pdoc-code .sh{color:#BA2121}.pdoc-code .si{color:#A45A77; font-weight:bold}.pdoc-code .sx{color:#008000}.pdoc-code .sr{color:#A45A77}.pdoc-code .s1{color:#BA2121}.pdoc-code .ss{color:#19177C}.pdoc-code .bp{color:#008000}.pdoc-code .fm{color:#0000FF}.pdoc-code .vc{color:#19177C}.pdoc-code .vg{color:#19177C}.pdoc-code .vi{color:#19177C}.pdoc-code .vm{color:#19177C}.pdoc-code .il{color:#666666}</style>
+    <style>/*! theme.css */:root{--pdoc-background:#fff;}.pdoc{--text:#212529;--muted:#6c757d;--link:#3660a5;--link-hover:#1659c5;--code:#f8f8f8;--active:#fff598;--accent:#eee;--accent2:#c1c1c1;--nav-hover:rgba(255, 255, 255, 0.5);--name:#0066BB;--def:#008800;--annotation:#007020;}</style>
+    <style>/*! layout.css */html, body{width:100%;height:100%;}html, main{scroll-behavior:smooth;}body{background-color:var(--pdoc-background);}@media (max-width:769px){#navtoggle{cursor:pointer;position:absolute;width:50px;height:40px;top:1rem;right:1rem;border-color:var(--text);color:var(--text);display:flex;opacity:0.8;z-index:999;}#navtoggle:hover{opacity:1;}#togglestate + div{display:none;}#togglestate:checked + div{display:inherit;}main, header{padding:2rem 3vw;}header + main{margin-top:-3rem;}.git-button{display:none !important;}nav input[type="search"]{max-width:77%;}nav input[type="search"]:first-child{margin-top:-6px;}nav input[type="search"]:valid ~ *{display:none !important;}}@media (min-width:770px){:root{--sidebar-width:clamp(12.5rem, 28vw, 22rem);}nav{position:fixed;overflow:auto;height:100vh;width:var(--sidebar-width);}main, header{padding:3rem 2rem 3rem calc(var(--sidebar-width) + 3rem);width:calc(54rem + var(--sidebar-width));max-width:100%;}header + main{margin-top:-4rem;}#navtoggle{display:none;}}#togglestate{position:absolute;height:0;opacity:0;}nav.pdoc{--pad:clamp(0.5rem, 2vw, 1.75rem);--indent:1.5rem;background-color:var(--accent);border-right:1px solid var(--accent2);box-shadow:0 0 20px rgba(50, 50, 50, .2) inset;padding:0 0 0 var(--pad);overflow-wrap:anywhere;scrollbar-width:thin; scrollbar-color:var(--accent2) transparent }nav.pdoc::-webkit-scrollbar{width:.4rem; }nav.pdoc::-webkit-scrollbar-thumb{background-color:var(--accent2); }nav.pdoc > div{padding:var(--pad) 0;}nav.pdoc .module-list-button{display:inline-flex;align-items:center;color:var(--text);border-color:var(--muted);margin-bottom:1rem;}nav.pdoc .module-list-button:hover{border-color:var(--text);}nav.pdoc input[type=search]{display:block;outline-offset:0;width:calc(100% - var(--pad));}nav.pdoc .logo{max-width:calc(100% - var(--pad));max-height:35vh;display:block;margin:0 auto 1rem;transform:translate(calc(-.5 * var(--pad)), 0);}nav.pdoc ul{list-style:none;padding-left:0;}nav.pdoc > div > ul{margin-left:calc(0px - var(--pad));}nav.pdoc li a{padding:.2rem 0 .2rem calc(var(--pad) + var(--indent));}nav.pdoc > div > ul > li > a{padding-left:var(--pad);}nav.pdoc li{transition:all 100ms;}nav.pdoc li:hover{background-color:var(--nav-hover);}nav.pdoc a, nav.pdoc a:hover{color:var(--text);}nav.pdoc a{display:block;}nav.pdoc > h2:first-of-type{margin-top:1.5rem;}nav.pdoc .class:before{content:"class ";color:var(--muted);}nav.pdoc .function:after{content:"()";color:var(--muted);}nav.pdoc footer:before{content:"";display:block;width:calc(100% - var(--pad));border-top:solid var(--accent2) 1px;margin-top:1.5rem;padding-top:.5rem;}nav.pdoc footer{font-size:small;}</style>
+    <style>/*! content.css */.pdoc{color:var(--text);box-sizing:border-box;line-height:1.5;background:none;}.pdoc .pdoc-button{cursor:pointer;display:inline-block;border:solid black 1px;border-radius:2px;font-size:.75rem;padding:calc(0.5em - 1px) 1em;transition:100ms all;}.pdoc .pdoc-alert{padding:1rem 1rem 1rem calc(1.5rem + 24px);border:1px solid transparent;border-radius:.25rem;background-repeat:no-repeat;background-position:1rem center;margin-bottom:1rem;}.pdoc .pdoc-alert > *:last-child{margin-bottom:0;}.pdoc .pdoc-alert-note {color:#084298;background-color:#cfe2ff;border-color:#b6d4fe;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23084298%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8%2016A8%208%200%201%200%208%200a8%208%200%200%200%200%2016zm.93-9.412-1%204.705c-.07.34.029.533.304.533.194%200%20.487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703%200-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381%202.29-.287zM8%205.5a1%201%200%201%201%200-2%201%201%200%200%201%200%202z%22/%3E%3C/svg%3E");}.pdoc .pdoc-alert-warning{color:#664d03;background-color:#fff3cd;border-color:#ffecb5;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23664d03%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8.982%201.566a1.13%201.13%200%200%200-1.96%200L.165%2013.233c-.457.778.091%201.767.98%201.767h13.713c.889%200%201.438-.99.98-1.767L8.982%201.566zM8%205c.535%200%20.954.462.9.995l-.35%203.507a.552.552%200%200%201-1.1%200L7.1%205.995A.905.905%200%200%201%208%205zm.002%206a1%201%200%201%201%200%202%201%201%200%200%201%200-2z%22/%3E%3C/svg%3E");}.pdoc .pdoc-alert-danger{color:#842029;background-color:#f8d7da;border-color:#f5c2c7;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23842029%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5.52.359A.5.5%200%200%201%206%200h4a.5.5%200%200%201%20.474.658L8.694%206H12.5a.5.5%200%200%201%20.395.807l-7%209a.5.5%200%200%201-.873-.454L6.823%209.5H3.5a.5.5%200%200%201-.48-.641l2.5-8.5z%22/%3E%3C/svg%3E");}.pdoc .visually-hidden{position:absolute !important;width:1px !important;height:1px !important;padding:0 !important;margin:-1px !important;overflow:hidden !important;clip:rect(0, 0, 0, 0) !important;white-space:nowrap !important;border:0 !important;}.pdoc h1, .pdoc h2, .pdoc h3{font-weight:300;margin:.3em 0;padding:.2em 0;}.pdoc > section:not(.module-info) h1{font-size:1.5rem;font-weight:500;}.pdoc > section:not(.module-info) h2{font-size:1.4rem;font-weight:500;}.pdoc > section:not(.module-info) h3{font-size:1.3rem;font-weight:500;}.pdoc > section:not(.module-info) h4{font-size:1.2rem;}.pdoc > section:not(.module-info) h5{font-size:1.1rem;}.pdoc a{text-decoration:none;color:var(--link);}.pdoc a:hover{color:var(--link-hover);}.pdoc blockquote{margin-left:2rem;}.pdoc pre{border-top:1px solid var(--accent2);border-bottom:1px solid var(--accent2);margin-top:0;margin-bottom:1em;padding:.5rem 0 .5rem .5rem;overflow-x:auto;background-color:var(--code);}.pdoc code{color:var(--text);padding:.2em .4em;margin:0;font-size:85%;background-color:var(--code);border-radius:6px;}.pdoc a > code{color:inherit;}.pdoc pre > code{display:inline-block;font-size:inherit;background:none;border:none;padding:0;}.pdoc > section:not(.module-info){margin-bottom:1.5rem;}.pdoc .modulename{margin-top:0;font-weight:bold;}.pdoc .modulename a{color:var(--link);transition:100ms all;}.pdoc .git-button{float:right;border:solid var(--link) 1px;}.pdoc .git-button:hover{background-color:var(--link);color:var(--pdoc-background);}.view-source-toggle-state,.view-source-toggle-state ~ .pdoc-code{display:none;}.view-source-toggle-state:checked ~ .pdoc-code{display:block;}.view-source-button{display:inline-block;float:right;font-size:.75rem;line-height:1.5rem;color:var(--muted);padding:0 .4rem 0 1.3rem;cursor:pointer;text-indent:-2px;}.view-source-button > span{visibility:hidden;}.module-info .view-source-button{float:none;display:flex;justify-content:flex-end;margin:-1.2rem .4rem -.2rem 0;}.view-source-button::before{position:absolute;content:"View Source";display:list-item;list-style-type:disclosure-closed;}.view-source-toggle-state:checked ~ .attr .view-source-button::before,.view-source-toggle-state:checked ~ .view-source-button::before{list-style-type:disclosure-open;}.pdoc .docstring{margin-bottom:1.5rem;}.pdoc section:not(.module-info) .docstring{margin-left:clamp(0rem, 5vw - 2rem, 1rem);}.pdoc .docstring .pdoc-code{margin-left:1em;margin-right:1em;}.pdoc h1:target,.pdoc h2:target,.pdoc h3:target,.pdoc h4:target,.pdoc h5:target,.pdoc h6:target,.pdoc .pdoc-code > pre > span:target{background-color:var(--active);box-shadow:-1rem 0 0 0 var(--active);}.pdoc .pdoc-code > pre > span:target{display:block;}.pdoc div:target > .attr,.pdoc section:target > .attr,.pdoc dd:target > a{background-color:var(--active);}.pdoc *{scroll-margin:2rem;}.pdoc .pdoc-code .linenos{user-select:none;}.pdoc .attr:hover{filter:contrast(0.95);}.pdoc section, .pdoc .classattr{position:relative;}.pdoc .headerlink{--width:clamp(1rem, 3vw, 2rem);position:absolute;top:0;left:calc(0rem - var(--width));transition:all 100ms ease-in-out;opacity:0;}.pdoc .headerlink::before{content:"#";display:block;text-align:center;width:var(--width);height:2.3rem;line-height:2.3rem;font-size:1.5rem;}.pdoc .attr:hover ~ .headerlink,.pdoc *:target > .headerlink,.pdoc .headerlink:hover{opacity:1;}.pdoc .attr{display:block;margin:.5rem 0 .5rem;padding:.4rem .4rem .4rem 1rem;background-color:var(--accent);overflow-x:auto;}.pdoc .classattr{margin-left:2rem;}.pdoc .name{color:var(--name);font-weight:bold;}.pdoc .def{color:var(--def);font-weight:bold;}.pdoc .signature{background-color:transparent;}.pdoc .param, .pdoc .return-annotation{white-space:pre;}.pdoc .signature.multiline .param{display:block;}.pdoc .signature.condensed .param{display:inline-block;}.pdoc .annotation{color:var(--annotation);}.pdoc .view-value-toggle-state,.pdoc .view-value-toggle-state ~ .default_value{display:none;}.pdoc .view-value-toggle-state:checked ~ .default_value{display:inherit;}.pdoc .view-value-button{font-size:.5rem;vertical-align:middle;border-style:dashed;margin-top:-0.1rem;}.pdoc .view-value-button:hover{background:white;}.pdoc .view-value-button::before{content:"show";text-align:center;width:2.2em;display:inline-block;}.pdoc .view-value-toggle-state:checked ~ .view-value-button::before{content:"hide";}.pdoc .inherited{margin-left:2rem;}.pdoc .inherited dt{font-weight:700;}.pdoc .inherited dt, .pdoc .inherited dd{display:inline;margin-left:0;margin-bottom:.5rem;}.pdoc .inherited dd:not(:last-child):after{content:", ";}.pdoc .inherited .class:before{content:"class ";}.pdoc .inherited .function a:after{content:"()";}.pdoc .search-result .docstring{overflow:auto;max-height:25vh;}.pdoc .search-result.focused > .attr{background-color:var(--active);}.pdoc .attribution{margin-top:2rem;display:block;opacity:0.5;transition:all 200ms;filter:grayscale(100%);}.pdoc .attribution:hover{opacity:1;filter:grayscale(0%);}.pdoc .attribution img{margin-left:5px;height:35px;vertical-align:middle;width:70px;transition:all 200ms;}.pdoc table{display:block;width:max-content;max-width:100%;overflow:auto;margin-bottom:1rem;}.pdoc table th{font-weight:600;}.pdoc table th, .pdoc table td{padding:6px 13px;border:1px solid var(--accent2);}</style>
+    <style>/*! custom.css */</style></head>
+<body>
+    <nav class="pdoc">
+        <label id="navtoggle" for="togglestate" class="pdoc-button"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke-linecap='round' stroke="currentColor" stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg></label>
+        <input id="togglestate" type="checkbox" aria-hidden="true" tabindex="-1">
+        <div>            <a class="pdoc-button module-list-button" href="../codedog.html">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+  <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+</svg>                &nbsp;codedog</a>
+
+
+            <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
+                   pattern=".+" required>
+
+
+
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="class" href="#Blob">Blob</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#Blob.blob_id">blob_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Blob.sha">sha</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Blob.content">content</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Blob.encoding">encoding</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Blob.size">size</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Blob.url">url</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ChangeFile">ChangeFile</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#ChangeFile.blob_id">blob_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.sha">sha</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.full_name">full_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.source_full_name">source_full_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.status">status</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.pull_request_id">pull_request_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.start_commit_id">start_commit_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.end_commit_id">end_commit_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.name">name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.suffix">suffix</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.diff_url">diff_url</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.blob_url">blob_url</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeFile.diff_content">diff_content</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ChangeStatus">ChangeStatus</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#ChangeStatus.addition">addition</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.copy">copy</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.deletion">deletion</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.modified">modified</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.renaming">renaming</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.type_change">type_change</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.unmerged">unmerged</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeStatus.unknown">unknown</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ChangeSummary">ChangeSummary</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#ChangeSummary.full_name">full_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ChangeSummary.summary">summary</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#CodeReview">CodeReview</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#CodeReview.file">file</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#CodeReview.review">review</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#Commit">Commit</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#Commit.commit_id">commit_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Commit.sha">sha</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Commit.url">url</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Commit.message">message</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Commit.none_to_default">none_to_default</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#DiffContent">DiffContent</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#DiffContent.add_count">add_count</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffContent.remove_count">remove_count</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffContent.content">content</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffContent.diff_segments">diff_segments</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffContent.patched_file">patched_file</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#DiffSegment">DiffSegment</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#DiffSegment.add_count">add_count</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.remove_count">remove_count</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.content">content</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.source_start_line_number">source_start_line_number</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.source_length">source_length</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.target_start_line_number">target_start_line_number</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#DiffSegment.target_length">target_length</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#Issue">Issue</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#Issue.issue_id">issue_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Issue.title">title</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Issue.description">description</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Issue.url">url</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Issue.none_to_default">none_to_default</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#PRSummary">PRSummary</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#PRSummary.overview">overview</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRSummary.pr_type">pr_type</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRSummary.major_files">major_files</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#PRType">PRType</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#PRType.feature">feature</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.fix">fix</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.refactor">refactor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.perf">perf</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.test">test</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.doc">doc</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.ci">ci</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.style">style</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.chore">chore</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PRType.unknown">unknown</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#PullRequest">PullRequest</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#PullRequest.pull_request_id">pull_request_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.repository_id">repository_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.pull_request_number">pull_request_number</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.title">title</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.body">body</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.url">url</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.repository_name">repository_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.related_issues">related_issues</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.change_files">change_files</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.repository">repository</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PullRequest.source_repository">source_repository</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#PullRequest.none_to_default">none_to_default</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#Repository">Repository</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#Repository.repository_id">repository_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Repository.repository_name">repository_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Repository.repository_full_name">repository_full_name</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Repository.repository_url">repository_url</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Repository.none_to_default">none_to_default</a>
+                        </li>
+                </ul>
+
+            </li>
+    </ul>
+
+
+
+        <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
+            built with <span class="visually-hidden">pdoc</span><img
+                alt="pdoc logo"
+                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-label%3D%22pdoc%20logo%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%22-1%200%2060%2030%22%3E%3Ctitle%3Epdoc%3C/title%3E%3Cpath%20d%3D%22M29.621%2021.293c-.011-.273-.214-.475-.511-.481a.5.5%200%200%200-.489.503l-.044%201.393c-.097.551-.695%201.215-1.566%201.704-.577.428-1.306.486-2.193.182-1.426-.617-2.467-1.654-3.304-2.487l-.173-.172a3.43%203.43%200%200%200-.365-.306.49.49%200%200%200-.286-.196c-1.718-1.06-4.931-1.47-7.353.191l-.219.15c-1.707%201.187-3.413%202.131-4.328%201.03-.02-.027-.49-.685-.141-1.763.233-.721.546-2.408.772-4.076.042-.09.067-.187.046-.288.166-1.347.277-2.625.241-3.351%201.378-1.008%202.271-2.586%202.271-4.362%200-.976-.272-1.935-.788-2.774-.057-.094-.122-.18-.184-.268.033-.167.052-.339.052-.516%200-1.477-1.202-2.679-2.679-2.679-.791%200-1.496.352-1.987.9a6.3%206.3%200%200%200-1.001.029c-.492-.564-1.207-.929-2.012-.929-1.477%200-2.679%201.202-2.679%202.679A2.65%202.65%200%200%200%20.97%206.554c-.383.747-.595%201.572-.595%202.41%200%202.311%201.507%204.29%203.635%205.107-.037.699-.147%202.27-.423%203.294l-.137.461c-.622%202.042-2.515%208.257%201.727%2010.643%201.614.908%203.06%201.248%204.317%201.248%202.665%200%204.492-1.524%205.322-2.401%201.476-1.559%202.886-1.854%206.491.82%201.877%201.393%203.514%201.753%204.861%201.068%202.223-1.713%202.811-3.867%203.399-6.374.077-.846.056-1.469.054-1.537zm-4.835%204.313c-.054.305-.156.586-.242.629-.034-.007-.131-.022-.307-.157-.145-.111-.314-.478-.456-.908.221.121.432.25.675.355.115.039.219.051.33.081zm-2.251-1.238c-.05.33-.158.648-.252.694-.022.001-.125-.018-.307-.157-.217-.166-.488-.906-.639-1.573.358.344.754.693%201.198%201.036zm-3.887-2.337c-.006-.116-.018-.231-.041-.342.635.145%201.189.368%201.599.625.097.231.166.481.174.642-.03.049-.055.101-.067.158-.046.013-.128.026-.298.004-.278-.037-.901-.57-1.367-1.087zm-1.127-.497c.116.306.176.625.12.71-.019.014-.117.045-.345.016-.206-.027-.604-.332-.986-.695.41-.051.816-.056%201.211-.031zm-4.535%201.535c.209.22.379.47.358.598-.006.041-.088.138-.351.234-.144.055-.539-.063-.979-.259a11.66%2011.66%200%200%200%20.972-.573zm.983-.664c.359-.237.738-.418%201.126-.554.25.237.479.548.457.694-.006.042-.087.138-.351.235-.174.064-.694-.105-1.232-.375zm-3.381%201.794c-.022.145-.061.29-.149.401-.133.166-.358.248-.69.251h-.002c-.133%200-.306-.26-.45-.621.417.091.854.07%201.291-.031zm-2.066-8.077a4.78%204.78%200%200%201-.775-.584c.172-.115.505-.254.88-.378l-.105.962zm-.331%202.302a10.32%2010.32%200%200%201-.828-.502c.202-.143.576-.328.984-.49l-.156.992zm-.45%202.157l-.701-.403c.214-.115.536-.249.891-.376a11.57%2011.57%200%200%201-.19.779zm-.181%201.716c.064.398.194.702.298.893-.194-.051-.435-.162-.736-.398.061-.119.224-.3.438-.495zM8.87%204.141c0%20.152-.123.276-.276.276s-.275-.124-.275-.276.123-.276.276-.276.275.124.275.276zm-.735-.389a1.15%201.15%200%200%200-.314.783%201.16%201.16%200%200%200%201.162%201.162c.457%200%20.842-.27%201.032-.653.026.117.042.238.042.362a1.68%201.68%200%200%201-1.679%201.679%201.68%201.68%200%200%201-1.679-1.679c0-.843.626-1.535%201.436-1.654zM5.059%205.406A1.68%201.68%200%200%201%203.38%207.085a1.68%201.68%200%200%201-1.679-1.679c0-.037.009-.072.011-.109.21.3.541.508.935.508a1.16%201.16%200%200%200%201.162-1.162%201.14%201.14%200%200%200-.474-.912c.015%200%20.03-.005.045-.005.926.001%201.679.754%201.679%201.68zM3.198%204.141c0%20.152-.123.276-.276.276s-.275-.124-.275-.276.123-.276.276-.276.275.124.275.276zM1.375%208.964c0-.52.103-1.035.288-1.52.466.394%201.06.64%201.717.64%201.144%200%202.116-.725%202.499-1.738.383%201.012%201.355%201.738%202.499%201.738.867%200%201.631-.421%202.121-1.062.307.605.478%201.267.478%201.942%200%202.486-2.153%204.51-4.801%204.51s-4.801-2.023-4.801-4.51zm24.342%2019.349c-.985.498-2.267.168-3.813-.979-3.073-2.281-5.453-3.199-7.813-.705-1.315%201.391-4.163%203.365-8.423.97-3.174-1.786-2.239-6.266-1.261-9.479l.146-.492c.276-1.02.395-2.457.444-3.268a6.11%206.11%200%200%200%201.18.115%206.01%206.01%200%200%200%202.536-.562l-.006.175c-.802.215-1.848.612-2.021%201.25-.079.295.021.601.274.837.219.203.415.364.598.501-.667.304-1.243.698-1.311%201.179-.02.144-.022.507.393.787.213.144.395.26.564.365-1.285.521-1.361.96-1.381%201.126-.018.142-.011.496.427.746l.854.489c-.473.389-.971.914-.999%201.429-.018.278.095.532.316.713.675.556%201.231.721%201.653.721.059%200%20.104-.014.158-.02.207.707.641%201.64%201.513%201.64h.013c.8-.008%201.236-.345%201.462-.626.173-.216.268-.457.325-.692.424.195.93.374%201.372.374.151%200%20.294-.021.423-.068.732-.27.944-.704.993-1.021.009-.061.003-.119.002-.179.266.086.538.147.789.147.15%200%20.294-.021.423-.069.542-.2.797-.489.914-.754.237.147.478.258.704.288.106.014.205.021.296.021.356%200%20.595-.101.767-.229.438.435%201.094.992%201.656%201.067.106.014.205.021.296.021a1.56%201.56%200%200%200%20.323-.035c.17.575.453%201.289.866%201.605.358.273.665.362.914.362a.99.99%200%200%200%20.421-.093%201.03%201.03%200%200%200%20.245-.164c.168.428.39.846.68%201.068.358.273.665.362.913.362a.99.99%200%200%200%20.421-.093c.317-.148.512-.448.639-.762.251.157.495.257.726.257.127%200%20.25-.024.37-.071.427-.17.706-.617.841-1.314.022-.015.047-.022.068-.038.067-.051.133-.104.196-.159-.443%201.486-1.107%202.761-2.086%203.257zM8.66%209.925a.5.5%200%201%200-1%200c0%20.653-.818%201.205-1.787%201.205s-1.787-.552-1.787-1.205a.5.5%200%201%200-1%200c0%201.216%201.25%202.205%202.787%202.205s2.787-.989%202.787-2.205zm4.4%2015.965l-.208.097c-2.661%201.258-4.708%201.436-6.086.527-1.542-1.017-1.88-3.19-1.844-4.198a.4.4%200%200%200-.385-.414c-.242-.029-.406.164-.414.385-.046%201.249.367%203.686%202.202%204.896.708.467%201.547.7%202.51.7%201.248%200%202.706-.392%204.362-1.174l.185-.086a.4.4%200%200%200%20.205-.527c-.089-.204-.326-.291-.527-.206zM9.547%202.292c.093.077.205.114.317.114a.5.5%200%200%200%20.318-.886L8.817.397a.5.5%200%200%200-.703.068.5.5%200%200%200%20.069.703l1.364%201.124zm-7.661-.065c.086%200%20.173-.022.253-.068l1.523-.893a.5.5%200%200%200-.506-.863l-1.523.892a.5.5%200%200%200-.179.685c.094.158.261.247.432.247z%22%20transform%3D%22matrix%28-1%200%200%201%2058%200%29%22%20fill%3D%22%233bb300%22/%3E%3Cpath%20d%3D%22M.3%2021.86V10.18q0-.46.02-.68.04-.22.18-.5.28-.54%201.34-.54%201.06%200%201.42.28.38.26.44.78.76-1.04%202.38-1.04%201.64%200%203.1%201.54%201.46%201.54%201.46%203.58%200%202.04-1.46%203.58-1.44%201.54-3.08%201.54-1.64%200-2.38-.92v4.04q0%20.46-.04.68-.02.22-.18.5-.14.3-.5.42-.36.12-.98.12-.62%200-1-.12-.36-.12-.52-.4-.14-.28-.18-.5-.02-.22-.02-.68zm3.96-9.42q-.46.54-.46%201.18%200%20.64.46%201.18.48.52%201.2.52.74%200%201.24-.52.52-.52.52-1.18%200-.66-.48-1.18-.48-.54-1.26-.54-.76%200-1.22.54zm14.741-8.36q.16-.3.54-.42.38-.12%201-.12.64%200%201.02.12.38.12.52.42.16.3.18.54.04.22.04.68v11.94q0%20.46-.04.7-.02.22-.18.5-.3.54-1.7.54-1.38%200-1.54-.98-.84.96-2.34.96-1.8%200-3.28-1.56-1.48-1.58-1.48-3.66%200-2.1%201.48-3.68%201.5-1.58%203.28-1.58%201.48%200%202.3%201v-4.2q0-.46.02-.68.04-.24.18-.52zm-3.24%2010.86q.52.54%201.26.54.74%200%201.22-.54.5-.54.5-1.18%200-.66-.48-1.22-.46-.56-1.26-.56-.8%200-1.28.56-.48.54-.48%201.2%200%20.66.52%201.2zm7.833-1.2q0-2.4%201.68-3.96%201.68-1.56%203.84-1.56%202.16%200%203.82%201.56%201.66%201.54%201.66%203.94%200%201.66-.86%202.96-.86%201.28-2.1%201.9-1.22.6-2.54.6-1.32%200-2.56-.64-1.24-.66-2.1-1.92-.84-1.28-.84-2.88zm4.18%201.44q.64.48%201.3.48.66%200%201.32-.5.66-.5.66-1.48%200-.98-.62-1.46-.62-.48-1.34-.48-.72%200-1.34.5-.62.5-.62%201.48%200%20.96.64%201.46zm11.412-1.44q0%20.84.56%201.32.56.46%201.18.46.64%200%201.18-.36.56-.38.9-.38.6%200%201.46%201.06.46.58.46%201.04%200%20.76-1.1%201.42-1.14.8-2.8.8-1.86%200-3.58-1.34-.82-.64-1.34-1.7-.52-1.08-.52-2.36%200-1.3.52-2.34.52-1.06%201.34-1.7%201.66-1.32%203.54-1.32.76%200%201.48.22.72.2%201.06.4l.32.2q.36.24.56.38.52.4.52.92%200%20.5-.42%201.14-.72%201.1-1.38%201.1-.38%200-1.08-.44-.36-.34-1.04-.34-.66%200-1.24.48-.58.48-.58%201.34z%22%20fill%3D%22green%22/%3E%3C/svg%3E"/>
+        </a>
+</div>
+    </nav>
+    <main class="pdoc">
+            <section class="module-info">
+                    <h1 class="modulename">
+<a href="./../codedog.html">codedog</a><wbr>.models    </h1>
+
+                
+                        <input id="mod-models-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="mod-models-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span> <span class="nn">codedog.models.blob</span> <span class="kn">import</span> <span class="n">Blob</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span> <span class="nn">codedog.models.change_file</span> <span class="kn">import</span> <span class="n">ChangeFile</span><span class="p">,</span> <span class="n">ChangeStatus</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span> <span class="nn">codedog.models.change_summary</span> <span class="kn">import</span> <span class="n">ChangeSummary</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span> <span class="nn">codedog.models.code_review</span> <span class="kn">import</span> <span class="n">CodeReview</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">codedog.models.commit</span> <span class="kn">import</span> <span class="n">Commit</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span> <span class="nn">codedog.models.diff</span> <span class="kn">import</span> <span class="n">DiffContent</span><span class="p">,</span> <span class="n">DiffSegment</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">codedog.models.issue</span> <span class="kn">import</span> <span class="n">Issue</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span> <span class="nn">codedog.models.pr_summary</span> <span class="kn">import</span> <span class="n">PRSummary</span><span class="p">,</span> <span class="n">PRType</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span> <span class="nn">codedog.models.pull_request</span> <span class="kn">import</span> <span class="n">PullRequest</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">codedog.models.repository</span> <span class="kn">import</span> <span class="n">Repository</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="s2">&quot;Blob&quot;</span><span class="p">,</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="s2">&quot;ChangeFile&quot;</span><span class="p">,</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="s2">&quot;ChangeStatus&quot;</span><span class="p">,</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="s2">&quot;ChangeSummary&quot;</span><span class="p">,</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="s2">&quot;CodeReview&quot;</span><span class="p">,</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="s2">&quot;Commit&quot;</span><span class="p">,</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="s2">&quot;DiffContent&quot;</span><span class="p">,</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="s2">&quot;DiffSegment&quot;</span><span class="p">,</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="s2">&quot;Issue&quot;</span><span class="p">,</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="s2">&quot;PRSummary&quot;</span><span class="p">,</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="s2">&quot;PRType&quot;</span><span class="p">,</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="s2">&quot;PullRequest&quot;</span><span class="p">,</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="s2">&quot;Repository&quot;</span><span class="p">,</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="p">]</span>
+</span></pre></div>
+
+
+            </section>
+                <section id="Blob">
+                            <input id="Blob-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Blob</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="Blob-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Blob"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Blob-5"><a href="#Blob-5"><span class="linenos"> 5</span></a><span class="k">class</span> <span class="nc">Blob</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Blob-6"><a href="#Blob-6"><span class="linenos"> 6</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Git blob object.&quot;&quot;&quot;</span>
+</span><span id="Blob-7"><a href="#Blob-7"><span class="linenos"> 7</span></a>
+</span><span id="Blob-8"><a href="#Blob-8"><span class="linenos"> 8</span></a>    <span class="n">blob_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-9"><a href="#Blob-9"><span class="linenos"> 9</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob id. Converted from sha.&quot;&quot;&quot;</span>
+</span><span id="Blob-10"><a href="#Blob-10"><span class="linenos">10</span></a>    <span class="n">sha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-11"><a href="#Blob-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob sha.&quot;&quot;&quot;</span>
+</span><span id="Blob-12"><a href="#Blob-12"><span class="linenos">12</span></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-13"><a href="#Blob-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob content.&quot;&quot;&quot;</span>
+</span><span id="Blob-14"><a href="#Blob-14"><span class="linenos">14</span></a>    <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-15"><a href="#Blob-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob content encoding.&quot;&quot;&quot;</span>
+</span><span id="Blob-16"><a href="#Blob-16"><span class="linenos">16</span></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-17"><a href="#Blob-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob content size.&quot;&quot;&quot;</span>
+</span><span id="Blob-18"><a href="#Blob-18"><span class="linenos">18</span></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Blob-19"><a href="#Blob-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob url.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Git blob object.</p>
+</div>
+
+
+                            <div id="Blob.blob_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">blob_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.blob_id"></a>
+    
+            <div class="docstring"><p>Blob id. Converted from sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="Blob.sha" class="classattr">
+                                <div class="attr variable">
+            <span class="name">sha</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.sha"></a>
+    
+            <div class="docstring"><p>Blob sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="Blob.content" class="classattr">
+                                <div class="attr variable">
+            <span class="name">content</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.content"></a>
+    
+            <div class="docstring"><p>Blob content.</p>
+</div>
+
+
+                            </div>
+                            <div id="Blob.encoding" class="classattr">
+                                <div class="attr variable">
+            <span class="name">encoding</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.encoding"></a>
+    
+            <div class="docstring"><p>Blob content encoding.</p>
+</div>
+
+
+                            </div>
+                            <div id="Blob.size" class="classattr">
+                                <div class="attr variable">
+            <span class="name">size</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.size"></a>
+    
+            <div class="docstring"><p>Blob content size.</p>
+</div>
+
+
+                            </div>
+                            <div id="Blob.url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Blob.url"></a>
+    
+            <div class="docstring"><p>Blob url.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="Blob.__init__" class="function">BaseModel</dd>
+                <dd id="Blob.Config" class="variable">Config</dd>
+                <dd id="Blob.dict" class="function">dict</dd>
+                <dd id="Blob.json" class="function">json</dd>
+                <dd id="Blob.parse_obj" class="function">parse_obj</dd>
+                <dd id="Blob.parse_raw" class="function">parse_raw</dd>
+                <dd id="Blob.parse_file" class="function">parse_file</dd>
+                <dd id="Blob.from_orm" class="function">from_orm</dd>
+                <dd id="Blob.construct" class="function">construct</dd>
+                <dd id="Blob.copy" class="function">copy</dd>
+                <dd id="Blob.schema" class="function">schema</dd>
+                <dd id="Blob.schema_json" class="function">schema_json</dd>
+                <dd id="Blob.validate" class="function">validate</dd>
+                <dd id="Blob.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="ChangeFile">
+                            <input id="ChangeFile-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ChangeFile</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="ChangeFile-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ChangeFile"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ChangeFile-31"><a href="#ChangeFile-31"><span class="linenos">31</span></a><span class="k">class</span> <span class="nc">ChangeFile</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="ChangeFile-32"><a href="#ChangeFile-32"><span class="linenos">32</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A changed file between two commit.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-33"><a href="#ChangeFile-33"><span class="linenos">33</span></a>
+</span><span id="ChangeFile-34"><a href="#ChangeFile-34"><span class="linenos">34</span></a>    <span class="n">blob_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-35"><a href="#ChangeFile-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob id. Converted from sha.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-36"><a href="#ChangeFile-36"><span class="linenos">36</span></a>    <span class="n">sha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-37"><a href="#ChangeFile-37"><span class="linenos">37</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Blob sha.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-38"><a href="#ChangeFile-38"><span class="linenos">38</span></a>    <span class="n">full_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-39"><a href="#ChangeFile-39"><span class="linenos">39</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File name and path.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-40"><a href="#ChangeFile-40"><span class="linenos">40</span></a>    <span class="n">source_full_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-41"><a href="#ChangeFile-41"><span class="linenos">41</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File name and path in source repository.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-42"><a href="#ChangeFile-42"><span class="linenos">42</span></a>    <span class="n">status</span><span class="p">:</span> <span class="n">ChangeStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-43"><a href="#ChangeFile-43"><span class="linenos">43</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Change status. see more information in ChangeStatus.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-44"><a href="#ChangeFile-44"><span class="linenos">44</span></a>    <span class="n">pull_request_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-45"><a href="#ChangeFile-45"><span class="linenos">45</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Id of pull request this change belongs to.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-46"><a href="#ChangeFile-46"><span class="linenos">46</span></a>    <span class="n">start_commit_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-47"><a href="#ChangeFile-47"><span class="linenos">47</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Start commit id&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-48"><a href="#ChangeFile-48"><span class="linenos">48</span></a>    <span class="n">end_commit_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-49"><a href="#ChangeFile-49"><span class="linenos">49</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;End commit id&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-50"><a href="#ChangeFile-50"><span class="linenos">50</span></a>
+</span><span id="ChangeFile-51"><a href="#ChangeFile-51"><span class="linenos">51</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-52"><a href="#ChangeFile-52"><span class="linenos">52</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File name.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-53"><a href="#ChangeFile-53"><span class="linenos">53</span></a>    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeFile-54"><a href="#ChangeFile-54"><span class="linenos">54</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File suffix.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-55"><a href="#ChangeFile-55"><span class="linenos">55</span></a>    <span class="n">diff_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="ChangeFile-56"><a href="#ChangeFile-56"><span class="linenos">56</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Url of this change file in pull request.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-57"><a href="#ChangeFile-57"><span class="linenos">57</span></a>    <span class="n">blob_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="ChangeFile-58"><a href="#ChangeFile-58"><span class="linenos">58</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Url of this change file blob in end commit.</span>
+</span><span id="ChangeFile-59"><a href="#ChangeFile-59"><span class="linenos">59</span></a>
+</span><span id="ChangeFile-60"><a href="#ChangeFile-60"><span class="linenos">60</span></a><span class="sd">    If change file type is deleted, this will be none.</span>
+</span><span id="ChangeFile-61"><a href="#ChangeFile-61"><span class="linenos">61</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ChangeFile-62"><a href="#ChangeFile-62"><span class="linenos">62</span></a>
+</span><span id="ChangeFile-63"><a href="#ChangeFile-63"><span class="linenos">63</span></a>    <span class="n">diff_content</span><span class="p">:</span> <span class="n">DiffContent</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ChangeFile-64"><a href="#ChangeFile-64"><span class="linenos">64</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The diff content of this file.&quot;&quot;&quot;</span>
+</span><span id="ChangeFile-65"><a href="#ChangeFile-65"><span class="linenos">65</span></a>
+</span><span id="ChangeFile-66"><a href="#ChangeFile-66"><span class="linenos">66</span></a>    <span class="n">_raw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ChangeFile-67"><a href="#ChangeFile-67"><span class="linenos">67</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw object generated by client api of this change file.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>A changed file between two commit.</p>
+</div>
+
+
+                            <div id="ChangeFile.blob_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">blob_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.blob_id"></a>
+    
+            <div class="docstring"><p>Blob id. Converted from sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.sha" class="classattr">
+                                <div class="attr variable">
+            <span class="name">sha</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.sha"></a>
+    
+            <div class="docstring"><p>Blob sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.full_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">full_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.full_name"></a>
+    
+            <div class="docstring"><p>File name and path.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.source_full_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">source_full_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.source_full_name"></a>
+    
+            <div class="docstring"><p>File name and path in source repository.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.status" class="classattr">
+                                <div class="attr variable">
+            <span class="name">status</span><span class="annotation">: <a href="#ChangeStatus">codedog.models.ChangeStatus</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.status"></a>
+    
+            <div class="docstring"><p>Change status. see more information in ChangeStatus.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.pull_request_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">pull_request_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.pull_request_id"></a>
+    
+            <div class="docstring"><p>Id of pull request this change belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.start_commit_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">start_commit_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.start_commit_id"></a>
+    
+            <div class="docstring"><p>Start commit id</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.end_commit_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">end_commit_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.end_commit_id"></a>
+    
+            <div class="docstring"><p>End commit id</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.name"></a>
+    
+            <div class="docstring"><p>File name.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.suffix" class="classattr">
+                                <div class="attr variable">
+            <span class="name">suffix</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.suffix"></a>
+    
+            <div class="docstring"><p>File suffix.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.diff_url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">diff_url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.diff_url"></a>
+    
+            <div class="docstring"><p>Url of this change file in pull request.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.blob_url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">blob_url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.blob_url"></a>
+    
+            <div class="docstring"><p>Url of this change file blob in end commit.</p>
+
+<p>If change file type is deleted, this will be none.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeFile.diff_content" class="classattr">
+                                <div class="attr variable">
+            <span class="name">diff_content</span><span class="annotation">: <a href="#DiffContent">codedog.models.DiffContent</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeFile.diff_content"></a>
+    
+            <div class="docstring"><p>The diff content of this file.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="ChangeFile.__init__" class="function">BaseModel</dd>
+                <dd id="ChangeFile.Config" class="variable">Config</dd>
+                <dd id="ChangeFile.dict" class="function">dict</dd>
+                <dd id="ChangeFile.json" class="function">json</dd>
+                <dd id="ChangeFile.parse_obj" class="function">parse_obj</dd>
+                <dd id="ChangeFile.parse_raw" class="function">parse_raw</dd>
+                <dd id="ChangeFile.parse_file" class="function">parse_file</dd>
+                <dd id="ChangeFile.from_orm" class="function">from_orm</dd>
+                <dd id="ChangeFile.construct" class="function">construct</dd>
+                <dd id="ChangeFile.copy" class="function">copy</dd>
+                <dd id="ChangeFile.schema" class="function">schema</dd>
+                <dd id="ChangeFile.schema_json" class="function">schema_json</dd>
+                <dd id="ChangeFile.validate" class="function">validate</dd>
+                <dd id="ChangeFile.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="ChangeStatus">
+                            <input id="ChangeStatus-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ChangeStatus</span><wbr>(<span class="base">builtins.str</span>, <span class="base">enum.Enum</span>):
+
+                <label class="view-source-button" for="ChangeStatus-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ChangeStatus"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ChangeStatus-10"><a href="#ChangeStatus-10"><span class="linenos">10</span></a><span class="k">class</span> <span class="nc">ChangeStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="ChangeStatus-11"><a href="#ChangeStatus-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Git file change mode. https://git-scm.com/docs/diff-format&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-12"><a href="#ChangeStatus-12"><span class="linenos">12</span></a>
+</span><span id="ChangeStatus-13"><a href="#ChangeStatus-13"><span class="linenos">13</span></a>    <span class="n">addition</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+</span><span id="ChangeStatus-14"><a href="#ChangeStatus-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Addition of a file&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-15"><a href="#ChangeStatus-15"><span class="linenos">15</span></a>    <span class="n">copy</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span>
+</span><span id="ChangeStatus-16"><a href="#ChangeStatus-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy of a file into a new one&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-17"><a href="#ChangeStatus-17"><span class="linenos">17</span></a>    <span class="n">deletion</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span>
+</span><span id="ChangeStatus-18"><a href="#ChangeStatus-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Deletion of a file&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-19"><a href="#ChangeStatus-19"><span class="linenos">19</span></a>    <span class="n">modified</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
+</span><span id="ChangeStatus-20"><a href="#ChangeStatus-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Modification of the contents or mode of a file&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-21"><a href="#ChangeStatus-21"><span class="linenos">21</span></a>    <span class="n">renaming</span> <span class="o">=</span> <span class="s2">&quot;R&quot;</span>
+</span><span id="ChangeStatus-22"><a href="#ChangeStatus-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renaming of a file&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-23"><a href="#ChangeStatus-23"><span class="linenos">23</span></a>    <span class="n">type_change</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+</span><span id="ChangeStatus-24"><a href="#ChangeStatus-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Change in the type of the file (regular file, symbolic link or submodule)&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-25"><a href="#ChangeStatus-25"><span class="linenos">25</span></a>    <span class="n">unmerged</span> <span class="o">=</span> <span class="s2">&quot;U&quot;</span>
+</span><span id="ChangeStatus-26"><a href="#ChangeStatus-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File is unmerged (you must complete the merge before it can be committed)&quot;&quot;&quot;</span>
+</span><span id="ChangeStatus-27"><a href="#ChangeStatus-27"><span class="linenos">27</span></a>    <span class="n">unknown</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>
+</span><span id="ChangeStatus-28"><a href="#ChangeStatus-28"><span class="linenos">28</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unknown change type (most probably a bug, please report it)&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Git file change mode. <a href="https://git-scm.com/docs/diff-format">https://git-scm.com/docs/diff-format</a></p>
+</div>
+
+
+                            <div id="ChangeStatus.addition" class="classattr">
+                                <div class="attr variable">
+            <span class="name">addition</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.addition">ChangeStatus.addition</a>: &#39;A&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.addition"></a>
+    
+            <div class="docstring"><p>Addition of a file</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.copy" class="classattr">
+                                <div class="attr variable">
+            <span class="name">copy</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.copy">ChangeStatus.copy</a>: &#39;C&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.copy"></a>
+    
+            <div class="docstring"><p>Copy of a file into a new one</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.deletion" class="classattr">
+                                <div class="attr variable">
+            <span class="name">deletion</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.deletion">ChangeStatus.deletion</a>: &#39;D&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.deletion"></a>
+    
+            <div class="docstring"><p>Deletion of a file</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.modified" class="classattr">
+                                <div class="attr variable">
+            <span class="name">modified</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.modified">ChangeStatus.modified</a>: &#39;M&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.modified"></a>
+    
+            <div class="docstring"><p>Modification of the contents or mode of a file</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.renaming" class="classattr">
+                                <div class="attr variable">
+            <span class="name">renaming</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.renaming">ChangeStatus.renaming</a>: &#39;R&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.renaming"></a>
+    
+            <div class="docstring"><p>Renaming of a file</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.type_change" class="classattr">
+                                <div class="attr variable">
+            <span class="name">type_change</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.type_change">ChangeStatus.type_change</a>: &#39;T&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.type_change"></a>
+    
+            <div class="docstring"><p>Change in the type of the file (regular file, symbolic link or submodule)</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.unmerged" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unmerged</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.unmerged">ChangeStatus.unmerged</a>: &#39;U&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.unmerged"></a>
+    
+            <div class="docstring"><p>File is unmerged (you must complete the merge before it can be committed)</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeStatus.unknown" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unknown</span>        =
+<span class="default_value">&lt;<a href="#ChangeStatus.unknown">ChangeStatus.unknown</a>: &#39;X&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeStatus.unknown"></a>
+    
+            <div class="docstring"><p>Unknown change type (most probably a bug, please report it)</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="ChangeStatus.name" class="variable">name</dd>
+                <dd id="ChangeStatus.value" class="variable">value</dd>
+
+            </div>
+            <div><dt>builtins.str</dt>
+                                <dd id="ChangeStatus.encode" class="function">encode</dd>
+                <dd id="ChangeStatus.replace" class="function">replace</dd>
+                <dd id="ChangeStatus.split" class="function">split</dd>
+                <dd id="ChangeStatus.rsplit" class="function">rsplit</dd>
+                <dd id="ChangeStatus.join" class="function">join</dd>
+                <dd id="ChangeStatus.capitalize" class="function">capitalize</dd>
+                <dd id="ChangeStatus.casefold" class="function">casefold</dd>
+                <dd id="ChangeStatus.title" class="function">title</dd>
+                <dd id="ChangeStatus.center" class="function">center</dd>
+                <dd id="ChangeStatus.count" class="function">count</dd>
+                <dd id="ChangeStatus.expandtabs" class="function">expandtabs</dd>
+                <dd id="ChangeStatus.find" class="function">find</dd>
+                <dd id="ChangeStatus.partition" class="function">partition</dd>
+                <dd id="ChangeStatus.index" class="function">index</dd>
+                <dd id="ChangeStatus.ljust" class="function">ljust</dd>
+                <dd id="ChangeStatus.lower" class="function">lower</dd>
+                <dd id="ChangeStatus.lstrip" class="function">lstrip</dd>
+                <dd id="ChangeStatus.rfind" class="function">rfind</dd>
+                <dd id="ChangeStatus.rindex" class="function">rindex</dd>
+                <dd id="ChangeStatus.rjust" class="function">rjust</dd>
+                <dd id="ChangeStatus.rstrip" class="function">rstrip</dd>
+                <dd id="ChangeStatus.rpartition" class="function">rpartition</dd>
+                <dd id="ChangeStatus.splitlines" class="function">splitlines</dd>
+                <dd id="ChangeStatus.strip" class="function">strip</dd>
+                <dd id="ChangeStatus.swapcase" class="function">swapcase</dd>
+                <dd id="ChangeStatus.translate" class="function">translate</dd>
+                <dd id="ChangeStatus.upper" class="function">upper</dd>
+                <dd id="ChangeStatus.startswith" class="function">startswith</dd>
+                <dd id="ChangeStatus.endswith" class="function">endswith</dd>
+                <dd id="ChangeStatus.removeprefix" class="function">removeprefix</dd>
+                <dd id="ChangeStatus.removesuffix" class="function">removesuffix</dd>
+                <dd id="ChangeStatus.isascii" class="function">isascii</dd>
+                <dd id="ChangeStatus.islower" class="function">islower</dd>
+                <dd id="ChangeStatus.isupper" class="function">isupper</dd>
+                <dd id="ChangeStatus.istitle" class="function">istitle</dd>
+                <dd id="ChangeStatus.isspace" class="function">isspace</dd>
+                <dd id="ChangeStatus.isdecimal" class="function">isdecimal</dd>
+                <dd id="ChangeStatus.isdigit" class="function">isdigit</dd>
+                <dd id="ChangeStatus.isnumeric" class="function">isnumeric</dd>
+                <dd id="ChangeStatus.isalpha" class="function">isalpha</dd>
+                <dd id="ChangeStatus.isalnum" class="function">isalnum</dd>
+                <dd id="ChangeStatus.isidentifier" class="function">isidentifier</dd>
+                <dd id="ChangeStatus.isprintable" class="function">isprintable</dd>
+                <dd id="ChangeStatus.zfill" class="function">zfill</dd>
+                <dd id="ChangeStatus.format" class="function">format</dd>
+                <dd id="ChangeStatus.format_map" class="function">format_map</dd>
+                <dd id="ChangeStatus.maketrans" class="function">maketrans</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="ChangeSummary">
+                            <input id="ChangeSummary-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ChangeSummary</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="ChangeSummary-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ChangeSummary"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ChangeSummary-5"><a href="#ChangeSummary-5"><span class="linenos"> 5</span></a><span class="k">class</span> <span class="nc">ChangeSummary</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="ChangeSummary-6"><a href="#ChangeSummary-6"><span class="linenos"> 6</span></a>    <span class="n">full_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeSummary-7"><a href="#ChangeSummary-7"><span class="linenos"> 7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File full name.&quot;&quot;&quot;</span>
+</span><span id="ChangeSummary-8"><a href="#ChangeSummary-8"><span class="linenos"> 8</span></a>
+</span><span id="ChangeSummary-9"><a href="#ChangeSummary-9"><span class="linenos"> 9</span></a>    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="ChangeSummary-10"><a href="#ChangeSummary-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File change summarization.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="ChangeSummary.full_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">full_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeSummary.full_name"></a>
+    
+            <div class="docstring"><p>File full name.</p>
+</div>
+
+
+                            </div>
+                            <div id="ChangeSummary.summary" class="classattr">
+                                <div class="attr variable">
+            <span class="name">summary</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ChangeSummary.summary"></a>
+    
+            <div class="docstring"><p>File change summarization.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="ChangeSummary.__init__" class="function">BaseModel</dd>
+                <dd id="ChangeSummary.Config" class="variable">Config</dd>
+                <dd id="ChangeSummary.dict" class="function">dict</dd>
+                <dd id="ChangeSummary.json" class="function">json</dd>
+                <dd id="ChangeSummary.parse_obj" class="function">parse_obj</dd>
+                <dd id="ChangeSummary.parse_raw" class="function">parse_raw</dd>
+                <dd id="ChangeSummary.parse_file" class="function">parse_file</dd>
+                <dd id="ChangeSummary.from_orm" class="function">from_orm</dd>
+                <dd id="ChangeSummary.construct" class="function">construct</dd>
+                <dd id="ChangeSummary.copy" class="function">copy</dd>
+                <dd id="ChangeSummary.schema" class="function">schema</dd>
+                <dd id="ChangeSummary.schema_json" class="function">schema_json</dd>
+                <dd id="ChangeSummary.validate" class="function">validate</dd>
+                <dd id="ChangeSummary.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="CodeReview">
+                            <input id="CodeReview-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">CodeReview</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="CodeReview-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#CodeReview"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CodeReview-7"><a href="#CodeReview-7"><span class="linenos">7</span></a><span class="k">class</span> <span class="nc">CodeReview</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="CodeReview-8"><a href="#CodeReview-8"><span class="linenos">8</span></a>    <span class="n">file</span><span class="p">:</span> <span class="n">ChangeFile</span>
+</span><span id="CodeReview-9"><a href="#CodeReview-9"><span class="linenos">9</span></a>    <span class="n">review</span><span class="p">:</span> <span class="nb">str</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="CodeReview.file" class="classattr">
+                                <div class="attr variable">
+            <span class="name">file</span><span class="annotation">: <a href="#ChangeFile">codedog.models.ChangeFile</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#CodeReview.file"></a>
+    
+    
+
+                            </div>
+                            <div id="CodeReview.review" class="classattr">
+                                <div class="attr variable">
+            <span class="name">review</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#CodeReview.review"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="CodeReview.__init__" class="function">BaseModel</dd>
+                <dd id="CodeReview.Config" class="variable">Config</dd>
+                <dd id="CodeReview.dict" class="function">dict</dd>
+                <dd id="CodeReview.json" class="function">json</dd>
+                <dd id="CodeReview.parse_obj" class="function">parse_obj</dd>
+                <dd id="CodeReview.parse_raw" class="function">parse_raw</dd>
+                <dd id="CodeReview.parse_file" class="function">parse_file</dd>
+                <dd id="CodeReview.from_orm" class="function">from_orm</dd>
+                <dd id="CodeReview.construct" class="function">construct</dd>
+                <dd id="CodeReview.copy" class="function">copy</dd>
+                <dd id="CodeReview.schema" class="function">schema</dd>
+                <dd id="CodeReview.schema_json" class="function">schema_json</dd>
+                <dd id="CodeReview.validate" class="function">validate</dd>
+                <dd id="CodeReview.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="Commit">
+                            <input id="Commit-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Commit</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="Commit-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Commit"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Commit-8"><a href="#Commit-8"><span class="linenos"> 8</span></a><span class="k">class</span> <span class="nc">Commit</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Commit-9"><a href="#Commit-9"><span class="linenos"> 9</span></a>    <span class="n">commit_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Commit-10"><a href="#Commit-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Commit id converted from sha.&quot;&quot;&quot;</span>
+</span><span id="Commit-11"><a href="#Commit-11"><span class="linenos">11</span></a>    <span class="n">sha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Commit-12"><a href="#Commit-12"><span class="linenos">12</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Commit sha.&quot;&quot;&quot;</span>
+</span><span id="Commit-13"><a href="#Commit-13"><span class="linenos">13</span></a>
+</span><span id="Commit-14"><a href="#Commit-14"><span class="linenos">14</span></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Commit-15"><a href="#Commit-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Commit html url.&quot;&quot;&quot;</span>
+</span><span id="Commit-16"><a href="#Commit-16"><span class="linenos">16</span></a>    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Commit-17"><a href="#Commit-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Commit message.&quot;&quot;&quot;</span>
+</span><span id="Commit-18"><a href="#Commit-18"><span class="linenos">18</span></a>
+</span><span id="Commit-19"><a href="#Commit-19"><span class="linenos">19</span></a>    <span class="n">_raw</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Commit-20"><a href="#Commit-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git commit raw object&quot;&quot;&quot;</span>
+</span><span id="Commit-21"><a href="#Commit-21"><span class="linenos">21</span></a>
+</span><span id="Commit-22"><a href="#Commit-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Commit-23"><a href="#Commit-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Commit-24"><a href="#Commit-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Commit-25"><a href="#Commit-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Commit-26"><a href="#Commit-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Commit-27"><a href="#Commit-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Commit-28"><a href="#Commit-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Commit-29"><a href="#Commit-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Commit-30"><a href="#Commit-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="Commit.commit_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">commit_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Commit.commit_id"></a>
+    
+            <div class="docstring"><p>Commit id converted from sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="Commit.sha" class="classattr">
+                                <div class="attr variable">
+            <span class="name">sha</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Commit.sha"></a>
+    
+            <div class="docstring"><p>Commit sha.</p>
+</div>
+
+
+                            </div>
+                            <div id="Commit.url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Commit.url"></a>
+    
+            <div class="docstring"><p>Commit html url.</p>
+</div>
+
+
+                            </div>
+                            <div id="Commit.message" class="classattr">
+                                <div class="attr variable">
+            <span class="name">message</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Commit.message"></a>
+    
+            <div class="docstring"><p>Commit message.</p>
+</div>
+
+
+                            </div>
+                            <div id="Commit.none_to_default" class="classattr">
+                                        <input id="Commit.none_to_default-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator">@validator(&#39;*&#39;, pre=True, allow_reuse=True)</div>
+
+        <span class="def">def</span>
+        <span class="name">none_to_default</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span>, </span><span class="param"><span class="n">field</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">ModelField</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="Commit.none_to_default-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Commit.none_to_default"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Commit.none_to_default-22"><a href="#Commit.none_to_default-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Commit.none_to_default-23"><a href="#Commit.none_to_default-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Commit.none_to_default-24"><a href="#Commit.none_to_default-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Commit.none_to_default-25"><a href="#Commit.none_to_default-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Commit.none_to_default-26"><a href="#Commit.none_to_default-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Commit.none_to_default-27"><a href="#Commit.none_to_default-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Commit.none_to_default-28"><a href="#Commit.none_to_default-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Commit.none_to_default-29"><a href="#Commit.none_to_default-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Commit.none_to_default-30"><a href="#Commit.none_to_default-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="Commit.__init__" class="function">BaseModel</dd>
+                <dd id="Commit.Config" class="variable">Config</dd>
+                <dd id="Commit.dict" class="function">dict</dd>
+                <dd id="Commit.json" class="function">json</dd>
+                <dd id="Commit.parse_obj" class="function">parse_obj</dd>
+                <dd id="Commit.parse_raw" class="function">parse_raw</dd>
+                <dd id="Commit.parse_file" class="function">parse_file</dd>
+                <dd id="Commit.from_orm" class="function">from_orm</dd>
+                <dd id="Commit.construct" class="function">construct</dd>
+                <dd id="Commit.copy" class="function">copy</dd>
+                <dd id="Commit.schema" class="function">schema</dd>
+                <dd id="Commit.schema_json" class="function">schema_json</dd>
+                <dd id="Commit.validate" class="function">validate</dd>
+                <dd id="Commit.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="DiffContent">
+                            <input id="DiffContent-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">DiffContent</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="DiffContent-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#DiffContent"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="DiffContent-25"><a href="#DiffContent-25"><span class="linenos">25</span></a><span class="k">class</span> <span class="nc">DiffContent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="DiffContent-26"><a href="#DiffContent-26"><span class="linenos">26</span></a>    <span class="n">add_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffContent-27"><a href="#DiffContent-27"><span class="linenos">27</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Added lines count.&quot;&quot;&quot;</span>
+</span><span id="DiffContent-28"><a href="#DiffContent-28"><span class="linenos">28</span></a>    <span class="n">remove_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffContent-29"><a href="#DiffContent-29"><span class="linenos">29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Removed lines count.&quot;&quot;&quot;</span>
+</span><span id="DiffContent-30"><a href="#DiffContent-30"><span class="linenos">30</span></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffContent-31"><a href="#DiffContent-31"><span class="linenos">31</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Diff content.&quot;&quot;&quot;</span>
+</span><span id="DiffContent-32"><a href="#DiffContent-32"><span class="linenos">32</span></a>    <span class="n">diff_segments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DiffSegment</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="DiffContent-33"><a href="#DiffContent-33"><span class="linenos">33</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Diff segments.&quot;&quot;&quot;</span>
+</span><span id="DiffContent-34"><a href="#DiffContent-34"><span class="linenos">34</span></a>    <span class="n">patched_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PatchedFile</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="DiffContent-35"><a href="#DiffContent-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unidiff patched file object.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="DiffContent.add_count" class="classattr">
+                                <div class="attr variable">
+            <span class="name">add_count</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffContent.add_count"></a>
+    
+            <div class="docstring"><p>Added lines count.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffContent.remove_count" class="classattr">
+                                <div class="attr variable">
+            <span class="name">remove_count</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffContent.remove_count"></a>
+    
+            <div class="docstring"><p>Removed lines count.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffContent.content" class="classattr">
+                                <div class="attr variable">
+            <span class="name">content</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffContent.content"></a>
+    
+            <div class="docstring"><p>Diff content.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffContent.diff_segments" class="classattr">
+                                <div class="attr variable">
+            <span class="name">diff_segments</span><span class="annotation">: list[<a href="#DiffSegment">codedog.models.DiffSegment</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffContent.diff_segments"></a>
+    
+            <div class="docstring"><p>Diff segments.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffContent.patched_file" class="classattr">
+                                <div class="attr variable">
+            <span class="name">patched_file</span><span class="annotation">: Optional[unidiff.patch.PatchedFile]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffContent.patched_file"></a>
+    
+            <div class="docstring"><p>Unidiff patched file object.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="DiffContent.__init__" class="function">BaseModel</dd>
+                <dd id="DiffContent.Config" class="variable">Config</dd>
+                <dd id="DiffContent.dict" class="function">dict</dd>
+                <dd id="DiffContent.json" class="function">json</dd>
+                <dd id="DiffContent.parse_obj" class="function">parse_obj</dd>
+                <dd id="DiffContent.parse_raw" class="function">parse_raw</dd>
+                <dd id="DiffContent.parse_file" class="function">parse_file</dd>
+                <dd id="DiffContent.from_orm" class="function">from_orm</dd>
+                <dd id="DiffContent.construct" class="function">construct</dd>
+                <dd id="DiffContent.copy" class="function">copy</dd>
+                <dd id="DiffContent.schema" class="function">schema</dd>
+                <dd id="DiffContent.schema_json" class="function">schema_json</dd>
+                <dd id="DiffContent.validate" class="function">validate</dd>
+                <dd id="DiffContent.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="DiffSegment">
+                            <input id="DiffSegment-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">DiffSegment</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="DiffSegment-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#DiffSegment"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="DiffSegment-8"><a href="#DiffSegment-8"><span class="linenos"> 8</span></a><span class="k">class</span> <span class="nc">DiffSegment</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="DiffSegment-9"><a href="#DiffSegment-9"><span class="linenos"> 9</span></a>    <span class="n">add_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-10"><a href="#DiffSegment-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Added lines count of this segment.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-11"><a href="#DiffSegment-11"><span class="linenos">11</span></a>    <span class="n">remove_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-12"><a href="#DiffSegment-12"><span class="linenos">12</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Removed lines count of this segment.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-13"><a href="#DiffSegment-13"><span class="linenos">13</span></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-14"><a href="#DiffSegment-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Diff content of this segment.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-15"><a href="#DiffSegment-15"><span class="linenos">15</span></a>    <span class="n">source_start_line_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-16"><a href="#DiffSegment-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Start line number of this segment in source file.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-17"><a href="#DiffSegment-17"><span class="linenos">17</span></a>    <span class="n">source_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-18"><a href="#DiffSegment-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Length of this segment in source file.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-19"><a href="#DiffSegment-19"><span class="linenos">19</span></a>    <span class="n">target_start_line_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-20"><a href="#DiffSegment-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Start line number of this segment in target file.&quot;&quot;&quot;</span>
+</span><span id="DiffSegment-21"><a href="#DiffSegment-21"><span class="linenos">21</span></a>    <span class="n">target_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="DiffSegment-22"><a href="#DiffSegment-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Length of this segment in target file.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="DiffSegment.add_count" class="classattr">
+                                <div class="attr variable">
+            <span class="name">add_count</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.add_count"></a>
+    
+            <div class="docstring"><p>Added lines count of this segment.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.remove_count" class="classattr">
+                                <div class="attr variable">
+            <span class="name">remove_count</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.remove_count"></a>
+    
+            <div class="docstring"><p>Removed lines count of this segment.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.content" class="classattr">
+                                <div class="attr variable">
+            <span class="name">content</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.content"></a>
+    
+            <div class="docstring"><p>Diff content of this segment.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.source_start_line_number" class="classattr">
+                                <div class="attr variable">
+            <span class="name">source_start_line_number</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.source_start_line_number"></a>
+    
+            <div class="docstring"><p>Start line number of this segment in source file.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.source_length" class="classattr">
+                                <div class="attr variable">
+            <span class="name">source_length</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.source_length"></a>
+    
+            <div class="docstring"><p>Length of this segment in source file.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.target_start_line_number" class="classattr">
+                                <div class="attr variable">
+            <span class="name">target_start_line_number</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.target_start_line_number"></a>
+    
+            <div class="docstring"><p>Start line number of this segment in target file.</p>
+</div>
+
+
+                            </div>
+                            <div id="DiffSegment.target_length" class="classattr">
+                                <div class="attr variable">
+            <span class="name">target_length</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#DiffSegment.target_length"></a>
+    
+            <div class="docstring"><p>Length of this segment in target file.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="DiffSegment.__init__" class="function">BaseModel</dd>
+                <dd id="DiffSegment.Config" class="variable">Config</dd>
+                <dd id="DiffSegment.dict" class="function">dict</dd>
+                <dd id="DiffSegment.json" class="function">json</dd>
+                <dd id="DiffSegment.parse_obj" class="function">parse_obj</dd>
+                <dd id="DiffSegment.parse_raw" class="function">parse_raw</dd>
+                <dd id="DiffSegment.parse_file" class="function">parse_file</dd>
+                <dd id="DiffSegment.from_orm" class="function">from_orm</dd>
+                <dd id="DiffSegment.construct" class="function">construct</dd>
+                <dd id="DiffSegment.copy" class="function">copy</dd>
+                <dd id="DiffSegment.schema" class="function">schema</dd>
+                <dd id="DiffSegment.schema_json" class="function">schema_json</dd>
+                <dd id="DiffSegment.validate" class="function">validate</dd>
+                <dd id="DiffSegment.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="Issue">
+                            <input id="Issue-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Issue</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="Issue-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Issue"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Issue-8"><a href="#Issue-8"><span class="linenos"> 8</span></a><span class="k">class</span> <span class="nc">Issue</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Issue-9"><a href="#Issue-9"><span class="linenos"> 9</span></a>    <span class="n">issue_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Issue-10"><a href="#Issue-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Issue id.&quot;&quot;&quot;</span>
+</span><span id="Issue-11"><a href="#Issue-11"><span class="linenos">11</span></a>
+</span><span id="Issue-12"><a href="#Issue-12"><span class="linenos">12</span></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Issue-13"><a href="#Issue-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Issue title.&quot;&quot;&quot;</span>
+</span><span id="Issue-14"><a href="#Issue-14"><span class="linenos">14</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Issue-15"><a href="#Issue-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Issue description.&quot;&quot;&quot;</span>
+</span><span id="Issue-16"><a href="#Issue-16"><span class="linenos">16</span></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Issue-17"><a href="#Issue-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Issue url.&quot;&quot;&quot;</span>
+</span><span id="Issue-18"><a href="#Issue-18"><span class="linenos">18</span></a>
+</span><span id="Issue-19"><a href="#Issue-19"><span class="linenos">19</span></a>    <span class="n">_raw</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Issue-20"><a href="#Issue-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git issue raw object&quot;&quot;&quot;</span>
+</span><span id="Issue-21"><a href="#Issue-21"><span class="linenos">21</span></a>
+</span><span id="Issue-22"><a href="#Issue-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Issue-23"><a href="#Issue-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Issue-24"><a href="#Issue-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span><span id="Issue-25"><a href="#Issue-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Issue-26"><a href="#Issue-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Issue-27"><a href="#Issue-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Issue-28"><a href="#Issue-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Issue-29"><a href="#Issue-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Issue-30"><a href="#Issue-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="Issue.issue_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">issue_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Issue.issue_id"></a>
+    
+            <div class="docstring"><p>Issue id.</p>
+</div>
+
+
+                            </div>
+                            <div id="Issue.title" class="classattr">
+                                <div class="attr variable">
+            <span class="name">title</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Issue.title"></a>
+    
+            <div class="docstring"><p>Issue title.</p>
+</div>
+
+
+                            </div>
+                            <div id="Issue.description" class="classattr">
+                                <div class="attr variable">
+            <span class="name">description</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Issue.description"></a>
+    
+            <div class="docstring"><p>Issue description.</p>
+</div>
+
+
+                            </div>
+                            <div id="Issue.url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Issue.url"></a>
+    
+            <div class="docstring"><p>Issue url.</p>
+</div>
+
+
+                            </div>
+                            <div id="Issue.none_to_default" class="classattr">
+                                        <input id="Issue.none_to_default-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator">@validator(&#39;*&#39;, pre=True, allow_reuse=True)</div>
+
+        <span class="def">def</span>
+        <span class="name">none_to_default</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span>, </span><span class="param"><span class="n">field</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">ModelField</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="Issue.none_to_default-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Issue.none_to_default"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Issue.none_to_default-22"><a href="#Issue.none_to_default-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Issue.none_to_default-23"><a href="#Issue.none_to_default-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Issue.none_to_default-24"><a href="#Issue.none_to_default-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span><span id="Issue.none_to_default-25"><a href="#Issue.none_to_default-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Issue.none_to_default-26"><a href="#Issue.none_to_default-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Issue.none_to_default-27"><a href="#Issue.none_to_default-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Issue.none_to_default-28"><a href="#Issue.none_to_default-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Issue.none_to_default-29"><a href="#Issue.none_to_default-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Issue.none_to_default-30"><a href="#Issue.none_to_default-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="Issue.__init__" class="function">BaseModel</dd>
+                <dd id="Issue.Config" class="variable">Config</dd>
+                <dd id="Issue.dict" class="function">dict</dd>
+                <dd id="Issue.json" class="function">json</dd>
+                <dd id="Issue.parse_obj" class="function">parse_obj</dd>
+                <dd id="Issue.parse_raw" class="function">parse_raw</dd>
+                <dd id="Issue.parse_file" class="function">parse_file</dd>
+                <dd id="Issue.from_orm" class="function">from_orm</dd>
+                <dd id="Issue.construct" class="function">construct</dd>
+                <dd id="Issue.copy" class="function">copy</dd>
+                <dd id="Issue.schema" class="function">schema</dd>
+                <dd id="Issue.schema_json" class="function">schema_json</dd>
+                <dd id="Issue.validate" class="function">validate</dd>
+                <dd id="Issue.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="PRSummary">
+                            <input id="PRSummary-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PRSummary</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="PRSummary-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PRSummary"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PRSummary-22"><a href="#PRSummary-22"><span class="linenos">22</span></a><span class="k">class</span> <span class="nc">PRSummary</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="PRSummary-23"><a href="#PRSummary-23"><span class="linenos">23</span></a>    <span class="n">overview</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span id="PRSummary-24"><a href="#PRSummary-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull request summarization.&quot;&quot;&quot;</span>
+</span><span id="PRSummary-25"><a href="#PRSummary-25"><span class="linenos">25</span></a>
+</span><span id="PRSummary-26"><a href="#PRSummary-26"><span class="linenos">26</span></a>    <span class="n">pr_type</span><span class="p">:</span> <span class="n">PRType</span> <span class="o">=</span> <span class="n">PRType</span><span class="o">.</span><span class="n">unknown</span>
+</span><span id="PRSummary-27"><a href="#PRSummary-27"><span class="linenos">27</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull request type.&quot;&quot;&quot;</span>
+</span><span id="PRSummary-28"><a href="#PRSummary-28"><span class="linenos">28</span></a>
+</span><span id="PRSummary-29"><a href="#PRSummary-29"><span class="linenos">29</span></a>    <span class="n">major_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span><span id="PRSummary-30"><a href="#PRSummary-30"><span class="linenos">30</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull request file with major logical changes. If pr_type is not feature, this will be empty.&quot;&quot;&quot;</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="PRSummary.overview" class="classattr">
+                                <div class="attr variable">
+            <span class="name">overview</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRSummary.overview"></a>
+    
+            <div class="docstring"><p>Pull request summarization.</p>
+</div>
+
+
+                            </div>
+                            <div id="PRSummary.pr_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">pr_type</span><span class="annotation">: <a href="#PRType">codedog.models.PRType</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRSummary.pr_type"></a>
+    
+            <div class="docstring"><p>Pull request type.</p>
+</div>
+
+
+                            </div>
+                            <div id="PRSummary.major_files" class="classattr">
+                                <div class="attr variable">
+            <span class="name">major_files</span><span class="annotation">: list[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRSummary.major_files"></a>
+    
+            <div class="docstring"><p>Pull request file with major logical changes. If pr_type is not feature, this will be empty.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="PRSummary.__init__" class="function">BaseModel</dd>
+                <dd id="PRSummary.Config" class="variable">Config</dd>
+                <dd id="PRSummary.dict" class="function">dict</dd>
+                <dd id="PRSummary.json" class="function">json</dd>
+                <dd id="PRSummary.parse_obj" class="function">parse_obj</dd>
+                <dd id="PRSummary.parse_raw" class="function">parse_raw</dd>
+                <dd id="PRSummary.parse_file" class="function">parse_file</dd>
+                <dd id="PRSummary.from_orm" class="function">from_orm</dd>
+                <dd id="PRSummary.construct" class="function">construct</dd>
+                <dd id="PRSummary.copy" class="function">copy</dd>
+                <dd id="PRSummary.schema" class="function">schema</dd>
+                <dd id="PRSummary.schema_json" class="function">schema_json</dd>
+                <dd id="PRSummary.validate" class="function">validate</dd>
+                <dd id="PRSummary.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="PRType">
+                            <input id="PRType-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PRType</span><wbr>(<span class="base">builtins.str</span>, <span class="base">enum.Enum</span>):
+
+                <label class="view-source-button" for="PRType-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PRType"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PRType-7"><a href="#PRType-7"><span class="linenos"> 7</span></a><span class="k">class</span> <span class="nc">PRType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="PRType-8"><a href="#PRType-8"><span class="linenos"> 8</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull request type: feature, fix, refactor, perf, test, doc, ci, style, chore.&quot;&quot;&quot;</span>
+</span><span id="PRType-9"><a href="#PRType-9"><span class="linenos"> 9</span></a>
+</span><span id="PRType-10"><a href="#PRType-10"><span class="linenos">10</span></a>    <span class="n">feature</span> <span class="o">=</span> <span class="s2">&quot;feature&quot;</span>
+</span><span id="PRType-11"><a href="#PRType-11"><span class="linenos">11</span></a>    <span class="n">fix</span> <span class="o">=</span> <span class="s2">&quot;fix&quot;</span>
+</span><span id="PRType-12"><a href="#PRType-12"><span class="linenos">12</span></a>    <span class="n">refactor</span> <span class="o">=</span> <span class="s2">&quot;refactor&quot;</span>
+</span><span id="PRType-13"><a href="#PRType-13"><span class="linenos">13</span></a>    <span class="n">perf</span> <span class="o">=</span> <span class="s2">&quot;perf&quot;</span>
+</span><span id="PRType-14"><a href="#PRType-14"><span class="linenos">14</span></a>    <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+</span><span id="PRType-15"><a href="#PRType-15"><span class="linenos">15</span></a>    <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;doc&quot;</span>
+</span><span id="PRType-16"><a href="#PRType-16"><span class="linenos">16</span></a>    <span class="n">ci</span> <span class="o">=</span> <span class="s2">&quot;ci&quot;</span>
+</span><span id="PRType-17"><a href="#PRType-17"><span class="linenos">17</span></a>    <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;style&quot;</span>
+</span><span id="PRType-18"><a href="#PRType-18"><span class="linenos">18</span></a>    <span class="n">chore</span> <span class="o">=</span> <span class="s2">&quot;chore&quot;</span>
+</span><span id="PRType-19"><a href="#PRType-19"><span class="linenos">19</span></a>    <span class="n">unknown</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Pull request type: feature, fix, refactor, perf, test, doc, ci, style, chore.</p>
+</div>
+
+
+                            <div id="PRType.feature" class="classattr">
+                                <div class="attr variable">
+            <span class="name">feature</span>        =
+<span class="default_value">&lt;<a href="#PRType.feature">PRType.feature</a>: &#39;feature&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.feature"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.fix" class="classattr">
+                                <div class="attr variable">
+            <span class="name">fix</span>        =
+<span class="default_value">&lt;<a href="#PRType.fix">PRType.fix</a>: &#39;fix&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.fix"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.refactor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">refactor</span>        =
+<span class="default_value">&lt;<a href="#PRType.refactor">PRType.refactor</a>: &#39;refactor&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.refactor"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.perf" class="classattr">
+                                <div class="attr variable">
+            <span class="name">perf</span>        =
+<span class="default_value">&lt;<a href="#PRType.perf">PRType.perf</a>: &#39;perf&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.perf"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.test" class="classattr">
+                                <div class="attr variable">
+            <span class="name">test</span>        =
+<span class="default_value">&lt;<a href="#PRType.test">PRType.test</a>: &#39;test&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.test"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.doc" class="classattr">
+                                <div class="attr variable">
+            <span class="name">doc</span>        =
+<span class="default_value">&lt;<a href="#PRType.doc">PRType.doc</a>: &#39;doc&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.doc"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.ci" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ci</span>        =
+<span class="default_value">&lt;<a href="#PRType.ci">PRType.ci</a>: &#39;ci&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.ci"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.style" class="classattr">
+                                <div class="attr variable">
+            <span class="name">style</span>        =
+<span class="default_value">&lt;<a href="#PRType.style">PRType.style</a>: &#39;style&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.style"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.chore" class="classattr">
+                                <div class="attr variable">
+            <span class="name">chore</span>        =
+<span class="default_value">&lt;<a href="#PRType.chore">PRType.chore</a>: &#39;chore&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.chore"></a>
+    
+    
+
+                            </div>
+                            <div id="PRType.unknown" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unknown</span>        =
+<span class="default_value">&lt;<a href="#PRType.unknown">PRType.unknown</a>: &#39;unknown&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PRType.unknown"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="PRType.name" class="variable">name</dd>
+                <dd id="PRType.value" class="variable">value</dd>
+
+            </div>
+            <div><dt>builtins.str</dt>
+                                <dd id="PRType.encode" class="function">encode</dd>
+                <dd id="PRType.replace" class="function">replace</dd>
+                <dd id="PRType.split" class="function">split</dd>
+                <dd id="PRType.rsplit" class="function">rsplit</dd>
+                <dd id="PRType.join" class="function">join</dd>
+                <dd id="PRType.capitalize" class="function">capitalize</dd>
+                <dd id="PRType.casefold" class="function">casefold</dd>
+                <dd id="PRType.title" class="function">title</dd>
+                <dd id="PRType.center" class="function">center</dd>
+                <dd id="PRType.count" class="function">count</dd>
+                <dd id="PRType.expandtabs" class="function">expandtabs</dd>
+                <dd id="PRType.find" class="function">find</dd>
+                <dd id="PRType.partition" class="function">partition</dd>
+                <dd id="PRType.index" class="function">index</dd>
+                <dd id="PRType.ljust" class="function">ljust</dd>
+                <dd id="PRType.lower" class="function">lower</dd>
+                <dd id="PRType.lstrip" class="function">lstrip</dd>
+                <dd id="PRType.rfind" class="function">rfind</dd>
+                <dd id="PRType.rindex" class="function">rindex</dd>
+                <dd id="PRType.rjust" class="function">rjust</dd>
+                <dd id="PRType.rstrip" class="function">rstrip</dd>
+                <dd id="PRType.rpartition" class="function">rpartition</dd>
+                <dd id="PRType.splitlines" class="function">splitlines</dd>
+                <dd id="PRType.strip" class="function">strip</dd>
+                <dd id="PRType.swapcase" class="function">swapcase</dd>
+                <dd id="PRType.translate" class="function">translate</dd>
+                <dd id="PRType.upper" class="function">upper</dd>
+                <dd id="PRType.startswith" class="function">startswith</dd>
+                <dd id="PRType.endswith" class="function">endswith</dd>
+                <dd id="PRType.removeprefix" class="function">removeprefix</dd>
+                <dd id="PRType.removesuffix" class="function">removesuffix</dd>
+                <dd id="PRType.isascii" class="function">isascii</dd>
+                <dd id="PRType.islower" class="function">islower</dd>
+                <dd id="PRType.isupper" class="function">isupper</dd>
+                <dd id="PRType.istitle" class="function">istitle</dd>
+                <dd id="PRType.isspace" class="function">isspace</dd>
+                <dd id="PRType.isdecimal" class="function">isdecimal</dd>
+                <dd id="PRType.isdigit" class="function">isdigit</dd>
+                <dd id="PRType.isnumeric" class="function">isnumeric</dd>
+                <dd id="PRType.isalpha" class="function">isalpha</dd>
+                <dd id="PRType.isalnum" class="function">isalnum</dd>
+                <dd id="PRType.isidentifier" class="function">isidentifier</dd>
+                <dd id="PRType.isprintable" class="function">isprintable</dd>
+                <dd id="PRType.zfill" class="function">zfill</dd>
+                <dd id="PRType.format" class="function">format</dd>
+                <dd id="PRType.format_map" class="function">format_map</dd>
+                <dd id="PRType.maketrans" class="function">maketrans</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="PullRequest">
+                            <input id="PullRequest-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PullRequest</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="PullRequest-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PullRequest"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PullRequest-12"><a href="#PullRequest-12"><span class="linenos">12</span></a><span class="k">class</span> <span class="nc">PullRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="PullRequest-13"><a href="#PullRequest-13"><span class="linenos">13</span></a>    <span class="n">pull_request_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="PullRequest-14"><a href="#PullRequest-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull Request id (Global id. Not number/iid)&quot;&quot;&quot;</span>
+</span><span id="PullRequest-15"><a href="#PullRequest-15"><span class="linenos">15</span></a>    <span class="n">repository_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="PullRequest-16"><a href="#PullRequest-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository id this pull request belongs to.&quot;&quot;&quot;</span>
+</span><span id="PullRequest-17"><a href="#PullRequest-17"><span class="linenos">17</span></a>    <span class="n">pull_request_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="PullRequest-18"><a href="#PullRequest-18"><span class="linenos">18</span></a>
+</span><span id="PullRequest-19"><a href="#PullRequest-19"><span class="linenos">19</span></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="PullRequest-20"><a href="#PullRequest-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull Request title.&quot;&quot;&quot;</span>
+</span><span id="PullRequest-21"><a href="#PullRequest-21"><span class="linenos">21</span></a>    <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="PullRequest-22"><a href="#PullRequest-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull Request description.&quot;&quot;&quot;</span>
+</span><span id="PullRequest-23"><a href="#PullRequest-23"><span class="linenos">23</span></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="PullRequest-24"><a href="#PullRequest-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull Request url.&quot;&quot;&quot;</span>
+</span><span id="PullRequest-25"><a href="#PullRequest-25"><span class="linenos">25</span></a>    <span class="n">repository_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="PullRequest-26"><a href="#PullRequest-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository name this pull request belongs to.&quot;&quot;&quot;</span>
+</span><span id="PullRequest-27"><a href="#PullRequest-27"><span class="linenos">27</span></a>
+</span><span id="PullRequest-28"><a href="#PullRequest-28"><span class="linenos">28</span></a>    <span class="n">related_issues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Issue</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-29"><a href="#PullRequest-29"><span class="linenos">29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git PR related issues&quot;&quot;&quot;</span>
+</span><span id="PullRequest-30"><a href="#PullRequest-30"><span class="linenos">30</span></a>    <span class="n">change_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChangeFile</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-31"><a href="#PullRequest-31"><span class="linenos">31</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git PR changed files&quot;&quot;&quot;</span>
+</span><span id="PullRequest-32"><a href="#PullRequest-32"><span class="linenos">32</span></a>    <span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-33"><a href="#PullRequest-33"><span class="linenos">33</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git PR target repository&quot;&quot;&quot;</span>
+</span><span id="PullRequest-34"><a href="#PullRequest-34"><span class="linenos">34</span></a>    <span class="n">source_repository</span><span class="p">:</span> <span class="n">Repository</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-35"><a href="#PullRequest-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git PR source repository&quot;&quot;&quot;</span>
+</span><span id="PullRequest-36"><a href="#PullRequest-36"><span class="linenos">36</span></a>    <span class="n">_raw</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-37"><a href="#PullRequest-37"><span class="linenos">37</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git PR raw object&quot;&quot;&quot;</span>
+</span><span id="PullRequest-38"><a href="#PullRequest-38"><span class="linenos">38</span></a>
+</span><span id="PullRequest-39"><a href="#PullRequest-39"><span class="linenos">39</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest-40"><a href="#PullRequest-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="PullRequest-41"><a href="#PullRequest-41"><span class="linenos">41</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+</span><span id="PullRequest-42"><a href="#PullRequest-42"><span class="linenos">42</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="PullRequest-43"><a href="#PullRequest-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="PullRequest-44"><a href="#PullRequest-44"><span class="linenos">44</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="PullRequest-45"><a href="#PullRequest-45"><span class="linenos">45</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="PullRequest-46"><a href="#PullRequest-46"><span class="linenos">46</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="PullRequest-47"><a href="#PullRequest-47"><span class="linenos">47</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="PullRequest.pull_request_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">pull_request_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.pull_request_id"></a>
+    
+            <div class="docstring"><p>Pull Request id (Global id. Not number/iid)</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.repository_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.repository_id"></a>
+    
+            <div class="docstring"><p>Repository id this pull request belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.pull_request_number" class="classattr">
+                                <div class="attr variable">
+            <span class="name">pull_request_number</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.pull_request_number"></a>
+    
+    
+
+                            </div>
+                            <div id="PullRequest.title" class="classattr">
+                                <div class="attr variable">
+            <span class="name">title</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.title"></a>
+    
+            <div class="docstring"><p>Pull Request title.</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.body" class="classattr">
+                                <div class="attr variable">
+            <span class="name">body</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.body"></a>
+    
+            <div class="docstring"><p>Pull Request description.</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.url"></a>
+    
+            <div class="docstring"><p>Pull Request url.</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.repository_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.repository_name"></a>
+    
+            <div class="docstring"><p>Repository name this pull request belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.related_issues" class="classattr">
+                                <div class="attr variable">
+            <span class="name">related_issues</span><span class="annotation">: list[<a href="#Issue">codedog.models.Issue</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.related_issues"></a>
+    
+            <div class="docstring"><p>git PR related issues</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.change_files" class="classattr">
+                                <div class="attr variable">
+            <span class="name">change_files</span><span class="annotation">: list[<a href="#ChangeFile">codedog.models.ChangeFile</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.change_files"></a>
+    
+            <div class="docstring"><p>git PR changed files</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.repository" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository</span><span class="annotation">: <a href="#Repository">codedog.models.Repository</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.repository"></a>
+    
+            <div class="docstring"><p>git PR target repository</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.source_repository" class="classattr">
+                                <div class="attr variable">
+            <span class="name">source_repository</span><span class="annotation">: <a href="#Repository">codedog.models.Repository</a></span>
+
+        
+    </div>
+    <a class="headerlink" href="#PullRequest.source_repository"></a>
+    
+            <div class="docstring"><p>git PR source repository</p>
+</div>
+
+
+                            </div>
+                            <div id="PullRequest.none_to_default" class="classattr">
+                                        <input id="PullRequest.none_to_default-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator">@validator(&#39;*&#39;, pre=True, allow_reuse=True)</div>
+
+        <span class="def">def</span>
+        <span class="name">none_to_default</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span>, </span><span class="param"><span class="n">field</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">ModelField</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="PullRequest.none_to_default-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PullRequest.none_to_default"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PullRequest.none_to_default-39"><a href="#PullRequest.none_to_default-39"><span class="linenos">39</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="PullRequest.none_to_default-40"><a href="#PullRequest.none_to_default-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="PullRequest.none_to_default-41"><a href="#PullRequest.none_to_default-41"><span class="linenos">41</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+</span><span id="PullRequest.none_to_default-42"><a href="#PullRequest.none_to_default-42"><span class="linenos">42</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="PullRequest.none_to_default-43"><a href="#PullRequest.none_to_default-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="PullRequest.none_to_default-44"><a href="#PullRequest.none_to_default-44"><span class="linenos">44</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="PullRequest.none_to_default-45"><a href="#PullRequest.none_to_default-45"><span class="linenos">45</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="PullRequest.none_to_default-46"><a href="#PullRequest.none_to_default-46"><span class="linenos">46</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="PullRequest.none_to_default-47"><a href="#PullRequest.none_to_default-47"><span class="linenos">47</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="PullRequest.__init__" class="function">BaseModel</dd>
+                <dd id="PullRequest.Config" class="variable">Config</dd>
+                <dd id="PullRequest.dict" class="function">dict</dd>
+                <dd id="PullRequest.json" class="function">json</dd>
+                <dd id="PullRequest.parse_obj" class="function">parse_obj</dd>
+                <dd id="PullRequest.parse_raw" class="function">parse_raw</dd>
+                <dd id="PullRequest.parse_file" class="function">parse_file</dd>
+                <dd id="PullRequest.from_orm" class="function">from_orm</dd>
+                <dd id="PullRequest.construct" class="function">construct</dd>
+                <dd id="PullRequest.copy" class="function">copy</dd>
+                <dd id="PullRequest.schema" class="function">schema</dd>
+                <dd id="PullRequest.schema_json" class="function">schema_json</dd>
+                <dd id="PullRequest.validate" class="function">validate</dd>
+                <dd id="PullRequest.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="Repository">
+                            <input id="Repository-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Repository</span><wbr>(<span class="base">pydantic.main.BaseModel</span>):
+
+                <label class="view-source-button" for="Repository-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Repository"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Repository-8"><a href="#Repository-8"><span class="linenos"> 8</span></a><span class="k">class</span> <span class="nc">Repository</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Repository-9"><a href="#Repository-9"><span class="linenos"> 9</span></a>    <span class="n">repository_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</span><span id="Repository-10"><a href="#Repository-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository id.&quot;&quot;&quot;</span>
+</span><span id="Repository-11"><a href="#Repository-11"><span class="linenos">11</span></a>
+</span><span id="Repository-12"><a href="#Repository-12"><span class="linenos">12</span></a>    <span class="n">repository_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Repository-13"><a href="#Repository-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository name this pull request belongs to.&quot;&quot;&quot;</span>
+</span><span id="Repository-14"><a href="#Repository-14"><span class="linenos">14</span></a>    <span class="n">repository_full_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Repository-15"><a href="#Repository-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository full name this pull request belongs to.&quot;&quot;&quot;</span>
+</span><span id="Repository-16"><a href="#Repository-16"><span class="linenos">16</span></a>    <span class="n">repository_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="Repository-17"><a href="#Repository-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository url this pull request belongs to.&quot;&quot;&quot;</span>
+</span><span id="Repository-18"><a href="#Repository-18"><span class="linenos">18</span></a>
+</span><span id="Repository-19"><a href="#Repository-19"><span class="linenos">19</span></a>    <span class="n">_raw</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Repository-20"><a href="#Repository-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;git repository raw object&quot;&quot;&quot;</span>
+</span><span id="Repository-21"><a href="#Repository-21"><span class="linenos">21</span></a>
+</span><span id="Repository-22"><a href="#Repository-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Repository-23"><a href="#Repository-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Repository-24"><a href="#Repository-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+</span><span id="Repository-25"><a href="#Repository-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Repository-26"><a href="#Repository-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Repository-27"><a href="#Repository-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Repository-28"><a href="#Repository-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Repository-29"><a href="#Repository-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Repository-30"><a href="#Repository-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="Repository.repository_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Repository.repository_id"></a>
+    
+            <div class="docstring"><p>Repository id.</p>
+</div>
+
+
+                            </div>
+                            <div id="Repository.repository_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Repository.repository_name"></a>
+    
+            <div class="docstring"><p>Repository name this pull request belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="Repository.repository_full_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_full_name</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Repository.repository_full_name"></a>
+    
+            <div class="docstring"><p>Repository full name this pull request belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="Repository.repository_url" class="classattr">
+                                <div class="attr variable">
+            <span class="name">repository_url</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Repository.repository_url"></a>
+    
+            <div class="docstring"><p>Repository url this pull request belongs to.</p>
+</div>
+
+
+                            </div>
+                            <div id="Repository.none_to_default" class="classattr">
+                                        <input id="Repository.none_to_default-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator">@validator(&#39;*&#39;, pre=True, allow_reuse=True)</div>
+
+        <span class="def">def</span>
+        <span class="name">none_to_default</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span>, </span><span class="param"><span class="n">field</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">ModelField</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="Repository.none_to_default-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Repository.none_to_default"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Repository.none_to_default-22"><a href="#Repository.none_to_default-22"><span class="linenos">22</span></a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Repository.none_to_default-23"><a href="#Repository.none_to_default-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">none_to_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ModelField</span><span class="p">):</span>
+</span><span id="Repository.none_to_default-24"><a href="#Repository.none_to_default-24"><span class="linenos">24</span></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+</span><span id="Repository.none_to_default-25"><a href="#Repository.none_to_default-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="n">value</span>
+</span><span id="Repository.none_to_default-26"><a href="#Repository.none_to_default-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+</span><span id="Repository.none_to_default-27"><a href="#Repository.none_to_default-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">default</span>
+</span><span id="Repository.none_to_default-28"><a href="#Repository.none_to_default-28"><span class="linenos">28</span></a>        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+</span><span id="Repository.none_to_default-29"><a href="#Repository.none_to_default-29"><span class="linenos">29</span></a>            <span class="k">return</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">default_factory</span><span class="p">)()</span>
+</span><span id="Repository.none_to_default-30"><a href="#Repository.none_to_default-30"><span class="linenos">30</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field </span><span class="si">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is None.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>pydantic.main.BaseModel</dt>
+                                <dd id="Repository.__init__" class="function">BaseModel</dd>
+                <dd id="Repository.Config" class="variable">Config</dd>
+                <dd id="Repository.dict" class="function">dict</dd>
+                <dd id="Repository.json" class="function">json</dd>
+                <dd id="Repository.parse_obj" class="function">parse_obj</dd>
+                <dd id="Repository.parse_raw" class="function">parse_raw</dd>
+                <dd id="Repository.parse_file" class="function">parse_file</dd>
+                <dd id="Repository.from_orm" class="function">from_orm</dd>
+                <dd id="Repository.construct" class="function">construct</dd>
+                <dd id="Repository.copy" class="function">copy</dd>
+                <dd id="Repository.schema" class="function">schema</dd>
+                <dd id="Repository.schema_json" class="function">schema_json</dd>
+                <dd id="Repository.validate" class="function">validate</dd>
+                <dd id="Repository.update_forward_refs" class="function">update_forward_refs</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+    </main>
+<script>
+    function escapeHTML(html) {
+        return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML;
+    }
+
+    const originalContent = document.querySelector("main.pdoc");
+    let currentContent = originalContent;
+
+    function setContent(innerHTML) {
+        let elem;
+        if (innerHTML) {
+            elem = document.createElement("main");
+            elem.classList.add("pdoc");
+            elem.innerHTML = innerHTML;
+        } else {
+            elem = originalContent;
+        }
+        if (currentContent !== elem) {
+            currentContent.replaceWith(elem);
+            currentContent = elem;
+        }
+    }
+
+    function getSearchTerm() {
+        return (new URL(window.location)).searchParams.get("search");
+    }
+
+    const searchBox = document.querySelector(".pdoc input[type=search]");
+    searchBox.addEventListener("input", function () {
+        let url = new URL(window.location);
+        if (searchBox.value.trim()) {
+            url.hash = "";
+            url.searchParams.set("search", searchBox.value);
+        } else {
+            url.searchParams.delete("search");
+        }
+        history.replaceState("", "", url.toString());
+        onInput();
+    });
+    window.addEventListener("popstate", onInput);
+
+
+    let search, searchErr;
+
+    async function initialize() {
+        try {
+            search = await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.type = "text/javascript";
+                script.async = true;
+                script.onload = () => resolve(window.pdocSearch);
+                script.onerror = (e) => reject(e);
+                script.src = "../search.js";
+                document.getElementsByTagName("head")[0].appendChild(script);
+            });
+        } catch (e) {
+            console.error("Cannot fetch pdoc search index");
+            searchErr = "Cannot fetch search index.";
+        }
+        onInput();
+
+        document.querySelector("nav.pdoc").addEventListener("click", e => {
+            if (e.target.hash) {
+                searchBox.value = "";
+                searchBox.dispatchEvent(new Event("input"));
+            }
+        });
+    }
+
+    function onInput() {
+        setContent((() => {
+            const term = getSearchTerm();
+            if (!term) {
+                return null
+            }
+            if (searchErr) {
+                return `<h3>Error: ${searchErr}</h3>`
+            }
+            if (!search) {
+                return "<h3>Searching...</h3>"
+            }
+
+            window.scrollTo({top: 0, left: 0, behavior: 'auto'});
+
+            const results = search(term);
+
+            let html;
+            if (results.length === 0) {
+                html = `No search results for '${escapeHTML(term)}'.`
+            } else {
+                html = `<h4>${results.length} search result${results.length > 1 ? "s" : ""} for '${escapeHTML(term)}'.</h4>`;
+            }
+            for (let result of results.slice(0, 10)) {
+                let doc = result.doc;
+                let url = `../${doc.modulename.replaceAll(".", "/")}.html`;
+                if (doc.qualname) {
+                    url += `#${doc.qualname}`;
+                }
+
+                let heading;
+                switch (result.doc.kind) {
+                    case "function":
+                        if (doc.fullname.endsWith(".__init__")) {
+                            heading = `<span class="name">${doc.fullname.replace(/\.__init__$/, "")}</span>${doc.signature}`;
+                        } else {
+                            heading = `<span class="def">${doc.funcdef}</span> <span class="name">${doc.fullname}</span>${doc.signature}`;
+                        }
+                        break;
+                    case "class":
+                        heading = `<span class="def">class</span> <span class="name">${doc.fullname}</span>`;
+                        if (doc.bases)
+                            heading += `<wbr>(<span class="base">${doc.bases}</span>)`;
+                        heading += `:`;
+                        break;
+                    case "variable":
+                        heading = `<span class="name">${doc.fullname}</span>`;
+                        if (doc.annotation)
+                            heading += `<span class="annotation">${doc.annotation}</span>`;
+                        if (doc.default_value)
+                            heading += `<span class="default_value"> = ${doc.default_value}</span>`;
+                        break;
+                    default:
+                        heading = `<span class="name">${doc.fullname}</span>`;
+                        break;
+                }
+                html += `
+                        <section class="search-result">
+                        <a href="${url}" class="attr ${doc.kind}">${heading}</a>
+                        <div class="docstring">${doc.doc}</div>
+                        </section>
+                    `;
+
+            }
+            return html;
+        })());
+    }
+
+    if (getSearchTerm()) {
+        initialize();
+        searchBox.value = getSearchTerm();
+        onInput();
+    } else {
+        searchBox.addEventListener("focus", initialize, {once: true});
+    }
+
+    searchBox.addEventListener("keydown", e => {
+        if (["ArrowDown", "ArrowUp", "Enter"].includes(e.key)) {
+            let focused = currentContent.querySelector(".search-result.focused");
+            if (!focused) {
+                currentContent.querySelector(".search-result").classList.add("focused");
+            } else if (
+                e.key === "ArrowDown"
+                && focused.nextElementSibling
+                && focused.nextElementSibling.classList.contains("search-result")
+            ) {
+                focused.classList.remove("focused");
+                focused.nextElementSibling.classList.add("focused");
+                focused.nextElementSibling.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest"
+                });
+            } else if (
+                e.key === "ArrowUp"
+                && focused.previousElementSibling
+                && focused.previousElementSibling.classList.contains("search-result")
+            ) {
+                focused.classList.remove("focused");
+                focused.previousElementSibling.classList.add("focused");
+                focused.previousElementSibling.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest"
+                });
+            } else if (
+                e.key === "Enter"
+            ) {
+                focused.querySelector("a").click();
+            }
+        }
+    });
+</script></body>
+</html>

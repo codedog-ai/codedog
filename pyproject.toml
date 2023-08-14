@@ -47,6 +47,12 @@ optional = true
 fastapi = "^0.100.1"
 uvicorn = "^0.23.1"
 
+[tool.poetry.group.doc]
+optional = true
+
+[tool.poetry.group.doc.dependencies]
+pdoc = "^14.0.0"
+
 [tool.poetry.scripts]
 demoserver = "examples.server:start"
 
