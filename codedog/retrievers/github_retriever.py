@@ -57,12 +57,18 @@ class GithubRetriever(Retriever):
 
         # --- github model ---
         self._git_repository: GHRepo = client.get_repo(repository_name_or_id)
-        self._git_pull_request: GHPullRequest = self._git_repository.get_pull(pull_request_number)
+        self._git_pull_request: GHPullRequest = self._git_repository.get_pull(
+            pull_request_number
+        )
 
         # --- codedog model ---
         self._repository: Repository = self._build_repository(self._git_repository)
-        self._source_repository: Repository = self._build_repository(self._git_pull_request.base.repo)
-        self._pull_request: PullRequest = self._build_pull_request(self._git_pull_request)
+        self._source_repository: Repository = self._build_repository(
+            self._git_pull_request.base.repo
+        )
+        self._pull_request: PullRequest = self._build_pull_request(
+            self._git_pull_request
+        )
 
     @property
     def retriever_type(self) -> str:
@@ -110,7 +116,7 @@ class GithubRetriever(Retriever):
             repository_id=git_pr.head.repo.id,
             pull_request_number=git_pr.number,
             title=git_pr.title,
-            body=git_pr.body if git_pr is not None else "",
+            body=git_pr.body if git_pr.body is not None else "",
             url=git_pr.html_url,
             repository_name=git_pr.head.repo.full_name,
             related_issues=related_issues,
@@ -125,12 +131,19 @@ class GithubRetriever(Retriever):
         body = git_pr.body
 
         issue_numbers = self._parse_issue_numbers(title, body)
-        return [self._get_and_build_issue(issue_number) for issue_number in issue_numbers]
+        return [
+            self._get_and_build_issue(issue_number) for issue_number in issue_numbers
+        ]
 
     def _parse_issue_numbers(self, title, body) -> list[int]:
         body_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, body) if body else []
-        title_matches = re.finditer(GithubRetriever.ISSUE_PATTERN, title) if title else []
-        issue_numbers = [int(match.group(0).lstrip("#")) for match in itertools.chain(body_matches, title_matches)]
+        title_matches = (
+            re.finditer(GithubRetriever.ISSUE_PATTERN, title) if title else []
+        )
+        issue_numbers = [
+            int(match.group(0).lstrip("#"))
+            for match in itertools.chain(body_matches, title_matches)
+        ]
         return issue_numbers
 
     def _get_and_build_issue(self, issue_number):
@@ -141,7 +154,7 @@ class GithubRetriever(Retriever):
         return Issue(
             issue_id=git_issue.number,
             title=git_issue.title,
-            description=git_issue.body,
+            description=git_issue.body if git_issue.body else "",
             url=git_issue.html_url,
             _raw=git_issue,
         )
@@ -153,11 +166,15 @@ class GithubRetriever(Retriever):
             change_files.append(change_file)
         return change_files
 
-    def _build_change_file(self, git_file: GithubFile, git_pr: GHPullRequest) -> ChangeFile:
+    def _build_change_file(
+        self, git_file: GithubFile, git_pr: GHPullRequest
+    ) -> ChangeFile:
         full_name = git_file.filename
         name = full_name.split("/")[-1]
         suffix = name.split(".")[-1]
-        source_full_name = git_file.previous_filename if git_file.previous_filename else full_name
+        source_full_name = (
+            git_file.previous_filename if git_file.previous_filename else full_name
+        )
 
         return ChangeFile(
             blob_id=int(git_file.sha, 16),
@@ -179,7 +196,9 @@ class GithubRetriever(Retriever):
     def _convert_status(self, git_status: str) -> ChangeStatus:
         return ChangeStatus(GithubRetriever.GITHUB_STATUS_MAPPING.get(git_status, "X"))
 
-    def _build_change_file_diff_url(self, git_file: GithubFile, git_pr: GHPullRequest) -> str:
+    def _build_change_file_diff_url(
+        self, git_file: GithubFile, git_pr: GHPullRequest
+    ) -> str:
         return f"{git_pr.html_url}/files#diff-{git_file.sha}"
 
     def _parse_and_build_diff_content(self, git_file: GithubFile) -> DiffContent:
@@ -195,7 +214,11 @@ class GithubRetriever(Retriever):
         )
 
     def _build_patched_file(self, git_file: GithubFile) -> PatchedFile:
-        prev_name = git_file.previous_filename if git_file.previous_filename else git_file.filename
+        prev_name = (
+            git_file.previous_filename
+            if git_file.previous_filename
+            else git_file.filename
+        )
         return parse_patch_file(git_file.patch, prev_name, git_file.filename)
 
     def _build_patched_file_segs(self, patched_file: PatchedFile) -> list[DiffSegment]:
