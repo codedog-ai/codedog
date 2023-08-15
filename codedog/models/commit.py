@@ -18,7 +18,7 @@ class Commit(BaseModel):
     _raw: object = Field(default=None, exclude=True)
     """git commit raw object"""
 
-    @validator("*", pre=True)
+    @validator("*", pre=True, allow_reuse=True)
     def none_to_default(value: Any, field: ModelField):
         if value is not None:
             return value

@@ -22,17 +22,23 @@ openai_proxy = env.get("OPENAI_PROXY", "")
 if openai_proxy:
     openai.proxy = openai_proxy
 
-summary_chain = PRSummaryChain.from_llm(code_summary_llm=load_gpt_llm(), pr_summary_llm=load_gpt4_llm(), verbose=True)
+summary_chain = PRSummaryChain.from_llm(
+    code_summary_llm=load_gpt_llm(), pr_summary_llm=load_gpt4_llm(), verbose=True
+)
 review_chain = CodeReviewChain.from_llm(llm=load_gpt_llm(), verbose=True)
 
 
 async def pr_summary():
-    result = await summary_chain.acall({"pull_request": retriever.pull_request}, include_run_info=True)
+    result = await summary_chain.acall(
+        {"pull_request": retriever.pull_request}, include_run_info=True
+    )
     return result
 
 
 async def code_review():
-    result = await review_chain.acall({"pull_request": retriever.pull_request}, include_run_info=True)
+    result = await review_chain.acall(
+        {"pull_request": retriever.pull_request}, include_run_info=True
+    )
     return result
 
 

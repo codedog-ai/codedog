@@ -18,7 +18,7 @@ class Issue(BaseModel):
     _raw: object = Field(default=None, exclude=True)
     """git issue raw object"""
 
-    @validator("*", pre=True)
+    @validator("*", pre=True, allow_reuse=True)
     def none_to_default(value: Any, field: ModelField):
         if value is not None or field.type_ not in [str, int]:
             return value
