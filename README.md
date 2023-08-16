@@ -15,6 +15,12 @@ Codedog is based on OpenAI API and Langchain.
 
 ## Quickstart
 
+### Review your pull request via Github App
+
+Install our github app [codedog-assistant](https://github.com/apps/codedog-assistant)
+
+### Start with your own code
+
 As a example, we will use codedog to review a pull request on Github.
 
 0. Install codedog
@@ -96,6 +102,7 @@ Basicly you can also use it with workflow or Github Application.
 see `examples/server.py`
 
 Note that codedog don't have fastapi and unicorn as dependency, you need to install them manually.
+
 ## Configuration
 
 Codedog currently load config from environment variables.
