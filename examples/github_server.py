@@ -1,5 +1,5 @@
 """
-demo api server
+demo github api server
 """
 import asyncio
 import logging
@@ -23,8 +23,6 @@ from codedog.version import VERSION
 host = "127.0.0.1"
 port = 32167
 worker_num = 1
-
-
 github_token = "your github token here"
 
 # fastapi
@@ -60,10 +58,13 @@ def handle_github_event(event: GithubEvent, **kwargs) -> str:
     repository_id: int = event.repository.get("id", 0)
     pull_request_number: int = event.number
 
-    logging.info(f"Retrive pull request from Github {repository_id} {pull_request_number}")
+    logging.info(
+        f"Retrive pull request from Github {repository_id} {pull_request_number}"
+    )
 
     thread = threading.Thread(
-        target=asyncio.run, args=(handle_pull_request(repository_id, pull_request_number, **kwargs),)
+        target=asyncio.run,
+        args=(handle_pull_request(repository_id, pull_request_number, **kwargs),),
     )
     thread.start()
 
@@ -84,7 +85,9 @@ async def handle_pull_request(
         repository_name_or_id=repository_id,
         pull_request_number=pull_request_number,
     )
-    summary_chain = PRSummaryChain.from_llm(code_summary_llm=load_gpt_llm(), pr_summary_llm=load_gpt4_llm())
+    summary_chain = PRSummaryChain.from_llm(
+        code_summary_llm=load_gpt_llm(), pr_summary_llm=load_gpt4_llm()
+    )
     review_chain = CodeReviewChain.from_llm(llm=load_gpt_llm())
 
     with get_openai_callback() as cb:
@@ -133,7 +136,7 @@ def _github_event_filter(event: GithubEvent):
 
 
 def start():
-    uvicorn.run("examples.server:app", host=host, port=port, workers=worker_num)
+    uvicorn.run("examples.github_server:app", host=host, port=port, workers=worker_num)
     logging.info(f"Codedog v{VERSION}: server start.")
 
 
