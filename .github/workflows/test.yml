@@ -1,4 +1,4 @@
-name: PyTest
+name: Test
 on:
     pull_request:
         branches:
