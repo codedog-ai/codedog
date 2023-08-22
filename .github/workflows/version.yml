@@ -32,5 +32,4 @@ jobs:
         git config --global user.email "action@github.com"
         poetry run semantic-release version --changelog
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PyPI_TOKEN: ${{secrets.PyPI_TOKEN}}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
