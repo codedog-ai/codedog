@@ -13,6 +13,7 @@ permissions:
 
 jobs:
     test:
+        name: Test with Pytest
         runs-on: ubuntu-latest
         strategy:
             matrix:
