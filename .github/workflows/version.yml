@@ -4,38 +4,72 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Release New Version.
-    runs-on: ubuntu-latest
-    concurrency: release
-    permissions:
-      id-token: write
-      contents: write
+    update_doc:
+        name: Generate API Reference Documents.
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+        steps:
+        - uses: actions/checkout@v1
+          with:
+            fetch-depth: 0
 
-    - name: Set up Python 3.10
-      uses: "./.github/actions/poetry_setup"
-      with:
-        python-version: "3.10"
-        poetry-version: "1.5.1"
-        install-command: |
-            echo "Installing dependencies with poetry..."
-            poetry install --with dev
+        - name: Set up Python 3.10
+          uses: "./.github/actions/poetry_setup"
+          with:
+            python-version: 3.10
+            poetry-version: "1.5.1"
+            install-command: |
+                echo "Installing dependencies with poetry..."
+                poetry install --with doc
 
-    - name: Python Semantic Release
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "action@github.com"
-        poetry run semantic-release version --changelog --no-commit --no-push --skip-build
+        - name: Generate docs
+          run: |
+            rm -rf docs/api
+            poetry run pdoc codedog \
+                -o ./docs/api \
+                -e codedog=https://github.com/codedog-ai/codedog/blob/master/codedog/ \
+                --favicon https://raw.githubusercontent.com/codedog-ai/codedog/master/docs/assets/favicon.ico \
+                --logo https://raw.githubusercontent.com/codedog-ai/codedog/master/docs/assets/logo.png \
+                --logo-link https://codedog.ai \
 
+        - name: Commit & Push changes
+          uses: actions-js/push@master
+          with:
+            github_token: ${{ secrets.GH_TOKEN }}
+            message : "chore: Update docs"
+            branch : "master"
 
-    - name: Commit & Push changes
-      uses: actions-js/push@master
-      with:
-        github_token: ${{ secrets.GH_TOKEN }}
-        message : "chore: release"
-        branch : "master"
+    release:
+        name: Release New Version.
+        runs-on: ubuntu-latest
+        concurrency: release
+        permissions:
+            id-token: write
+            contents: write
+
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
+
+            - name: Set up Python 3.10
+              uses: "./.github/actions/poetry_setup"
+              with:
+                python-version: "3.10"
+                poetry-version: "1.5.1"
+                install-command: |
+                    echo "Installing dependencies with poetry..."
+                    poetry install --with dev
+
+            - name: Python Semantic Release
+              run: |
+                git config --global user.name "github-actions"
+                git config --global user.email "action@github.com"
+                poetry run semantic-release version --changelog --no-commit --no-push --skip-build
+
+            - name: Commit & Push changes
+              uses: actions-js/push@master
+              with:
+                github_token: ${{ secrets.GH_TOKEN }}
+                message : "chore: release"
+                branch : "master"

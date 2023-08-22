@@ -1,59 +1,23 @@
 name: Publish new version
+
 on:
     push:
         tags:
             - v*
 
-
 jobs:
-    update_doc:
-        name: Generate API Reference Documents.
+    build_and_publish_to_pypi:
+        name: Build and Publish Package to PyPI
         runs-on: ubuntu-latest
 
         steps:
         - uses: actions/checkout@v1
           with:
-            fetch-depth: 0
+            fetch-depth: 1
 
-        - name: Set up Python 3.10
-          uses: "./.github/actions/poetry_setup"
+        - name: Build and publish to pypi
+          uses: JRubics/poetry-publish@v1.17
           with:
-            python-version: 3.10
-            poetry-version: "1.5.1"
-            install-command: |
-                echo "Installing dependencies with poetry..."
-                poetry install --with doc
-
-        - name: Generate docs
-          run: |
-            rm -rf docs/api
-            poetry run pdoc codedog \
-                -o ./docs/api \
-                -e codedog=https://github.com/codedog-ai/codedog/blob/master/codedog/ \
-                --favicon https://raw.githubusercontent.com/codedog-ai/codedog/master/docs/assets/favicon.ico \
-                --logo https://raw.githubusercontent.com/codedog-ai/codedog/master/docs/assets/logo.png \
-                --logo-link https://codedog.ai \
-
-        - name: Commit & Push changes
-          uses: actions-js/push@master
-          with:
-            github_token: ${{ secrets.GH_TOKEN }}
-            message : "chore: Update docs"
-            branch : "master"
-
-    build_and_publish_to_pypi:
-        name: Build and Publish Package to PyPI
-        needs: update_doc
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v1
-              with:
-                fetch-depth: 1
-
-            - name: Build and publish to pypi
-              uses: JRubics/poetry-publish@v1.17
-              with:
-                python_version: "3.10.10"
-                poetry_version: "==1.5.1" # (PIP version specifier syntax)
-                pypi_token: ${{ secrets.PYPI_TOKEN }}
+            python_version: "3.10.10"
+            poetry_version: "==1.5.1" # (PIP version specifier syntax)
+            pypi_token: ${{ secrets.PYPI_TOKEN }}
