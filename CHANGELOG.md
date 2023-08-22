@@ -2,7 +2,62 @@
 
 
 
+## v0.8.2 (2023-08-22)
+
+### Chore
+
+* chore: update dependency ([`483dd1d`](https://github.com/codedog-ai/codedog/commit/483dd1dfd1bece8b2f2be26529642ea0df20d0d7))
+
+* chore: Add a gitlab server example (#40) ([`b2e3f4c`](https://github.com/codedog-ai/codedog/commit/b2e3f4c0ae059fbc2bc56818e7214e1cb7753123))
+
+* chore: update dependency ([`423f99c`](https://github.com/codedog-ai/codedog/commit/423f99c2d7d742a34c91ccab3473c429d5aa7569))
+
+### Ci
+
+* ci: remove auto doc ([`13a0f99`](https://github.com/codedog-ai/codedog/commit/13a0f998e184844b7a7b4dc7b022f4ec457e47a8))
+
+* ci: Auto generate doc on release new version ([`8913cb7`](https://github.com/codedog-ai/codedog/commit/8913cb7cec0fd12a1e49739c69d508277b31721f))
+
+### Documentation
+
+* docs: add github app entry ([`92255db`](https://github.com/codedog-ai/codedog/commit/92255db82ea7d780b86603f05a43dd4cccdb7440))
+
+* docs: Generate API documents with pdoc ([`56d980c`](https://github.com/codedog-ai/codedog/commit/56d980cd9b3520c1c3532accf99d410909f118a8))
+
+### Fix
+
+* fix: try fix publish ci ([`51a3531`](https://github.com/codedog-ai/codedog/commit/51a353156ef9199d159c369cb0f8c242c64466dd))
+
+* fix: try fix publish ci ([`632f394`](https://github.com/codedog-ai/codedog/commit/632f3944f8428cc2ad87c782778dbbd4828426ec))
+
+* fix: try fix publish ci ([`cbafad2`](https://github.com/codedog-ai/codedog/commit/cbafad2fa602231c080bdd2dc2f563f119370ec0))
+
+* fix: try fix publish ci ([`923a1c5`](https://github.com/codedog-ai/codedog/commit/923a1c54b324071f424c509aa10934957bd9b622))
+
+### Unknown
+
+* doc: update api docs. ([`32e563e`](https://github.com/codedog-ai/codedog/commit/32e563e68dd90e4239794376078ad58bfcf8e29a))
+
+* Merge pull request #39 from codedog-ai/Arcadia822-patch-1
+
+Create dependabot.yml ([`44b61bc`](https://github.com/codedog-ai/codedog/commit/44b61bc90ee46e37277bf179768448c5aca11d49))
+
+* Create dependabot.yml ([`6634bd9`](https://github.com/codedog-ai/codedog/commit/6634bd93a501d4acd9666329a68a0a6890907990))
+
+* Merge pull request #36 from codedog-ai/feature/add-github-app-entry
+
+docs: add github app entry ([`cd9a7cf`](https://github.com/codedog-ai/codedog/commit/cd9a7cfe58c97c3baa6428433c56cebc5fef3317))
+
+* Merge pull request #33 from codedog-ai/pdoc
+
+Generate API documents with pdoc ([`9f93237`](https://github.com/codedog-ai/codedog/commit/9f932374665525eddb824f013b4c43e68c720169))
+
+
 ## v0.8.1 (2023-08-14)
+
+### Chore
+
+* chore(release): release version v0.8.1 ([`02ac37f`](https://github.com/codedog-ai/codedog/commit/02ac37fc8b9bd063e25fbf8e4c9a31a51194504c))
 
 ### Fix
 
@@ -164,6 +219,17 @@ fix(chain): :bug: fix async call broken ([`7b29ddd`](https://github.com/codedog-
 
 ## v0.5.2 (2023-08-02)
 
+### Chore
+
+* chore(release): release version v0.5.2 ([`29e647c`](https://github.com/codedog-ai/codedog/commit/29e647cec3669ceac7947648b73b087bef306a24))
+
+### Fix
+
+* fix(Chain): :bug: fix asyncio missing await ([`3845382`](https://github.com/codedog-ai/codedog/commit/3845382499b65b2d60b58ffbaa7fcf7f522ef859))
+
+
+## v0.5.1 (2023-08-02)
+
 ### Build
 
 * build: fix build ([`abbf4fc`](https://github.com/codedog-ai/codedog/commit/abbf4fc05c44360bc61fdf7a71c72dd587fc21c1))
@@ -171,8 +237,6 @@ fix(chain): :bug: fix async call broken ([`7b29ddd`](https://github.com/codedog-
 * build: :memo: improve documentation ([`fd0d8bf`](https://github.com/codedog-ai/codedog/commit/fd0d8bf36796f48bfd721879583bff680de1656b))
 
 ### Chore
-
-* chore(release): release version v0.5.2 ([`29e647c`](https://github.com/codedog-ai/codedog/commit/29e647cec3669ceac7947648b73b087bef306a24))
 
 * chore(release): release version v0.5.1 ([`f10558e`](https://github.com/codedog-ai/codedog/commit/f10558eb0b42068ccf0df341463a6604d7c1574f))
 
@@ -183,8 +247,6 @@ fix(chain): :bug: fix async call broken ([`7b29ddd`](https://github.com/codedog-
 * ci: :green_heart: add poetry cache ([`5c977de`](https://github.com/codedog-ai/codedog/commit/5c977dec2c7dce01da3ddeadd15116fc1df8e483))
 
 ### Fix
-
-* fix(Chain): :bug: fix asyncio missing await ([`3845382`](https://github.com/codedog-ai/codedog/commit/3845382499b65b2d60b58ffbaa7fcf7f522ef859))
 
 * fix(Chain): :bug: Fix callback manager usage
 
