@@ -33,3 +33,4 @@ jobs:
         poetry run semantic-release version --changelog
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
