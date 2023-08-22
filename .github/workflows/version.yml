@@ -30,7 +30,12 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "action@github.com"
-        poetry run semantic-release version --changelog
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        poetry run semantic-release version --changelog --no-commit --no-push --skip-build
+
+
+    - name: Commit & Push changes
+      uses: actions-js/push@master
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        message : "chore: release"
+        branch : "master"
