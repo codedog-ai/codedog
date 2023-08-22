@@ -58,12 +58,12 @@ demoserver = "examples.server:start"
 
 [[tool.poetry.source]]
 name = "PyPI"
-priority = "default"
+priority = "supplemental"
 
 [[tool.poetry.source]]
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-priority = "supplemental"
+priority = "default"
 
 [tool.semantic_release]
 branch = "master"
