@@ -15,20 +15,17 @@ jobs:
     test:
         name: Test with Pytest
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-              python-version:
-                - "3.10"
-        name: Python ${{ matrix.python-version }}
+
         steps:
-            - uses: actions/checkout@v1
+            - name: Checkout
+              uses: actions/checkout@v1
               with:
                 fetch-depth: 1
 
-            - name: Set up Python ${{ matrix.python-version }}
+            - name: Set Up Python 3.10
               uses: "./.github/actions/poetry_setup"
               with:
-                python-version: ${{ matrix.python-version }}
+                python-version: "3.10"
                 poetry-version: "1.5.1"
                 install-command: |
                     echo "Installing dependencies with poetry..."
@@ -38,7 +35,7 @@ jobs:
               run:
                 poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=codedog tests/ | tee pytest-coverage.txt
 
-            - name: Pytest coverage comment
+            - name: Pytest Coverage Comment
               id: coverageComment
               uses: MishaKav/pytest-coverage-comment@main
               with:
