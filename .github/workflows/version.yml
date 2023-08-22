@@ -22,16 +22,15 @@ jobs:
       with:
         python-version: "3.10"
         poetry-version: "1.5.1"
-        virtualenvs-create: false
         install-command: |
             echo "Installing dependencies with poetry..."
-            poetry install --with dev --no-interaction --no-ansi
+            poetry install --with dev
 
     - name: Python Semantic Release
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "action@github.com"
-        python -m semantic_release version --changelog
+        poetry run semantic-release version --changelog
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PyPI_TOKEN: ${{secrets.PyPI_TOKEN}}
