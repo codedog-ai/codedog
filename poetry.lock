@@ -1386,19 +1386,19 @@ text-helpers = ["chardet (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langchain-visualizer"
-version = "0.0.29"
+version = "0.0.30"
 description = "Visualization and debugging tool for LangChain workflows"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "langchain_visualizer-0.0.29-py3-none-any.whl", hash = "sha256:82daca379ab1c8097a0d9287efb1be70bda0a10dc4b0ee0ae4ca5a031e0e69bc"},
-    {file = "langchain_visualizer-0.0.29.tar.gz", hash = "sha256:cc3509541f73777b6dec312d4aa61d13ec2a0f93966629480e82255ba0e9caf7"},
+    {file = "langchain_visualizer-0.0.30-py3-none-any.whl", hash = "sha256:68356d7292a37d71626b053b6a9af761c8f86238b3263f291b1c46dc105ac777"},
+    {file = "langchain_visualizer-0.0.30.tar.gz", hash = "sha256:3baa2b57d7d15059ebc687c828e49e3029f8450d8e52dc6060692ff647c05715"},
 ]
 
 [package.dependencies]
 fvalues = ">=0.0.4,<0.0.5"
 gorilla = ">=0.4.0,<0.5.0"
-langchain = ">=0.0.226,<0.1"
+langchain = ">=0.0.291,<0.1"
 ought-ice = ">=0.5.0,<0.6.0"
 
 [[package]]
@@ -3937,4 +3937,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "39f82af2362f48fe5d77b36d048e183ec6a416fc767687a1614f8f096c59b51b"
+content-hash = "e86d822ad5761a42630cab696817dacf2649e1c2aaf6a856ccd9b9cbdc3b68b9"
