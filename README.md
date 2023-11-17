@@ -3,6 +3,7 @@
 [![Checkstyle](https://github.com/Arcadia822/codedog/actions/workflows/flake8.yml/badge.svg)](https://github.com/Arcadia822/codedog/actions/workflows/flake8.yml)
 [![Pytest](https://github.com/Arcadia822/codedog/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Arcadia822/codedog/actions/workflows/test.yml)
 [![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Arcadia822/ce38dae58995aeffef42065093fcfe84/raw/codedog_master.json)](https://github.com/Arcadia822/codedog/actions/workflows/test.yml)
+[![](https://dcbadge.vercel.app/api/server/wzfsvaDQ?compact=true&style=flat)](https://discord.gg/6adMQxSpJS)
 
 Review your Github/Gitlab PR with ChatGPT
 
