@@ -15,7 +15,7 @@ keywords = ["code review", "langchain", "llm"]
 
 [tool.poetry.dependencies]
 python = "~3.10"
-langchain = ">=0.0.247,<0.0.326"
+langchain = ">=0.0.247,<0.0.339"
 openai = ">=0.27.8,<0.29.0"
 pydantic = ">=1.10.7,<3.0.0"
 python-gitlab = "^3.14.0"
