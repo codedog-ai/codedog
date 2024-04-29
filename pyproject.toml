@@ -30,7 +30,7 @@ optional = true
 black = ">=23.3,<25.0"
 flake8 = "^6.0.0"
 isort = "^5.12.0"
-python-semantic-release = "^8.0.5"
+python-semantic-release = ">=8.0.5,<10.0.0"
 langchain-visualizer = ">=0.0.28,<0.0.31"
 
 [tool.poetry.group.test]
