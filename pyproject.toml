@@ -44,7 +44,7 @@ pytest-cov = ">=4,<6"
 optional = true
 
 [tool.poetry.group.http.dependencies]
-fastapi = ">=0.100.1,<0.111.0"
+fastapi = ">=0.100.1,<0.112.0"
 uvicorn = ">=0.23.1,<0.30.0"
 
 [tool.poetry.group.doc]
