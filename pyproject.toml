@@ -28,7 +28,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.3,<25.0"
-flake8 = "^6.0.0"
+flake8 = ">=6,<8"
 isort = "^5.12.0"
 python-semantic-release = "^8.0.5"
 langchain-visualizer = ">=0.0.28,<0.0.31"
