@@ -25,7 +25,8 @@ openai_proxy = env.get("OPENAI_PROXY", "")
 if openai_proxy:
     openai.proxy = openai_proxy
 
-lang = "Chinese"
+languages = ["Chinese", "Español", "Nihongo"]
+language = languages[0]
 
 summary_chain = TranslatePRSummaryChain.from_llm(
     language=lang,
