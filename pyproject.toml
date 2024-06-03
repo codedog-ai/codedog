@@ -45,7 +45,7 @@ optional = true
 
 [tool.poetry.group.http.dependencies]
 fastapi = ">=0.100.1,<0.112.0"
-uvicorn = ">=0.23.1,<0.30.0"
+uvicorn = ">=0.23.1,<0.31.0"
 
 [tool.poetry.group.doc]
 optional = true
