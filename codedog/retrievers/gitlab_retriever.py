@@ -27,7 +27,9 @@ class GitlabRetriever(Retriever):
     # NOTE Currently, all DIFFs are obtained through one call. Here, the maximum number of file DIFFs is set to 200
     LIST_DIFF_LIMIT = 200
 
-    def __init__(self, client: Gitlab, project_name_or_id: str | int, merge_request_iid: int) -> None:
+    def __init__(
+        self, client: Gitlab, project_name_or_id: str | int, merge_request_iid: int
+    ) -> None:
         """
         Connect to gitlab remote server and retrieve merge request data.
 
@@ -39,15 +41,21 @@ class GitlabRetriever(Retriever):
 
         # --- gitlab model ---
         self._git_repository: Project = client.projects.get(project_name_or_id)
-        self._git_merge_request: ProjectMergeRequest = self._git_repository.mergerequests.get(merge_request_iid)
+        self._git_merge_request: ProjectMergeRequest = (
+            self._git_repository.mergerequests.get(merge_request_iid)
+        )
 
-        source_project: Project = client.projects.get(self._git_merge_request.source_project_id)
+        source_project: Project = client.projects.get(
+            self._git_merge_request.source_project_id
+        )
 
         # --- codedog model ---
         self._repository: Repository = self._build_repository(self._git_repository)
         self._source_repository: Repository = self._build_repository(source_project)
 
-        self._merge_request: PullRequest = self._build_merge_request(self._git_merge_request)
+        self._merge_request: PullRequest = self._build_merge_request(
+            self._git_merge_request
+        )
 
     @property
     def retriever_type(self) -> str:
@@ -89,14 +97,16 @@ class GitlabRetriever(Retriever):
             repository_name=git_repo.name,
             repository_full_name=git_repo.path_with_namespace,
             repository_url=git_repo.web_url,
-            _raw=git_repo,
+            raw=git_repo,
         )
 
     def _build_blob(self, git_blob: Dict[str, Any]) -> Blob:
         return Blob(
             blob_id=int(git_blob["sha"], 16),
             sha=git_blob["sha"],
-            content=base64.b64decode(git_blob["content"]).decode("utf-8", errors="ignore"),
+            content=base64.b64decode(git_blob["content"]).decode(
+                "utf-8", errors="ignore"
+            ),
             encoding=git_blob["encoding"],
             size=git_blob["size"],
             url=git_blob.get("url", ""),  # TODO fix url
@@ -126,21 +136,30 @@ class GitlabRetriever(Retriever):
             change_files=change_files,
             repository=self.repository,
             source_repository=self.source_repository,
-            _raw=git_pr,
+            raw=git_pr,
         )
         return pull_request
 
-    def _parse_and_build_related_issues(self, git_mr: ProjectMergeRequest) -> list[Issue]:
+    def _parse_and_build_related_issues(
+        self, git_mr: ProjectMergeRequest
+    ) -> list[Issue]:
         title = git_mr.title
         body = git_mr.description
         issue_numbers = self._parse_issue_numbers(title, body)
-        return [self._get_and_build_issue(issue_number) for issue_number in issue_numbers]
+        return [
+            self._get_and_build_issue(issue_number) for issue_number in issue_numbers
+        ]
 
     def _parse_issue_numbers(self, title, body) -> list[int]:
         # match pattern like https://gitlab.com/gitlab-org/gitlab/-/issues/405433
         body_matches = re.finditer(GitlabRetriever.ISSUE_PATTERN, body) if body else []
-        title_matches = re.finditer(GitlabRetriever.ISSUE_PATTERN, title) if title else []
-        issue_numbers = [int(match.group(0).lstrip("#")) for match in itertools.chain(body_matches, title_matches)]
+        title_matches = (
+            re.finditer(GitlabRetriever.ISSUE_PATTERN, title) if title else []
+        )
+        issue_numbers = [
+            int(match.group(0).lstrip("#"))
+            for match in itertools.chain(body_matches, title_matches)
+        ]
         return issue_numbers
 
     def _build_change_file_list(self, git_mr: ProjectMergeRequest) -> list[ChangeFile]:
@@ -179,7 +198,7 @@ class GitlabRetriever(Retriever):
             diff_url=blob_url,  # TODO
             blob_url=blob_url,
             diff_content=self._parse_and_build_diff_content(diff),
-            _raw=diff,
+            raw=diff,
         )
         return change_file
 
@@ -241,5 +260,5 @@ class GitlabRetriever(Retriever):
             title=git_issue.title,
             description=git_issue.description,
             url=git_issue.web_url,
-            _raw=git_issue,
+            raw=git_issue,
         )

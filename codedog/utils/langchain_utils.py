@@ -1,8 +1,8 @@
 from functools import lru_cache
 from os import environ as env
 
-from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
 from langchain.chat_models.base import BaseChatModel
+from langchain_openai.chat_models import AzureChatOpenAI, ChatOpenAI
 
 
 @lru_cache(maxsize=1)
@@ -11,16 +11,16 @@ def load_gpt_llm() -> BaseChatModel:
     if env.get("AZURE_OPENAI"):
         llm = AzureChatOpenAI(
             openai_api_type="azure",
-            openai_api_key=env.get("AZURE_OPENAI_API_KEY", ""),
-            openai_api_base=env.get("AZURE_OPENAI_API_BASE", ""),
-            openai_api_version="2024-05-01-preview",
-            deployment_name=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
+            api_key=env.get("AZURE_OPENAI_API_KEY", ""),
+            azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
+            api_version="2024-05-01-preview",
+            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
             model="gpt-3.5-turbo",
             temperature=0,
         )
     else:
         llm = ChatOpenAI(
-            openai_api_key=env.get("OPENAI_API_KEY"),
+            api_key=env.get("OPENAI_API_KEY"),
             model="gpt-3.5-turbo",
         )
     return llm
@@ -32,16 +32,17 @@ def load_gpt4_llm():
     if env.get("AZURE_OPENAI"):
         llm = AzureChatOpenAI(
             openai_api_type="azure",
-            openai_api_key=env.get("AZURE_OPENAI_API_KEY", ""),
-            openai_api_base=env.get("AZURE_OPENAI_API_BASE", ""),
-            openai_api_version="2024-05-01-preview",
-            deployment_name=env.get("AZURE_OPENAI_GPT4_DEPLOYMENT_ID", "gpt-4"),
+            api_key=env.get("AZURE_OPENAI_API_KEY", ""),
+            azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
+            api_version="2024-05-01-preview",
+            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
             model="gpt-4",
             temperature=0,
         )
     else:
         llm = ChatOpenAI(
-            openai_api_key=env.get("OPENAI_API_KEY"),
+            api_key=env.get("OPENAI_API_KEY"),
             model="gpt-4",
         )
+    return llm
     return llm

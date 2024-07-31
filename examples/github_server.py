@@ -1,6 +1,7 @@
 """
 demo github api server
 """
+
 import asyncio
 import logging
 import threading
@@ -9,7 +10,7 @@ import time
 import uvicorn
 from fastapi import FastAPI
 from github import Github
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 from pydantic import BaseModel
 
 from codedog.actors.reporters.pull_request import PullRequestReporter

@@ -121,7 +121,7 @@
                     <h1 class="modulename">
 <a href="./../codedog.html">codedog</a><wbr>.retrievers    </h1>
 
-                
+
                         <input id="mod-retrievers-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-retrievers-view-source"><span>View Source</span></label>
@@ -137,7 +137,7 @@
                 <section id="GithubRetriever">
                             <input id="GithubRetriever-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">GithubRetriever</span><wbr>(<span class="base">codedog.retrievers.base.Retriever</span>):
 
@@ -222,7 +222,7 @@
 </span><span id="GithubRetriever-105"><a href="#GithubRetriever-105"><span class="linenos">105</span></a>            <span class="n">repository_name</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
 </span><span id="GithubRetriever-106"><a href="#GithubRetriever-106"><span class="linenos">106</span></a>            <span class="n">repository_full_name</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span>
 </span><span id="GithubRetriever-107"><a href="#GithubRetriever-107"><span class="linenos">107</span></a>            <span class="n">repository_url</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">html_url</span><span class="p">,</span>
-</span><span id="GithubRetriever-108"><a href="#GithubRetriever-108"><span class="linenos">108</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_repo</span><span class="p">,</span>
+</span><span id="GithubRetriever-108"><a href="#GithubRetriever-108"><span class="linenos">108</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_repo</span><span class="p">,</span>
 </span><span id="GithubRetriever-109"><a href="#GithubRetriever-109"><span class="linenos">109</span></a>        <span class="p">)</span>
 </span><span id="GithubRetriever-110"><a href="#GithubRetriever-110"><span class="linenos">110</span></a>
 </span><span id="GithubRetriever-111"><a href="#GithubRetriever-111"><span class="linenos">111</span></a>    <span class="k">def</span> <span class="nf">_build_pull_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">git_pr</span><span class="p">:</span> <span class="n">GHPullRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullRequest</span><span class="p">:</span>
@@ -241,7 +241,7 @@
 </span><span id="GithubRetriever-124"><a href="#GithubRetriever-124"><span class="linenos">124</span></a>            <span class="n">change_files</span><span class="o">=</span><span class="n">change_files</span><span class="p">,</span>
 </span><span id="GithubRetriever-125"><a href="#GithubRetriever-125"><span class="linenos">125</span></a>            <span class="n">repository</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="p">,</span>
 </span><span id="GithubRetriever-126"><a href="#GithubRetriever-126"><span class="linenos">126</span></a>            <span class="n">source_repository</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_repository</span><span class="p">,</span>
-</span><span id="GithubRetriever-127"><a href="#GithubRetriever-127"><span class="linenos">127</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_pr</span><span class="p">,</span>
+</span><span id="GithubRetriever-127"><a href="#GithubRetriever-127"><span class="linenos">127</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_pr</span><span class="p">,</span>
 </span><span id="GithubRetriever-128"><a href="#GithubRetriever-128"><span class="linenos">128</span></a>        <span class="p">)</span>
 </span><span id="GithubRetriever-129"><a href="#GithubRetriever-129"><span class="linenos">129</span></a>
 </span><span id="GithubRetriever-130"><a href="#GithubRetriever-130"><span class="linenos">130</span></a>    <span class="k">def</span> <span class="nf">_parse_and_build_related_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">git_pr</span><span class="p">:</span> <span class="n">GHPullRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Issue</span><span class="p">]:</span>
@@ -274,7 +274,7 @@
 </span><span id="GithubRetriever-157"><a href="#GithubRetriever-157"><span class="linenos">157</span></a>            <span class="n">title</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
 </span><span id="GithubRetriever-158"><a href="#GithubRetriever-158"><span class="linenos">158</span></a>            <span class="n">description</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">body</span> <span class="k">if</span> <span class="n">git_issue</span><span class="o">.</span><span class="n">body</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
 </span><span id="GithubRetriever-159"><a href="#GithubRetriever-159"><span class="linenos">159</span></a>            <span class="n">url</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">html_url</span><span class="p">,</span>
-</span><span id="GithubRetriever-160"><a href="#GithubRetriever-160"><span class="linenos">160</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_issue</span><span class="p">,</span>
+</span><span id="GithubRetriever-160"><a href="#GithubRetriever-160"><span class="linenos">160</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_issue</span><span class="p">,</span>
 </span><span id="GithubRetriever-161"><a href="#GithubRetriever-161"><span class="linenos">161</span></a>        <span class="p">)</span>
 </span><span id="GithubRetriever-162"><a href="#GithubRetriever-162"><span class="linenos">162</span></a>
 </span><span id="GithubRetriever-163"><a href="#GithubRetriever-163"><span class="linenos">163</span></a>    <span class="k">def</span> <span class="nf">_build_change_file_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">git_pr</span><span class="p">:</span> <span class="n">GHPullRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChangeFile</span><span class="p">]:</span>
@@ -308,7 +308,7 @@
 </span><span id="GithubRetriever-191"><a href="#GithubRetriever-191"><span class="linenos">191</span></a>            <span class="n">diff_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_change_file_diff_url</span><span class="p">(</span><span class="n">git_file</span><span class="p">,</span> <span class="n">git_pr</span><span class="p">),</span>
 </span><span id="GithubRetriever-192"><a href="#GithubRetriever-192"><span class="linenos">192</span></a>            <span class="n">blob_url</span><span class="o">=</span><span class="n">git_file</span><span class="o">.</span><span class="n">blob_url</span><span class="p">,</span>
 </span><span id="GithubRetriever-193"><a href="#GithubRetriever-193"><span class="linenos">193</span></a>            <span class="n">diff_content</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_and_build_diff_content</span><span class="p">(</span><span class="n">git_file</span><span class="p">),</span>
-</span><span id="GithubRetriever-194"><a href="#GithubRetriever-194"><span class="linenos">194</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_file</span><span class="p">,</span>
+</span><span id="GithubRetriever-194"><a href="#GithubRetriever-194"><span class="linenos">194</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_file</span><span class="p">,</span>
 </span><span id="GithubRetriever-195"><a href="#GithubRetriever-195"><span class="linenos">195</span></a>        <span class="p">)</span>
 </span><span id="GithubRetriever-196"><a href="#GithubRetriever-196"><span class="linenos">196</span></a>
 </span><span id="GithubRetriever-197"><a href="#GithubRetriever-197"><span class="linenos">197</span></a>    <span class="k">def</span> <span class="nf">_convert_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">git_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChangeStatus</span><span class="p">:</span>
@@ -383,7 +383,7 @@
                             <div id="GithubRetriever.__init__" class="classattr">
                                         <input id="GithubRetriever.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="name">GithubRetriever</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">client</span><span class="p">:</span> <span class="n">github</span><span class="o">.</span><span class="n">MainClass</span><span class="o">.</span><span class="n">Github</span>,</span><span class="param">	<span class="n">repository_name_or_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">pull_request_number</span><span class="p">:</span> <span class="nb">int</span></span>)</span>
 
                 <label class="view-source-button" for="GithubRetriever.__init__-view-source"><span>View Source</span></label>
@@ -436,11 +436,11 @@
             <span class="name">GITHUB_STATUS_MAPPING</span>        =
 <span class="default_value">{&#39;added&#39;: &#39;A&#39;, &#39;copied&#39;: &#39;C&#39;, &#39;removed&#39;: &#39;D&#39;, &#39;modified&#39;: &#39;M&#39;, &#39;renamed&#39;: &#39;R&#39;, &#39;type_change&#39;: &#39;T&#39;}</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.GITHUB_STATUS_MAPPING"></a>
-    
-    
+
+
 
                             </div>
                             <div id="GithubRetriever.ISSUE_PATTERN" class="classattr">
@@ -448,21 +448,21 @@
             <span class="name">ISSUE_PATTERN</span>        =
 <span class="default_value">&#39;#\\d+&#39;</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.ISSUE_PATTERN"></a>
-    
-    
+
+
 
                             </div>
                             <div id="GithubRetriever.retriever_type" class="classattr">
                                 <div class="attr variable">
             <span class="name">retriever_type</span><span class="annotation">: str</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.retriever_type"></a>
-    
+
             <div class="docstring"><p>Return the retriever type.</p>
 </div>
 
@@ -472,10 +472,10 @@
                                 <div class="attr variable">
             <span class="name">repository</span><span class="annotation">: codedog.models.repository.Repository</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.repository"></a>
-    
+
             <div class="docstring"><p>Return the pull request target repository object.</p>
 </div>
 
@@ -485,10 +485,10 @@
                                 <div class="attr variable">
             <span class="name">pull_request</span><span class="annotation">: codedog.models.pull_request.PullRequest</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.pull_request"></a>
-    
+
             <div class="docstring"><p>Return the pull request object.</p>
 </div>
 
@@ -498,10 +498,10 @@
                                 <div class="attr variable">
             <span class="name">source_repository</span><span class="annotation">: codedog.models.repository.Repository</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.source_repository"></a>
-    
+
             <div class="docstring"><p>Return the pull request source repository object.</p>
 </div>
 
@@ -511,10 +511,10 @@
                                 <div class="attr variable">
             <span class="name">changed_files</span><span class="annotation">: list[codedog.models.change_file.ChangeFile]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GithubRetriever.changed_files"></a>
-    
+
             <div class="docstring"><p>Return the changed file list between end commit and start commit.</p>
 </div>
 
@@ -523,7 +523,7 @@
                             <div id="GithubRetriever.get_blob" class="classattr">
                                         <input id="GithubRetriever.get_blob-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">get_blob</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">blob_id</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">codedog</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">blob</span><span class="o">.</span><span class="n">Blob</span>:</span></span>
 
@@ -545,7 +545,7 @@
                             <div id="GithubRetriever.get_commit" class="classattr">
                                         <input id="GithubRetriever.get_commit-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">get_commit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">commit_sha</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">codedog</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">Commit</span>:</span></span>
 
@@ -568,7 +568,7 @@
                 <section id="GitlabRetriever">
                             <input id="GitlabRetriever-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">GitlabRetriever</span><wbr>(<span class="base">codedog.retrievers.base.Retriever</span>):
 
@@ -643,7 +643,7 @@
 </span><span id="GitlabRetriever-90"><a href="#GitlabRetriever-90"><span class="linenos"> 90</span></a>            <span class="n">repository_name</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
 </span><span id="GitlabRetriever-91"><a href="#GitlabRetriever-91"><span class="linenos"> 91</span></a>            <span class="n">repository_full_name</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">path_with_namespace</span><span class="p">,</span>
 </span><span id="GitlabRetriever-92"><a href="#GitlabRetriever-92"><span class="linenos"> 92</span></a>            <span class="n">repository_url</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">web_url</span><span class="p">,</span>
-</span><span id="GitlabRetriever-93"><a href="#GitlabRetriever-93"><span class="linenos"> 93</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_repo</span><span class="p">,</span>
+</span><span id="GitlabRetriever-93"><a href="#GitlabRetriever-93"><span class="linenos"> 93</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_repo</span><span class="p">,</span>
 </span><span id="GitlabRetriever-94"><a href="#GitlabRetriever-94"><span class="linenos"> 94</span></a>        <span class="p">)</span>
 </span><span id="GitlabRetriever-95"><a href="#GitlabRetriever-95"><span class="linenos"> 95</span></a>
 </span><span id="GitlabRetriever-96"><a href="#GitlabRetriever-96"><span class="linenos"> 96</span></a>    <span class="k">def</span> <span class="nf">_build_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">git_blob</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Blob</span><span class="p">:</span>
@@ -680,7 +680,7 @@
 </span><span id="GitlabRetriever-127"><a href="#GitlabRetriever-127"><span class="linenos">127</span></a>            <span class="n">change_files</span><span class="o">=</span><span class="n">change_files</span><span class="p">,</span>
 </span><span id="GitlabRetriever-128"><a href="#GitlabRetriever-128"><span class="linenos">128</span></a>            <span class="n">repository</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="p">,</span>
 </span><span id="GitlabRetriever-129"><a href="#GitlabRetriever-129"><span class="linenos">129</span></a>            <span class="n">source_repository</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_repository</span><span class="p">,</span>
-</span><span id="GitlabRetriever-130"><a href="#GitlabRetriever-130"><span class="linenos">130</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_pr</span><span class="p">,</span>
+</span><span id="GitlabRetriever-130"><a href="#GitlabRetriever-130"><span class="linenos">130</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_pr</span><span class="p">,</span>
 </span><span id="GitlabRetriever-131"><a href="#GitlabRetriever-131"><span class="linenos">131</span></a>        <span class="p">)</span>
 </span><span id="GitlabRetriever-132"><a href="#GitlabRetriever-132"><span class="linenos">132</span></a>        <span class="k">return</span> <span class="n">pull_request</span>
 </span><span id="GitlabRetriever-133"><a href="#GitlabRetriever-133"><span class="linenos">133</span></a>
@@ -733,7 +733,7 @@
 </span><span id="GitlabRetriever-180"><a href="#GitlabRetriever-180"><span class="linenos">180</span></a>            <span class="n">diff_url</span><span class="o">=</span><span class="n">blob_url</span><span class="p">,</span>  <span class="c1"># TODO</span>
 </span><span id="GitlabRetriever-181"><a href="#GitlabRetriever-181"><span class="linenos">181</span></a>            <span class="n">blob_url</span><span class="o">=</span><span class="n">blob_url</span><span class="p">,</span>
 </span><span id="GitlabRetriever-182"><a href="#GitlabRetriever-182"><span class="linenos">182</span></a>            <span class="n">diff_content</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_and_build_diff_content</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span>
-</span><span id="GitlabRetriever-183"><a href="#GitlabRetriever-183"><span class="linenos">183</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">diff</span><span class="p">,</span>
+</span><span id="GitlabRetriever-183"><a href="#GitlabRetriever-183"><span class="linenos">183</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">diff</span><span class="p">,</span>
 </span><span id="GitlabRetriever-184"><a href="#GitlabRetriever-184"><span class="linenos">184</span></a>        <span class="p">)</span>
 </span><span id="GitlabRetriever-185"><a href="#GitlabRetriever-185"><span class="linenos">185</span></a>        <span class="k">return</span> <span class="n">change_file</span>
 </span><span id="GitlabRetriever-186"><a href="#GitlabRetriever-186"><span class="linenos">186</span></a>
@@ -795,7 +795,7 @@
 </span><span id="GitlabRetriever-242"><a href="#GitlabRetriever-242"><span class="linenos">242</span></a>            <span class="n">title</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
 </span><span id="GitlabRetriever-243"><a href="#GitlabRetriever-243"><span class="linenos">243</span></a>            <span class="n">description</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
 </span><span id="GitlabRetriever-244"><a href="#GitlabRetriever-244"><span class="linenos">244</span></a>            <span class="n">url</span><span class="o">=</span><span class="n">git_issue</span><span class="o">.</span><span class="n">web_url</span><span class="p">,</span>
-</span><span id="GitlabRetriever-245"><a href="#GitlabRetriever-245"><span class="linenos">245</span></a>            <span class="n">_raw</span><span class="o">=</span><span class="n">git_issue</span><span class="p">,</span>
+</span><span id="GitlabRetriever-245"><a href="#GitlabRetriever-245"><span class="linenos">245</span></a>            <span class="n">raw</span><span class="o">=</span><span class="n">git_issue</span><span class="p">,</span>
 </span><span id="GitlabRetriever-246"><a href="#GitlabRetriever-246"><span class="linenos">246</span></a>        <span class="p">)</span>
 </span></pre></div>
 
@@ -811,7 +811,7 @@ from repository, wrapped the different client api of platforms.</p>
                             <div id="GitlabRetriever.__init__" class="classattr">
                                         <input id="GitlabRetriever.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="name">GitlabRetriever</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">client</span><span class="p">:</span> <span class="n">gitlab</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Gitlab</span>,</span><span class="param">	<span class="n">project_name_or_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">merge_request_iid</span><span class="p">:</span> <span class="nb">int</span></span>)</span>
 
                 <label class="view-source-button" for="GitlabRetriever.__init__-view-source"><span>View Source</span></label>
@@ -857,11 +857,11 @@ from repository, wrapped the different client api of platforms.</p>
             <span class="name">ISSUE_PATTERN</span>        =
 <span class="default_value">&#39;#\\d+&#39;</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.ISSUE_PATTERN"></a>
-    
-    
+
+
 
                             </div>
                             <div id="GitlabRetriever.LIST_DIFF_LIMIT" class="classattr">
@@ -869,21 +869,21 @@ from repository, wrapped the different client api of platforms.</p>
             <span class="name">LIST_DIFF_LIMIT</span>        =
 <span class="default_value">200</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.LIST_DIFF_LIMIT"></a>
-    
-    
+
+
 
                             </div>
                             <div id="GitlabRetriever.retriever_type" class="classattr">
                                 <div class="attr variable">
             <span class="name">retriever_type</span><span class="annotation">: str</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.retriever_type"></a>
-    
+
             <div class="docstring"><p>Return the retriever type.</p>
 </div>
 
@@ -893,10 +893,10 @@ from repository, wrapped the different client api of platforms.</p>
                                 <div class="attr variable">
             <span class="name">repository</span><span class="annotation">: codedog.models.repository.Repository</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.repository"></a>
-    
+
             <div class="docstring"><p>Return the pull request target repository object.</p>
 </div>
 
@@ -906,10 +906,10 @@ from repository, wrapped the different client api of platforms.</p>
                                 <div class="attr variable">
             <span class="name">pull_request</span><span class="annotation">: codedog.models.pull_request.PullRequest</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.pull_request"></a>
-    
+
             <div class="docstring"><p>Return the pull request object.</p>
 </div>
 
@@ -919,10 +919,10 @@ from repository, wrapped the different client api of platforms.</p>
                                 <div class="attr variable">
             <span class="name">source_repository</span><span class="annotation">: codedog.models.repository.Repository</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.source_repository"></a>
-    
+
             <div class="docstring"><p>Return the pull request source repository object.</p>
 </div>
 
@@ -932,10 +932,10 @@ from repository, wrapped the different client api of platforms.</p>
                                 <div class="attr variable">
             <span class="name">changed_files</span><span class="annotation">: list[codedog.models.change_file.ChangeFile]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#GitlabRetriever.changed_files"></a>
-    
+
             <div class="docstring"><p>Return the changed file list between end commit and start commit.</p>
 </div>
 
@@ -944,7 +944,7 @@ from repository, wrapped the different client api of platforms.</p>
                             <div id="GitlabRetriever.get_blob" class="classattr">
                                         <input id="GitlabRetriever.get_blob-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">get_blob</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">blob_sha</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">codedog</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">blob</span><span class="o">.</span><span class="n">Blob</span>:</span></span>
 
@@ -969,7 +969,7 @@ from repository, wrapped the different client api of platforms.</p>
                             <div id="GitlabRetriever.get_commit" class="classattr">
                                         <input id="GitlabRetriever.get_commit-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">get_commit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">commit_sha</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">codedog</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">Commit</span>:</span></span>
 

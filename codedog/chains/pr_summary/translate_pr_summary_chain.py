@@ -3,9 +3,10 @@ from __future__ import annotations
 from itertools import zip_longest
 from typing import Any, Dict, List
 
-from langchain import BasePromptTemplate, LLMChain
 from langchain.base_language import BaseLanguageModel
+from langchain.chains import LLMChain
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
+from langchain_core.prompts import BasePromptTemplate
 from pydantic import Field
 
 from codedog.chains.pr_summary.base import PRSummaryChain
@@ -116,7 +117,7 @@ class TranslatePRSummaryChain(PRSummaryChain):
         return code_summaries
 
     async def _atranslate_summary(self, summary: PRSummary) -> PRSummary:
-        response = await self.translate_chain.acall(
+        response = await self.translate_chain.ainvoke(
             {
                 "language": self.language,
                 "description": "Changed file brief summary (must in single line!).",

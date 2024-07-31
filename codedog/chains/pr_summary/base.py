@@ -2,15 +2,16 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from langchain import BasePromptTemplate, LLMChain
 from langchain.base_language import BaseLanguageModel
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
 )
+from langchain.chains import LLMChain
 from langchain.chains.base import Chain
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 from langchain.schema import BaseOutputParser
+from langchain_core.prompts import BasePromptTemplate
 from pydantic import Extra, Field
 
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT
@@ -19,6 +20,8 @@ from codedog.processors.pull_request_processor import (
     SUFFIX_LANGUAGE_MAPPING,
     PullRequestProcessor,
 )
+
+processor = PullRequestProcessor.build()
 
 
 class PRSummaryChain(Chain):
@@ -32,8 +35,6 @@ class PRSummaryChain(Chain):
     - code_summaries(Dict[str, str]): changed code file summarizations, key is file path.
     """
 
-    # TODO: input keys validation
-
     code_summary_chain: LLMChain = Field(exclude=True)
     """Chain to use to summarize code change."""
     pr_summary_chain: LLMChain = Field(exclude=True)
@@ -41,8 +42,6 @@ class PRSummaryChain(Chain):
 
     parser: BaseOutputParser = Field(exclude=True)
     """Parse pr summarized result to PRSummary object."""
-    processor: PullRequestProcessor = Field(exclude=True, default_factory=PullRequestProcessor.build)
-    """PR data process."""
 
     _input_keys: List[str] = ["pull_request"]
     _output_keys: List[str] = ["pr_summary", "code_summaries"]
@@ -78,15 +77,21 @@ class PRSummaryChain(Chain):
 
         code_summary_inputs = self._process_code_summary_inputs(pr)
         code_summary_outputs = (
-            self.code_summary_chain.apply(code_summary_inputs, callbacks=_run_manager.get_child(tag="CodeSummary"))
+            self.code_summary_chain.apply(
+                code_summary_inputs, callbacks=_run_manager.get_child(tag="CodeSummary")
+            )
             if code_summary_inputs
             else []
         )
 
-        code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
+        code_summaries = processor.build_change_summaries(
+            code_summary_inputs, code_summary_outputs
+        )
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output = self.pr_summary_chain(pr_summary_input, callbacks=_run_manager.get_child(tag="PRSummary"))
+        pr_summary_output = self.pr_summary_chain(
+            pr_summary_input, callbacks=_run_manager.get_child(tag="PRSummary")
+        )
 
         return self._process_result(pr_summary_output, code_summaries)
 
@@ -95,26 +100,38 @@ class PRSummaryChain(Chain):
 
         code_summary_inputs = self._process_code_summary_inputs(pr)
         code_summary_outputs = (
-            await self.code_summary_chain.aapply(code_summary_inputs, callbacks=_run_manager.get_child())
+            await self.code_summary_chain.aapply(
+                code_summary_inputs, callbacks=_run_manager.get_child()
+            )
             if code_summary_inputs
             else []
         )
 
-        code_summaries = self.processor.build_change_summaries(code_summary_inputs, code_summary_outputs)
+        code_summaries = processor.build_change_summaries(
+            code_summary_inputs, code_summary_outputs
+        )
 
         pr_summary_input = self._process_pr_summary_input(pr, code_summaries)
-        pr_summary_output = await self.pr_summary_chain.acall(pr_summary_input, callbacks=_run_manager.get_child())
+        pr_summary_output = await self.pr_summary_chain.ainvoke(
+            pr_summary_input, callbacks=_run_manager.get_child()
+        )
 
         return await self._aprocess_result(pr_summary_output, code_summaries)
 
-    def _call(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManagerForChainRun] = None) -> Dict[str, Any]:
+    def _call(
+        self,
+        inputs: Dict[str, Any],
+        run_manager: Optional[CallbackManagerForChainRun] = None,
+    ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         _run_manager.on_text(inputs["pull_request"].json() + "\n")
 
         return self.review(inputs, _run_manager)
 
     async def _acall(
-        self, inputs: Dict[str, Any], run_manager: Optional[AsyncCallbackManagerForChainRun] = None
+        self,
+        inputs: Dict[str, Any],
+        run_manager: Optional[AsyncCallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         await _run_manager.on_text(inputs["pull_request"].json() + "\n")
@@ -123,10 +140,12 @@ class PRSummaryChain(Chain):
 
     def _process_code_summary_inputs(self, pr: PullRequest) -> List[Dict[str, str]]:
         input_data = []
-        code_files = self.processor.get_diff_code_files(pr)
+        code_files = processor.get_diff_code_files(pr)
         for code_file in code_files:
             input_item = {
-                "content": code_file.diff_content.content[:2000],  # TODO: handle long diff
+                "content": code_file.diff_content.content[
+                    :2000
+                ],  # TODO: handle long diff
                 "name": code_file.full_name,
                 "language": SUFFIX_LANGUAGE_MAPPING.get(code_file.suffix, ""),
             }
@@ -134,17 +153,23 @@ class PRSummaryChain(Chain):
 
         return input_data
 
-    def _process_pr_summary_input(self, pr: PullRequest, code_summaries: List[ChangeSummary]) -> Dict[str, str]:
-        change_files_material: str = self.processor.gen_material_change_files(pr.change_files)
-        code_summaries_material = self.processor.gen_material_code_summaries(code_summaries)
-        pr_metadata_material = self.processor.gen_material_pr_metadata(pr)
+    def _process_pr_summary_input(
+        self, pr: PullRequest, code_summaries: List[ChangeSummary]
+    ) -> Dict[str, str]:
+        change_files_material: str = processor.gen_material_change_files(
+            pr.change_files
+        )
+        code_summaries_material = processor.gen_material_code_summaries(code_summaries)
+        pr_metadata_material = processor.gen_material_pr_metadata(pr)
         return {
             "change_files": change_files_material,
             "code_summaries": code_summaries_material,
             "metadata": pr_metadata_material,
         }
 
-    def _process_result(self, pr_summary_output: Dict[str, Any], code_summaries: List[ChangeSummary]) -> Dict[str, Any]:
+    def _process_result(
+        self, pr_summary_output: Dict[str, Any], code_summaries: List[ChangeSummary]
+    ) -> Dict[str, Any]:
         return {
             "pr_summary": pr_summary_output["text"],
             "code_summaries": code_summaries,
@@ -167,7 +192,16 @@ class PRSummaryChain(Chain):
         pr_summary_prompt: BasePromptTemplate = PR_SUMMARY_PROMPT,
         **kwargs,
     ) -> PRSummaryChain:
-        parser = OutputFixingParser.from_llm(llm=pr_summary_llm, parser=PydanticOutputParser(pydantic_object=PRSummary))
+        parser = OutputFixingParser.from_llm(
+            llm=pr_summary_llm, parser=PydanticOutputParser(pydantic_object=PRSummary)
+        )
         code_summary_chain = LLMChain(llm=code_summary_llm, prompt=code_summary_prompt)
-        pr_summary_chain = LLMChain(llm=pr_summary_llm, prompt=pr_summary_prompt, output_parser=parser)
-        return cls(code_summary_chain=code_summary_chain, pr_summary_chain=pr_summary_chain, parser=parser, **kwargs)
+        pr_summary_chain = LLMChain(
+            llm=pr_summary_llm, prompt=pr_summary_prompt, output_parser=parser
+        )
+        return cls(
+            code_summary_chain=code_summary_chain,
+            pr_summary_chain=pr_summary_chain,
+            parser=parser,
+            **kwargs,
+        )

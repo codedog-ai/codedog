@@ -104,7 +104,7 @@ class GithubRetriever(Retriever):
             repository_name=git_repo.name,
             repository_full_name=git_repo.full_name,
             repository_url=git_repo.html_url,
-            _raw=git_repo,
+            raw=git_repo,
         )
 
     def _build_pull_request(self, git_pr: GHPullRequest) -> PullRequest:
@@ -123,7 +123,7 @@ class GithubRetriever(Retriever):
             change_files=change_files,
             repository=self.repository,
             source_repository=self.source_repository,
-            _raw=git_pr,
+            raw=git_pr,
         )
 
     def _parse_and_build_related_issues(self, git_pr: GHPullRequest) -> list[Issue]:
@@ -156,7 +156,7 @@ class GithubRetriever(Retriever):
             title=git_issue.title,
             description=git_issue.body if git_issue.body else "",
             url=git_issue.html_url,
-            _raw=git_issue,
+            raw=git_issue,
         )
 
     def _build_change_file_list(self, git_pr: GHPullRequest) -> list[ChangeFile]:
@@ -190,7 +190,7 @@ class GithubRetriever(Retriever):
             diff_url=self._build_change_file_diff_url(git_file, git_pr),
             blob_url=git_file.blob_url,
             diff_content=self._parse_and_build_diff_content(git_file),
-            _raw=git_file,
+            raw=git_file,
         )
 
     def _convert_status(self, git_status: str) -> ChangeStatus:

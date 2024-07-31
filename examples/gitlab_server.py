@@ -1,6 +1,7 @@
 """
 demo gitlab api server
 """
+
 import asyncio
 import logging
 import threading
@@ -13,7 +14,7 @@ from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
 from gitlab import Gitlab
 from gitlab.v4.objects import ProjectMergeRequest
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 from pydantic import BaseModel
 
 from codedog.actors.reporters.pull_request import PullRequestReporter

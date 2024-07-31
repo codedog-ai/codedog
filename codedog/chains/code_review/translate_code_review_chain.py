@@ -3,8 +3,9 @@ from __future__ import annotations
 from itertools import zip_longest
 from typing import List
 
-from langchain import BasePromptTemplate, LLMChain
 from langchain.base_language import BaseLanguageModel
+from langchain.chains import LLMChain
+from langchain_core.prompts import BasePromptTemplate
 from pydantic import Field
 
 from codedog.chains.code_review.base import CodeReviewChain

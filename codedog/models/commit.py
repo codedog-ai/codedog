@@ -1,7 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, Field, validator
-from pydantic.fields import ModelField
+from pydantic import BaseModel, Field
 
 
 class Commit(BaseModel):
@@ -15,15 +14,6 @@ class Commit(BaseModel):
     message: str = Field(default="")
     """Commit message."""
 
-    _raw: object = Field(default=None, exclude=True)
+    raw: object = Field(default=None, exclude=True)
     """git commit raw object"""
-
-    @validator("*", pre=True, allow_reuse=True)
-    def none_to_default(value: Any, field: ModelField):
-        if value is not None:
-            return value
-        if field.default:
-            return field.default
-        if field.default_factory:
-            return (field.default_factory)()
-        raise ValueError(f"Field {field.name} is None.")
+    """git commit raw object"""

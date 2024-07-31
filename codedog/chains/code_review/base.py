@@ -3,13 +3,14 @@ from __future__ import annotations
 from itertools import zip_longest
 from typing import Any, Dict, List, Optional
 
-from langchain import BasePromptTemplate, LLMChain
 from langchain.base_language import BaseLanguageModel
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
 )
+from langchain.chains import LLMChain
 from langchain.chains.base import Chain
+from langchain_core.prompts import BasePromptTemplate
 from pydantic import Field
 
 from codedog.chains.code_review.prompts import CODE_REVIEW_PROMPT

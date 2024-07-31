@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from unidiff import PatchedFile
 
 
@@ -22,6 +22,8 @@ class DiffSegment(BaseModel):
 
 
 class DiffContent(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     add_count: int = Field()
     """Added lines count."""
     remove_count: int = Field()

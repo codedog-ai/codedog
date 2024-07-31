@@ -118,7 +118,7 @@
                     <h1 class="modulename">
 <a href="./../codedog.html">codedog</a><wbr>.chains    </h1>
 
-                
+
                         <input id="mod-chains-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-chains-view-source"><span>View Source</span></label>
@@ -135,7 +135,7 @@
                 <section id="PRSummaryChain">
                             <input id="PRSummaryChain-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">PRSummaryChain</span><wbr>(<span class="base">langchain.load.serializable.Serializable</span>, <span class="base">langchain.schema.runnable.Runnable[typing.Dict[str, typing.Any], typing.Dict[str, typing.Any]]</span>, <span class="base">abc.ABC</span>):
 
@@ -317,10 +317,10 @@
                                 <div class="attr variable">
             <span class="name">code_summary_chain</span><span class="annotation">: langchain.chains.llm.LLMChain</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.code_summary_chain"></a>
-    
+
             <div class="docstring"><p>Chain to use to summarize code change.</p>
 </div>
 
@@ -330,10 +330,10 @@
                                 <div class="attr variable">
             <span class="name">pr_summary_chain</span><span class="annotation">: langchain.chains.llm.LLMChain</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.pr_summary_chain"></a>
-    
+
             <div class="docstring"><p>Chain to use to summarize PR.</p>
 </div>
 
@@ -343,10 +343,10 @@
                                 <div class="attr variable">
             <span class="name">parser</span><span class="annotation">: langchain.schema.output_parser.BaseOutputParser</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.parser"></a>
-    
+
             <div class="docstring"><p>Parse pr summarized result to PRSummary object.</p>
 </div>
 
@@ -356,10 +356,10 @@
                                 <div class="attr variable">
             <span class="name">processor</span><span class="annotation">: codedog.processors.pull_request_processor.PullRequestProcessor</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.processor"></a>
-    
+
             <div class="docstring"><p>PR data process.</p>
 </div>
 
@@ -369,10 +369,10 @@
                                 <div class="attr variable">
             <span class="name">input_keys</span><span class="annotation">: List[str]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.input_keys"></a>
-    
+
             <div class="docstring"><p>Will be whatever keys the prompt expects.</p>
 
 <p>:meta private:</p>
@@ -384,10 +384,10 @@
                                 <div class="attr variable">
             <span class="name">output_keys</span><span class="annotation">: List[str]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#PRSummaryChain.output_keys"></a>
-    
+
             <div class="docstring"><p>Will always return text key.</p>
 
 <p>:meta private:</p>
@@ -398,7 +398,7 @@
                             <div id="PRSummaryChain.review" class="classattr">
                                         <input id="PRSummaryChain.review-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">review</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">inputs</span>, </span><span class="param"><span class="n">_run_manager</span></span><span class="return-annotation">) -> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>:</span></span>
 
@@ -425,13 +425,13 @@
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div id="PRSummaryChain.areview" class="classattr">
                                         <input id="PRSummaryChain.areview-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">async def</span>
         <span class="name">areview</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">inputs</span>, </span><span class="param"><span class="n">_run_manager</span></span><span class="return-annotation">) -> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>:</span></span>
 
@@ -458,7 +458,7 @@
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div id="PRSummaryChain.from_llm" class="classattr">
@@ -489,7 +489,7 @@
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div class="inherited">
@@ -538,7 +538,7 @@
             <div><dt>pydantic.main.BaseModel</dt>
                                 <dd id="PRSummaryChain.json" class="function">json</dd>
                 <dd id="PRSummaryChain.parse_obj" class="function">parse_obj</dd>
-                <dd id="PRSummaryChain.parse_raw" class="function">parse_raw</dd>
+                <dd id="PRSummaryChain.parseraw" class="function">parseraw</dd>
                 <dd id="PRSummaryChain.parse_file" class="function">parse_file</dd>
                 <dd id="PRSummaryChain.from_orm" class="function">from_orm</dd>
                 <dd id="PRSummaryChain.construct" class="function">construct</dd>
@@ -555,7 +555,7 @@
                 <section id="CodeReviewChain">
                             <input id="CodeReviewChain-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">CodeReviewChain</span><wbr>(<span class="base">langchain.load.serializable.Serializable</span>, <span class="base">langchain.schema.runnable.Runnable[typing.Dict[str, typing.Any], typing.Dict[str, typing.Any]]</span>, <span class="base">abc.ABC</span>):
 
@@ -710,10 +710,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">chain</span><span class="annotation">: langchain.chains.llm.LLMChain</span>
 
-        
+
     </div>
     <a class="headerlink" href="#CodeReviewChain.chain"></a>
-    
+
             <div class="docstring"><p>Chain to use to review code change.</p>
 </div>
 
@@ -723,10 +723,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">processor</span><span class="annotation">: codedog.processors.pull_request_processor.PullRequestProcessor</span>
 
-        
+
     </div>
     <a class="headerlink" href="#CodeReviewChain.processor"></a>
-    
+
             <div class="docstring"><p>PR data process.</p>
 </div>
 
@@ -736,10 +736,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">input_keys</span><span class="annotation">: List[str]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#CodeReviewChain.input_keys"></a>
-    
+
             <div class="docstring"><p>Will be whatever keys the prompt expects.</p>
 
 <p>:meta private:</p>
@@ -751,10 +751,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">output_keys</span><span class="annotation">: List[str]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#CodeReviewChain.output_keys"></a>
-    
+
             <div class="docstring"><p>Will always return text key.</p>
 
 <p>:meta private:</p>
@@ -789,7 +789,7 @@ to this sequence.</p>
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div class="inherited">
@@ -838,7 +838,7 @@ to this sequence.</p>
             <div><dt>pydantic.main.BaseModel</dt>
                                 <dd id="CodeReviewChain.json" class="function">json</dd>
                 <dd id="CodeReviewChain.parse_obj" class="function">parse_obj</dd>
-                <dd id="CodeReviewChain.parse_raw" class="function">parse_raw</dd>
+                <dd id="CodeReviewChain.parseraw" class="function">parseraw</dd>
                 <dd id="CodeReviewChain.parse_file" class="function">parse_file</dd>
                 <dd id="CodeReviewChain.from_orm" class="function">from_orm</dd>
                 <dd id="CodeReviewChain.construct" class="function">construct</dd>
@@ -855,7 +855,7 @@ to this sequence.</p>
                 <section id="TranslatePRSummaryChain">
                             <input id="TranslatePRSummaryChain-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">TranslatePRSummaryChain</span><wbr>(<span class="base">langchain.load.serializable.Serializable</span>, <span class="base">langchain.schema.runnable.Runnable[typing.Dict[str, typing.Any], typing.Dict[str, typing.Any]]</span>, <span class="base">abc.ABC</span>):
 
@@ -1021,10 +1021,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">language</span><span class="annotation">: str</span>
 
-        
+
     </div>
     <a class="headerlink" href="#TranslatePRSummaryChain.language"></a>
-    
+
             <div class="docstring"><p>The language you want to translate into.</p>
 
 <p>Note that default review result is usually in English. If language is set to english it will also call llm</p>
@@ -1036,10 +1036,10 @@ to this sequence.</p>
                                 <div class="attr variable">
             <span class="name">translate_chain</span><span class="annotation">: langchain.chains.llm.LLMChain</span>
 
-        
+
     </div>
     <a class="headerlink" href="#TranslatePRSummaryChain.translate_chain"></a>
-    
+
             <div class="docstring"><p>Chain to use to translate summary result.</p>
 </div>
 
@@ -1089,7 +1089,7 @@ to this sequence.</p>
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div class="inherited">
@@ -1149,7 +1149,7 @@ to this sequence.</p>
             <div><dt>pydantic.main.BaseModel</dt>
                                 <dd id="TranslatePRSummaryChain.json" class="function">json</dd>
                 <dd id="TranslatePRSummaryChain.parse_obj" class="function">parse_obj</dd>
-                <dd id="TranslatePRSummaryChain.parse_raw" class="function">parse_raw</dd>
+                <dd id="TranslatePRSummaryChain.parseraw" class="function">parseraw</dd>
                 <dd id="TranslatePRSummaryChain.parse_file" class="function">parse_file</dd>
                 <dd id="TranslatePRSummaryChain.from_orm" class="function">from_orm</dd>
                 <dd id="TranslatePRSummaryChain.construct" class="function">construct</dd>

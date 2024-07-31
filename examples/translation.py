@@ -4,7 +4,7 @@ from os import environ as env
 
 import openai
 from github import Github
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 from langchain_visualizer import visualize
 
 from codedog.actors.reporters.pull_request import PullRequestReporter
@@ -44,14 +44,14 @@ review_chain = TranslateCodeReviewChain.from_llm(
 
 
 async def pr_summary():
-    result = await summary_chain.acall(
+    result = await summary_chain.ainvoke(
         {"pull_request": retriever.pull_request}, include_run_info=True
     )
     return result
 
 
 async def code_review():
-    result = await review_chain.acall(
+    result = await review_chain.ainvoke(
         {"pull_request": retriever.pull_request}, include_run_info=True
     )
     return result

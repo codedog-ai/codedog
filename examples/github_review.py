@@ -4,8 +4,7 @@ from os import environ as env
 
 import openai
 from github import Github
-from langchain.callbacks import get_openai_callback
-from langchain_visualizer import visualize
+from langchain_community.callbacks.manager import get_openai_callback
 
 from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains import CodeReviewChain, PRSummaryChain
@@ -18,10 +17,6 @@ retriever = GithubRetriever(gh, "codedog-ai/codedog", 2)
 # retriever = GithubRetriever(gh, "langchain-ai/langchain", 8171)
 # retriever = GithubRetriever(gh, "ClickHouse/ClickHouse", 49113)
 
-openai_proxy = env.get("OPENAI_PROXY", "")
-if openai_proxy:
-    openai.proxy = openai_proxy
-
 summary_chain = PRSummaryChain.from_llm(
     code_summary_llm=load_gpt_llm(), pr_summary_llm=load_gpt4_llm(), verbose=True
 )
@@ -29,14 +24,14 @@ review_chain = CodeReviewChain.from_llm(llm=load_gpt_llm(), verbose=True)
 
 
 async def pr_summary():
-    result = await summary_chain.acall(
+    result = await summary_chain.ainvoke(
         {"pull_request": retriever.pull_request}, include_run_info=True
     )
     return result
 
 
 async def code_review():
-    result = await review_chain.acall(
+    result = await review_chain.ainvoke(
         {"pull_request": retriever.pull_request}, include_run_info=True
     )
     return result
@@ -68,11 +63,9 @@ def report():
     return reporter.report()
 
 
-async def run():
+def run():
     result = report()
     print(result)
 
 
-visualize(run)
-
-time.sleep(60)
+run()

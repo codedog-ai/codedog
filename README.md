@@ -118,3 +118,5 @@ settings:
 | AZURE_OPENAI_API_BASE          | No       |                   | Azure openai api base                   |
 | AZURE_OPENAI_DEPLOYMENT_ID     | No       |                   | Azure openai deployment id for gpt 3.5  |
 | AZURE_OPENAI_GPT4_DEPLOYMENT_ID| No       |                   | Azure openai deployment id for gpt 4    |
+
+# How to release
