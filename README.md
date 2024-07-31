@@ -7,6 +7,9 @@
 
 Review your Github/Gitlab PR with ChatGPT
 
+**Codedog is update to langchain v0.2**
+
+
 ## What is codedog?
 
 Codedog is a code review automation tool benefit the power of LLM (Large Language Model) to help developers
