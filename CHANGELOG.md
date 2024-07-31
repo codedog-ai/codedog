@@ -2,7 +2,18 @@
 
 
 
-## v0.9.0 (2024-05-31)
+## v0.10.0 (2024-07-31)
+
+### Feature
+
+* feat: update to langchain 0.2 ([`6ce0811`](https://github.com/codedog-ai/codedog/commit/6ce081103e59bb20b8b6c6bad6099c95506b73be))
+
+### Unknown
+
+* Rename dependabot.yml to dependabot.yml.disable ([`c47f341`](https://github.com/codedog-ai/codedog/commit/c47f34149c6b9abe4144a5aa5f75542fc9ab5d2c))
+
+
+## v0.9.0 (2024-05-30)
 
 ### Build
 
@@ -1058,6 +1069,10 @@ updated-dependencies:
 
 Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
 Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`32b4589`](https://github.com/codedog-ai/codedog/commit/32b4589d1692217d8fed8c13cb4218115e3eccf5))
+
+### Chore
+
+* chore(release): release version v0.9.0 ([`47f08b6`](https://github.com/codedog-ai/codedog/commit/47f08b67a1f3e16cff1c42312e50623fabf7d406))
 
 ### Fix
 
