@@ -2,7 +2,18 @@
 
 
 
-## v0.10.0 (2024-07-31)
+## v0.11.0 (2024-07-31)
+
+### Unknown
+
+* update readme ([`1c7beb9`](https://github.com/codedog-ai/codedog/commit/1c7beb972a76a001eff099f10837be13bd4744c1))
+
+
+## v0.10.0 (2024-07-30)
+
+### Chore
+
+* chore(release): release version v0.10.0 ([`e1ee52e`](https://github.com/codedog-ai/codedog/commit/e1ee52e44828af97b3b3479a77c63e7d333c5227))
 
 ### Feature
 
