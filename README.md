@@ -123,3 +123,5 @@ settings:
 | AZURE_OPENAI_GPT4_DEPLOYMENT_ID| No       |                   | Azure openai deployment id for gpt 4    |
 
 # How to release
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/kratos06/codedog?utm_source=oss&utm_medium=github&utm_campaign=kratos06%2Fcodedog&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
