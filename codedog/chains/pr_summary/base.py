@@ -2,17 +2,18 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from langchain.base_language import BaseLanguageModel
-from langchain.callbacks.manager import (
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
 )
 from langchain.chains import LLMChain
 from langchain.chains.base import Chain
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
-from langchain.schema import BaseOutputParser
+from langchain_core.output_parsers import BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate
-from pydantic import Extra, Field
+from langchain_core.pydantic_v1 import Field
+from pydantic import BaseModel
 
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT
 from codedog.models import ChangeSummary, PRSummary, PullRequest
@@ -49,7 +50,7 @@ class PRSummaryChain(Chain):
     class Config:
         """Configuration for this pydantic object."""
 
-        extra = Extra.forbid
+        extra = "forbid"
         arbitrary_types_allowed = True
 
     @property
