@@ -1,7 +1,7 @@
 from functools import lru_cache
 from os import environ as env
 
-from langchain.chat_models.base import BaseChatModel
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_openai.chat_models import AzureChatOpenAI, ChatOpenAI
 
 
@@ -44,5 +44,4 @@ def load_gpt4_llm():
             api_key=env.get("OPENAI_API_KEY"),
             model="gpt-4",
         )
-    return llm
     return llm

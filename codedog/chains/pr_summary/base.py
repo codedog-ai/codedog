@@ -12,8 +12,7 @@ from langchain.chains.base import Chain
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 from langchain_core.output_parsers import BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate
-from langchain_core.pydantic_v1 import Field
-from pydantic import BaseModel
+from pydantic import Field, BaseModel, ConfigDict
 
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT
 from codedog.models import ChangeSummary, PRSummary, PullRequest
@@ -47,11 +46,7 @@ class PRSummaryChain(Chain):
     _input_keys: List[str] = ["pull_request"]
     _output_keys: List[str] = ["pr_summary", "code_summaries"]
 
-    class Config:
-        """Configuration for this pydantic object."""
-
-        extra = "forbid"
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
     @property
     def _chain_type(self) -> str:

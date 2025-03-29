@@ -3,7 +3,7 @@ from __future__ import annotations
 from itertools import zip_longest
 from typing import List
 
-from langchain.base_language import BaseLanguageModel
+from langchain_core.language_models import BaseLanguageModel
 from langchain.chains import LLMChain
 from langchain_core.prompts import BasePromptTemplate
 from pydantic import Field

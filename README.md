@@ -1,127 +1,138 @@
-# 🐶 Codedog
+# Codedog: AI-Powered Code Review Assistant
 
-[![Checkstyle](https://github.com/Arcadia822/codedog/actions/workflows/flake8.yml/badge.svg)](https://github.com/Arcadia822/codedog/actions/workflows/flake8.yml)
-[![Pytest](https://github.com/Arcadia822/codedog/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Arcadia822/codedog/actions/workflows/test.yml)
-[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Arcadia822/ce38dae58995aeffef42065093fcfe84/raw/codedog_master.json)](https://github.com/Arcadia822/codedog/actions/workflows/test.yml)
-[![](https://dcbadge.vercel.app/api/server/wzfsvaDQ?compact=true&style=flat)](https://discord.gg/6adMQxSpJS)
+[![Python Version](https://img.shields.io/pypi/pyversions/codedog)](https://pypi.org/project/codedog/)
+[![PyPI Version](https://img.shields.io/pypi/v/codedog.svg)](https://pypi.org/project/codedog/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Review your Github/Gitlab PR with ChatGPT
+Codedog leverages Large Language Models (LLMs) like GPT to automatically review your pull requests on platforms like GitHub and GitLab, providing summaries and potential suggestions.
 
-**Codedog is update to langchain v0.2**
+## Features
 
+*   **Pull Request Summarization**: Generates concise summaries of PR changes, including categorization (feature, fix, etc.) and identification of major files.
+*   **Code Change Summarization**: Summarizes individual file diffs.
+*   **Code Review Suggestions**: Provides feedback and suggestions on code changes (experimental).
+*   **Multi-language Support**: Includes templates for English and Chinese reports.
+*   **Platform Support**: Works with GitHub and GitLab.
 
-## What is codedog?
+## Prerequisites
 
-Codedog is a code review automation tool benefit the power of LLM (Large Language Model) to help developers
-review code faster and more accurately.
+*   **Python**: Version 3.10 or higher (as the project now requires `^3.10`).
+*   **Poetry**: A dependency management tool for Python. Installation instructions: [Poetry Docs](https://python-poetry.org/docs/#installation).
+*   **Git**: For interacting with repositories.
+*   **(Optional) Homebrew**: For easier installation of Python versions on macOS.
+*   **API Keys**:
+    *   OpenAI API Key (or Azure OpenAI credentials).
+    *   GitHub Personal Access Token (with `repo` scope) or GitLab Personal Access Token (with `api` scope).
 
-Codedog is based on OpenAI API and Langchain.
+## Setup
 
-## Quickstart
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/codedog-ai/codedog.git # Or your fork
+    cd codedog
+    ```
 
-### Review your pull request via Github App
+2.  **Configure Python Version (if needed)**:
+    The project requires Python `^3.10` (3.10 or higher, but less than 4.0).
+    *   If your default Python doesn't meet this, install a compatible version (e.g., using Homebrew `brew install python@3.12`, pyenv, etc.).
+    *   Tell Poetry to use the correct Python executable (replace path if necessary):
+        ```bash
+        poetry env use /opt/homebrew/bin/python3.12 # Example for Homebrew on Apple Silicon
+        # or
+        poetry env use /path/to/your/python3.10+
+        ```
 
-Install our github app [codedog-assistant](https://github.com/apps/codedog-assistant)
-
-### Start with your own code
-
-As a example, we will use codedog to review a pull request on Github.
-
-0. Install codedog
-
-```bash
-pip install codedog
-```
-
-codedog currently only supports python 3.10.
-
-1. Get a github pull request
-```python
-from github import Github
-
-github_token="YOUR GITHUB TOKEN"
-repository = "codedog-ai/codedog"
-pull_request_number = 2
-
-github = Github(github_token)
-retriever = GithubRetriever(github, repository, pull_requeest_number)
-```
-
-
-2. Summarize the pull request
-
-Since `PRSummaryChain` uses langchain's output parser, we suggest to use GPT-4 to improve formatting accuracy.
-
-```python
-from codedog.chains import PRSummaryChain
-
-openai_api_key = "YOUR OPENAI API KEY WITH GPT4"
-
-# PR Summary uses output parser
-llm35 = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-3.5-turbo")
-
-llm4 = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4")
-
-summary_chain = PRSummaryChain.from_llm(code_summary_llm=llm35, pr_summary_llm=llm4, verbose=True)
-
-summary = summary_chain({"pull_request": retriever.pull_request}, include_run_info=True)
-
-print(summary)
-```
-
-3. Review each code file changes in the pull request
-
-```python
-review_chain = CodeReviewChain.from_llm(llm=llm35, verbose=True)
-
-reviews = review_chain({"pull_request": retriever.pull_request}, include_run_info=True)
-
-print(reviews)
-```
-
-4. Format review result
-
-Format review result to a markdown report.
-
-```python
-from codedog.actors.reporters.pull_request import PullRequestReporter
-
-reporter = PullRequestReporter(
-    pr_summary=summary["pr_summary"],
-    code_summaries=summary["code_summaries"],
-    pull_request=retriever.pull_request,
-    code_reviews=reviews["code_reviews"],
-)
-
-md_report = reporter.report()
-
-print(md_report)
-```
-
-## Deployment
-
-We have a simple server demo to deploy codedog as a service with fastapi and handle Github webhook.
-Basicly you can also use it with workflow or Github Application.
-
-see `examples/server.py`
-
-Note that codedog don't have fastapi and unicorn as dependency, you need to install them manually.
+3.  **Install Dependencies**:
+    Poetry will create a virtual environment and install all necessary packages defined in `pyproject.toml` and `poetry.lock`.
+    ```bash
+    poetry install --with test,dev # Include optional dev and test dependencies
+    ```
+    *(Note: If you encounter issues connecting to package sources, ensure you have internet access. The configuration previously used a mirror but has been reverted to the default PyPI.)*
 
 ## Configuration
 
-Codedog currently load config from environment variables.
+Codedog uses environment variables for configuration. You can set these directly in your shell, or use a `.env` file (you might need to install `python-dotenv` separately in your environment: `poetry run pip install python-dotenv`).
 
-settings:
+**Required:**
 
-| Config Name                    | Required | Default           | Description                             |
-| ------------------------------ | -------- | ----------------- | --------------------------------------- |
-| OPENAI_API_KEY                 | No       |                   | Api Key for calling openai gpt api      |
-| AZURE_OPENAI                   | No       |                   | Use azure openai if not blank           |
-| AZURE_OPENAI_API_KEY           | No       |                   | Azure openai api key                    |
-| AZURE_OPENAI_API_BASE          | No       |                   | Azure openai api base                   |
-| AZURE_OPENAI_DEPLOYMENT_ID     | No       |                   | Azure openai deployment id for gpt 3.5  |
-| AZURE_OPENAI_GPT4_DEPLOYMENT_ID| No       |                   | Azure openai deployment id for gpt 4    |
+*   **Platform Token**:
+    *   For GitHub: `GITHUB_TOKEN="your_github_personal_access_token"`
+    *   For GitLab: `GITLAB_TOKEN="your_gitlab_personal_access_token"`
+    *   For GitLab (if using a self-hosted instance): `GITLAB_URL="https://your.gitlab.instance.com"`
 
-# How to release
+*   **LLM Credentials**:
+    *   **OpenAI**: `OPENAI_API_KEY="sk-your_openai_api_key"`
+    *   **Azure OpenAI**: Set `AZURE_OPENAI="true"` (or any non-empty string) **and** provide:
+        *   `AZURE_OPENAI_API_KEY="your_azure_api_key"`
+        *   `AZURE_OPENAI_API_BASE="https://your_azure_endpoint.openai.azure.com/"`
+        *   `AZURE_OPENAI_DEPLOYMENT_ID="your_gpt_35_turbo_deployment_name"` (Used for code summaries/reviews)
+        *   `AZURE_OPENAI_GPT4_DEPLOYMENT_ID="your_gpt_4_deployment_name"` (Used for PR summary)
+        *   *(Optional)* `AZURE_OPENAI_API_VERSION="YYYY-MM-DD"` (Defaults to a recent preview version if not set)
 
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/kratos06/codedog?utm_source=oss&utm_medium=github&utm_campaign=kratos06%2Fcodedog&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+**Example `.env` file:**
+
+```dotenv
+# Platform
+GITHUB_TOKEN="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# LLM (OpenAI example)
+OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# LLM (Azure OpenAI example)
+# AZURE_OPENAI="true"
+# AZURE_OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# AZURE_OPENAI_API_BASE="https://your-instance.openai.azure.com/"
+# AZURE_OPENAI_DEPLOYMENT_ID="gpt-35-turbo-16k"
+# AZURE_OPENAI_GPT4_DEPLOYMENT_ID="gpt-4-turbo"
+```
+
+## Running the Example (Quickstart)
+
+The `README.md` in the project root (and `codedog/__init__.py`) contains a quickstart Python script demonstrating the core workflow. 
+
+1.  **Save the Quickstart Code**: Copy the Python code from the quickstart section into a file, e.g., `run_codedog.py`.
+
+2.  **Update Placeholders**: Modify the script with:
+    *   Your actual GitHub/GitLab token.
+    *   Your OpenAI/Azure API key and relevant details.
+    *   The target repository (e.g., `"codedog-ai/codedog"` or your fork/project).
+    *   The target Pull Request / Merge Request number/iid.
+
+3.  **Load Environment Variables**: If using a `.env` file, ensure it's loaded. You might need to add `from dotenv import load_dotenv; load_dotenv()` at the beginning of your script.
+
+4.  **Run the Script**: Execute the script within the Poetry environment:
+    ```bash
+    poetry run python run_codedog.py
+    ```
+
+This will:
+*   Initialize the appropriate retriever (GitHub/GitLab).
+*   Fetch the PR/MR data.
+*   Use the configured LLMs to generate code summaries and a PR summary.
+*   Use the configured LLM to generate code review suggestions.
+*   Print a formatted Markdown report to the console.
+
+## Running Tests
+
+To ensure the package is working correctly after setup or changes:
+
+```bash
+poetry run pytest
+```
+
+## Development
+
+*   **Code Style**: Uses `black` for formatting and `flake8` for linting.
+    ```bash
+    poetry run black .
+    poetry run flake8 .
+    ```
+*   **Dependencies**: Managed via `poetry`. Use `poetry add <package>` to add new dependencies.
+
+## Contributing
+
+Contributions are welcome! Please refer to the project's contribution guidelines (if available) or open an issue/PR on the repository.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
