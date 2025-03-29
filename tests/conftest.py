@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 
+
 @pytest.fixture
 def mock_pull_request():
     """Create a mock PullRequest object for testing."""
@@ -15,9 +16,10 @@ def mock_pull_request():
     mock_pr.json.return_value = "{}"
     return mock_pr
 
+
 @pytest.fixture
 def mock_llm():
     """Create a mock LLM for testing."""
     mock = MagicMock()
     mock.invoke.return_value = {"text": "Test response"}
-    return mock 
+    return mock
