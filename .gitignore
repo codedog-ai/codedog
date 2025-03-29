@@ -139,3 +139,9 @@ dmypy.json
 
 # macOS .DS_Store files
 .DS_Store
+
+# Generated context prompt file
+project_context.prompt
+
+# Helper script to generate context
+_create_context_prompt.py

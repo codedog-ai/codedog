@@ -3,8 +3,8 @@ from __future__ import annotations
 from itertools import zip_longest
 from typing import Any, Dict, List, Optional
 
-from langchain.base_language import BaseLanguageModel
-from langchain.callbacks.manager import (
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
 )
