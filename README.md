@@ -13,6 +13,12 @@ Codedog leverages Large Language Models (LLMs) like GPT to automatically review 
 *   **Code Review Suggestions**: Provides feedback and suggestions on code changes (experimental).
 *   **Multi-language Support**: Includes templates for English and Chinese reports.
 *   **Platform Support**: Works with GitHub and GitLab.
+*   **Automated Code Review**: Uses LLMs to analyze code changes, provide feedback, and suggest improvements
+*   **Scoring System**: Evaluates code across multiple dimensions, including correctness, readability, and maintainability
+*   **Multiple LLM Support**: Works with OpenAI, Azure OpenAI, DeepSeek, and MindConnect R1 models
+*   **Email Notifications**: Sends code review reports via email
+*   **Commit-Triggered Reviews**: Automatically reviews code when commits are made
+*   **Developer Evaluation**: Evaluates a developer's code over a specific time period
 
 ## Prerequisites
 
@@ -68,6 +74,13 @@ Codedog uses environment variables for configuration. You can set these directly
         *   `AZURE_OPENAI_DEPLOYMENT_ID="your_gpt_35_turbo_deployment_name"` (Used for code summaries/reviews)
         *   `AZURE_OPENAI_GPT4_DEPLOYMENT_ID="your_gpt_4_deployment_name"` (Used for PR summary)
         *   *(Optional)* `AZURE_OPENAI_API_VERSION="YYYY-MM-DD"` (Defaults to a recent preview version if not set)
+    *   **DeepSeek Models**: Set the following for DeepSeek models:
+        *   `DEEPSEEK_API_KEY="your_deepseek_api_key"`
+        *   *(Optional)* `DEEPSEEK_MODEL="deepseek-chat"` (Default model, options include: "deepseek-chat", "deepseek-coder", etc.)
+        *   *(Optional)* `DEEPSEEK_API_BASE="https://api.deepseek.com"` (Default API endpoint)
+        *   For **DeepSeek R1 model** specifically:
+            *   Set `DEEPSEEK_MODEL="deepseek-r1"`
+            *   *(Optional)* `DEEPSEEK_R1_API_BASE="https://your-r1-endpoint"` (If different from standard DeepSeek endpoint)
 
 **Example `.env` file:**
 
@@ -84,6 +97,32 @@ OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 # AZURE_OPENAI_API_BASE="https://your-instance.openai.azure.com/"
 # AZURE_OPENAI_DEPLOYMENT_ID="gpt-35-turbo-16k"
 # AZURE_OPENAI_GPT4_DEPLOYMENT_ID="gpt-4-turbo"
+
+# LLM (DeepSeek example)
+# DEEPSEEK_API_KEY="your_deepseek_api_key"
+# DEEPSEEK_MODEL="deepseek-chat"
+# DEEPSEEK_API_BASE="https://api.deepseek.com"
+
+# LLM (DeepSeek R1 example)
+# DEEPSEEK_API_KEY="your_deepseek_api_key"
+# DEEPSEEK_MODEL="deepseek-r1"
+# DEEPSEEK_R1_API_BASE="https://your-r1-endpoint"
+
+# LLM (MindConnect R1 example)
+# MINDCONNECT_API_KEY="your_mindconnect_api_key"
+
+# Model selection (optional)
+CODE_SUMMARY_MODEL="gpt-3.5"
+PR_SUMMARY_MODEL="gpt-4"
+CODE_REVIEW_MODEL="deepseek"  # Can use "deepseek" or "deepseek-r1" here
+
+# Email notification (optional)
+EMAIL_ENABLED="true"
+NOTIFICATION_EMAILS="your_email@example.com,another_email@example.com"
+SMTP_SERVER="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USERNAME="your_email@gmail.com"
+SMTP_PASSWORD="your_app_password"
 ```
 
 ## Running the Example (Quickstart)
