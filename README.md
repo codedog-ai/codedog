@@ -17,7 +17,7 @@ Codedog leverages Large Language Models (LLMs) like GPT to automatically review 
 *   **Scoring System**: Evaluates code across multiple dimensions, including correctness, readability, and maintainability
 *   **Multiple LLM Support**: Works with OpenAI, Azure OpenAI, DeepSeek, and MindConnect R1 models
 *   **Email Notifications**: Sends code review reports via email (see [Email Setup Guide](docs/email_setup.md))
-*   **Commit-Triggered Reviews**: Automatically reviews code when commits are made
+*   **Commit-Triggered Reviews**: Automatically reviews code when commits are made (see [Commit Review Guide](docs/commit_review.md))
 *   **Developer Evaluation**: Evaluates a developer's code over a specific time period
 
 ## Prerequisites
@@ -127,7 +127,7 @@ SMTP_PASSWORD="your_app_password"  # For Gmail, you must use an App Password, se
 
 ## Running the Example (Quickstart)
 
-The `README.md` in the project root (and `codedog/__init__.py`) contains a quickstart Python script demonstrating the core workflow. 
+The `README.md` in the project root (and `codedog/__init__.py`) contains a quickstart Python script demonstrating the core workflow.
 
 1.  **Save the Quickstart Code**: Copy the Python code from the quickstart section into a file, e.g., `run_codedog.py`.
 
