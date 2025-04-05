@@ -290,8 +290,16 @@ def main():
         )
         commit_hash = result.stdout.strip()
 
-    # Get email addresses
-    email_addresses = parse_emails(args.email or os.environ.get("NOTIFICATION_EMAILS", ""))
+    # Get email addresses from args, env var, or use the default address
+    default_email = "xiejun06@qq.com"  # Default email address
+    email_from_args = args.email or os.environ.get("NOTIFICATION_EMAILS", "")
+
+    # If no email is specified in args or env, use the default
+    if not email_from_args:
+        email_addresses = [default_email]
+        print(f"No email specified, using default: {default_email}")
+    else:
+        email_addresses = parse_emails(email_from_args)
 
     # Generate review
     report = generate_commit_review(
@@ -307,6 +315,8 @@ def main():
     if args.verbose:
         print("\n===================== Review Report =====================\n")
         print(f"Report generated for commit {commit_hash[:8]}")
+        if email_addresses:
+            print(f"Report sent to: {', '.join(email_addresses)}")
         print("\n===================== Report End =====================\n")
 
 
