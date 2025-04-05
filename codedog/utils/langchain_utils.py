@@ -1,158 +1,243 @@
 from functools import lru_cache
 from os import environ as env
 from typing import Dict, Any, List, Optional
+import inspect
+import os
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_openai.chat_models import AzureChatOpenAI, ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, BaseMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 from pydantic import Field, ConfigDict
+import requests
+import aiohttp
+import json
+from langchain.callbacks.manager import CallbackManagerForLLMRun, AsyncCallbackManagerForLLMRun
+import logging
+import traceback
+import asyncio
+
+logger = logging.getLogger(__name__)
+
+
+def log_error(e: Exception, message: str, response_text: str = None):
+    """Log error with file name and line number"""
+    frame = inspect.currentframe()
+    # Get the caller's frame (1 level up)
+    caller = frame.f_back
+    if caller:
+        file_name = os.path.basename(caller.f_code.co_filename)
+        line_no = caller.f_lineno
+        error_msg = f"{file_name}:{line_no} - {message}: {str(e)}"
+        if response_text:
+            error_msg += f"\nResponse: {response_text}"
+        error_msg += f"\n{traceback.format_exc()}"
+        logger.error(error_msg)
+    else:
+        error_msg = f"{message}: {str(e)}"
+        if response_text:
+            error_msg += f"\nResponse: {response_text}"
+        error_msg += f"\n{traceback.format_exc()}"
+        logger.error(error_msg)
 
 
 # Define a custom class for DeepSeek model since it's not available in langchain directly
 class DeepSeekChatModel(BaseChatModel):
-    """DeepSeek model wrapper for langchain"""
-    
-    model_name: str = Field(default="deepseek-chat")
+    """DeepSeek Chat Model"""
+
     api_key: str
-    api_base: str = Field(default="https://api.deepseek.com")
-    temperature: float = Field(default=0)
-    model_kwargs: Dict[str, Any] = Field(default_factory=dict)
-    
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True,
-        extra="forbid",
-    )
-    
+    model_name: str
+    api_base: str
+    temperature: float
+    max_tokens: int
+    top_p: float
+    timeout: int = 300  # 增加默认超时时间到300秒
+    total_tokens: int = 0
+    total_cost: float = 0.0
+
+    def _calculate_cost(self, total_tokens: int) -> float:
+        """Calculate cost based on token usage."""
+        # DeepSeek pricing (as of 2024)
+        return total_tokens * 0.0001  # $0.0001 per token
+
     @property
     def _llm_type(self) -> str:
-        """Return type of LLM."""
         return "deepseek"
-    
-    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
-        """Implementation for DeepSeek API"""
+
+    def _generate(
+        self,
+        messages: List[BaseMessage],
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        **kwargs: Any,
+    ) -> ChatResult:
+        """Generate a response from the DeepSeek API."""
         try:
-            import requests
-            import json
-            
             # Convert LangChain messages to DeepSeek format
             deepseek_messages = []
             for message in messages:
-                if isinstance(message, HumanMessage):
-                    deepseek_messages.append({"role": "user", "content": message.content})
-                elif isinstance(message, SystemMessage):
-                    deepseek_messages.append({"role": "system", "content": message.content})
-                else:  # AIMessage or other
-                    deepseek_messages.append({"role": "assistant", "content": message.content})
-            
-            # Prepare the API request
+                role = "user" if isinstance(message, HumanMessage) else "system" if isinstance(message, SystemMessage) else "assistant"
+                deepseek_messages.append({"role": role, "content": message.content})
+
+            # Prepare API request
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
-            
             payload = {
                 "model": self.model_name,
                 "messages": deepseek_messages,
                 "temperature": self.temperature,
-                **self.model_kwargs
+                "max_tokens": self.max_tokens,
+                "top_p": self.top_p,
             }
-            
             if stop:
                 payload["stop"] = stop
-            
-            # Make the API call
-            response = requests.post(
-                f"{self.api_base}/v1/chat/completions",
-                headers=headers,
-                data=json.dumps(payload)
-            )
-            
-            if response.status_code != 200:
-                raise Exception(f"DeepSeek API error: {response.status_code}, {response.text}")
-            
-            response_data = response.json()
-            
-            # Convert the response to LangChain format
-            message = AIMessage(content=response_data["choices"][0]["message"]["content"])
-            generation = ChatGeneration(message=message)
-            
+
+            # Log request details for debugging
+            logger.debug(f"DeepSeek API request to {self.api_base}")
+            logger.debug(f"Model: {self.model_name}")
+            logger.debug(f"Payload: {json.dumps(payload, ensure_ascii=False)}")
+
+            # Ensure API base URL is properly formatted and construct endpoint
+            api_base = self.api_base.rstrip('/')
+            endpoint = f"{api_base}/v1/chat/completions"
+
+            # Make API request with timeout
+            try:
+                response = requests.post(endpoint, headers=headers, json=payload, timeout=self.timeout)
+                response_text = response.text
+            except requests.exceptions.Timeout as e:
+                log_error(e, f"DeepSeek API request timed out after {self.timeout} seconds")
+                raise
+
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as e:
+                log_error(e, f"DeepSeek API HTTP error (status {response.status_code})", response_text)
+                raise
+
+            try:
+                response_data = response.json()
+            except json.JSONDecodeError as e:
+                log_error(e, "Failed to decode JSON response", response_text)
+                raise
+
+            # Extract response content
+            if not response_data.get("choices"):
+                error_msg = "No choices in response"
+                log_error(ValueError(error_msg), "DeepSeek API response error", json.dumps(response_data, ensure_ascii=False))
+                raise ValueError(error_msg)
+
+            message = response_data["choices"][0]["message"]["content"]
+
+            # Update token usage and cost
+            if "usage" in response_data:
+                tokens = response_data["usage"].get("total_tokens", 0)
+                self.total_tokens += tokens
+                self.total_cost += self._calculate_cost(tokens)
+
+            # Create and return ChatResult
+            generation = ChatGeneration(message=AIMessage(content=message))
             return ChatResult(generations=[generation])
+
         except Exception as e:
-            import traceback
-            print(f"DeepSeek API error: {str(e)}")
-            print(traceback.format_exc())
-            # 如果 API 调用失败，返回一个默认消息
-            message = AIMessage(content="I'm sorry, but I couldn't process your request.")
-            generation = ChatGeneration(message=message)
+            log_error(e, "DeepSeek API error")
+            # Return a default message indicating the error
+            message = f"Error calling DeepSeek API: {str(e)}"
+            generation = ChatGeneration(message=AIMessage(content=message))
             return ChatResult(generations=[generation])
-    
-    async def _agenerate(self, messages, stop=None, run_manager=None, **kwargs):
-        """Async implementation for DeepSeek API"""
+
+    async def _agenerate(
+        self,
+        messages: List[BaseMessage],
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[AsyncCallbackManagerForLLMRun] = None,
+        **kwargs: Any,
+    ) -> ChatResult:
+        """Asynchronously generate a response from the DeepSeek API."""
         try:
-            import aiohttp
-            import json
-            
             # Convert LangChain messages to DeepSeek format
             deepseek_messages = []
             for message in messages:
-                if isinstance(message, HumanMessage):
-                    deepseek_messages.append({"role": "user", "content": message.content})
-                elif isinstance(message, SystemMessage):
-                    deepseek_messages.append({"role": "system", "content": message.content})
-                else:  # AIMessage or other
-                    deepseek_messages.append({"role": "assistant", "content": message.content})
-            
-            # Prepare the API request
+                role = "user" if isinstance(message, HumanMessage) else "system" if isinstance(message, SystemMessage) else "assistant"
+                deepseek_messages.append({"role": role, "content": message.content})
+
+            # Prepare API request
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
-            
             payload = {
                 "model": self.model_name,
                 "messages": deepseek_messages,
                 "temperature": self.temperature,
-                **self.model_kwargs
+                "max_tokens": self.max_tokens,
+                "top_p": self.top_p,
             }
-            
             if stop:
                 payload["stop"] = stop
-            
-            # Make the API call
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                    f"{self.api_base}/v1/chat/completions",
-                    headers=headers,
-                    data=json.dumps(payload)
-                ) as response:
-                    if response.status != 200:
+
+            # Log request details for debugging
+            logger.debug(f"DeepSeek API request to {self.api_base}")
+            logger.debug(f"Model: {self.model_name}")
+            logger.debug(f"Payload: {json.dumps(payload, ensure_ascii=False)}")
+
+            # Ensure API base URL is properly formatted and construct endpoint
+            api_base = self.api_base.rstrip('/')
+            endpoint = f"{api_base}/v1/chat/completions"
+
+            # Make API request with timeout
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(endpoint, headers=headers, json=payload, timeout=aiohttp.ClientTimeout(total=self.timeout)) as response:
                         response_text = await response.text()
-                        raise Exception(f"DeepSeek API error: {response.status}, {response_text}")
-                    
-                    response_data = await response.json()
-            
-            # Convert the response to LangChain format
-            message = AIMessage(content=response_data["choices"][0]["message"]["content"])
-            generation = ChatGeneration(message=message)
-            
-            return ChatResult(generations=[generation])
+
+                        try:
+                            response.raise_for_status()
+                        except aiohttp.ClientResponseError as e:
+                            log_error(e, f"DeepSeek API HTTP error (status {response.status})", response_text)
+                            raise
+
+                        try:
+                            response_data = await response.json()
+                        except json.JSONDecodeError as e:
+                            log_error(e, "Failed to decode JSON response", response_text)
+                            raise
+
+                        # Extract response content
+                        if not response_data.get("choices"):
+                            error_msg = "No choices in response"
+                            log_error(ValueError(error_msg), "DeepSeek API response error", json.dumps(response_data, ensure_ascii=False))
+                            raise ValueError(error_msg)
+
+                        message = response_data["choices"][0]["message"]["content"]
+
+                        # Update token usage and cost
+                        if "usage" in response_data:
+                            tokens = response_data["usage"].get("total_tokens", 0)
+                            self.total_tokens += tokens
+                            self.total_cost += self._calculate_cost(tokens)
+
+                        # Create and return ChatResult
+                        generation = ChatGeneration(message=AIMessage(content=message))
+                        return ChatResult(generations=[generation])
+
+            except asyncio.TimeoutError as e:
+                log_error(e, f"DeepSeek API request timed out after {self.timeout} seconds")
+                raise
+
         except Exception as e:
-            import traceback
-            print(f"DeepSeek API error: {str(e)}")
-            print(traceback.format_exc())
-            # 如果 API 调用失败，返回一个默认消息
-            message = AIMessage(content="I'm sorry, but I couldn't process your request.")
-            generation = ChatGeneration(message=message)
+            log_error(e, "DeepSeek API error")
+            # Return a default message indicating the error
+            message = f"Error calling DeepSeek API: {str(e)}"
+            generation = ChatGeneration(message=AIMessage(content=message))
             return ChatResult(generations=[generation])
 
 
 # Define a custom class for DeepSeek R1 model
 class DeepSeekR1Model(DeepSeekChatModel):
     """DeepSeek R1 model wrapper for langchain"""
-    
-    model_name: str = Field(default="deepseek-reasoner")
-    api_base: str = Field(default="https://api.deepseek.com")
     
     @property
     def _llm_type(self) -> str:
@@ -207,9 +292,12 @@ def load_deepseek_llm():
     """Load DeepSeek model"""
     llm = DeepSeekChatModel(
         api_key=env.get("DEEPSEEK_API_KEY"),
-        model_name=env.get("DEEPSEEK_MODEL", "deepseek-chat"),
-        api_base=env.get("DEEPSEEK_API_BASE", "https://api.deepseek.com"),
-        temperature=0,
+        model_name=env.get("DEEPSEEK_MODEL"),
+        api_base=env.get("DEEPSEEK_API_BASE"),
+        temperature=float(env.get("DEEPSEEK_TEMPERATURE", "0")),
+        max_tokens=int(env.get("DEEPSEEK_MAX_TOKENS", "4096")),
+        top_p=float(env.get("DEEPSEEK_TOP_P", "0.95")),
+        timeout=int(env.get("DEEPSEEK_TIMEOUT", "60")),
     )
     return llm
 
@@ -219,8 +307,12 @@ def load_deepseek_r1_llm():
     """Load DeepSeek R1 model"""
     llm = DeepSeekR1Model(
         api_key=env.get("DEEPSEEK_API_KEY"),
-        api_base=env.get("DEEPSEEK_R1_API_BASE", env.get("DEEPSEEK_API_BASE", "https://api.deepseek.com")),
-        temperature=0,
+        model_name=env.get("DEEPSEEK_R1_MODEL"),
+        api_base=env.get("DEEPSEEK_R1_API_BASE", env.get("DEEPSEEK_API_BASE")),
+        temperature=float(env.get("DEEPSEEK_TEMPERATURE", "0")),
+        max_tokens=int(env.get("DEEPSEEK_MAX_TOKENS", "4096")),
+        top_p=float(env.get("DEEPSEEK_TOP_P", "0.95")),
+        timeout=int(env.get("DEEPSEEK_TIMEOUT", "60")),
     )
     return llm
 
@@ -233,7 +325,6 @@ def load_model_by_name(model_name: str) -> BaseChatModel:
         "deepseek": load_deepseek_llm,
         "deepseek-r1": load_deepseek_r1_llm,
     }
-    
     if model_name not in model_loaders:
         raise ValueError(f"Unknown model name: {model_name}. Available models: {list(model_loaders.keys())}")
     

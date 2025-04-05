@@ -89,6 +89,25 @@ REPORT_CODE_REVIEW_SEGMENT = """**[{full_name}]({url})**
 
 REPORT_CODE_REVIEW_NO_FEEDBACK = """对该 PR 没有代码审查建议"""
 
+# --- Code Review Summary Table -----------------------------------------------
+PR_REVIEW_SUMMARY_TABLE = """
+## PR 审查总结
+
+| 文件 | 可读性 | 效率与性能 | 安全性 | 结构与设计 | 错误处理 | 文档与注释 | 代码风格 | 总分 |
+|------|-------------|------------------------|----------|-------------------|---------------|-------------------------|-----------|---------|
+{file_scores}
+| **平均分** | **{avg_readability:.1f}** | **{avg_efficiency:.1f}** | **{avg_security:.1f}** | **{avg_structure:.1f}** | **{avg_error_handling:.1f}** | **{avg_documentation:.1f}** | **{avg_code_style:.1f}** | **{avg_overall:.1f}** |
+
+### 评分说明:
+- 9.0-10.0: 优秀
+- 7.0-8.9: 很好
+- 5.0-6.9: 良好
+- 3.0-4.9: 需要改进
+- 1.0-2.9: 较差
+
+### PR 质量评估:
+{quality_assessment}
+"""
 
 # --- Materials ---------------------------------------------------------------
 

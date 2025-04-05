@@ -27,19 +27,20 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
         default_scores = {
             "file": file_name,
             "scores": {
-                "correctness": 0,
                 "readability": 0,
-                "maintainability": 0,
-                "standards_compliance": 0,
-                "performance": 0,
+                "efficiency": 0, 
                 "security": 0,
+                "structure": 0,
+                "error_handling": 0,
+                "documentation": 0,
+                "code_style": 0,
                 "overall": 0
             }
         }
         
         try:
             # Look for the scores section
-            scores_section = re.search(r'#{1,3}\s*SCORES:\s*([\s\S]*?)(?=#{1,3}|$)', review_text)
+            scores_section = re.search(r'#{1,3}\s*(?:SCORES|评分):\s*([\s\S]*?)(?=#{1,3}|$)', review_text)
             if not scores_section:
                 print(f"No scores section found for {file_name}")
                 return default_scores
@@ -47,25 +48,27 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             scores_text = scores_section.group(1)
             
             # Extract individual scores
-            correctness = self._extract_score(scores_text, "Correctness")
-            readability = self._extract_score(scores_text, "Readability")
-            maintainability = self._extract_score(scores_text, "Maintainability")
-            standards = self._extract_score(scores_text, "Standards Compliance")
-            performance = self._extract_score(scores_text, "Performance")
-            security = self._extract_score(scores_text, "Security")
-            overall = self._extract_score(scores_text, "Overall")
+            readability = self._extract_score(scores_text, "Readability|可读性")
+            efficiency = self._extract_score(scores_text, "Efficiency & Performance|效率与性能")
+            security = self._extract_score(scores_text, "Security|安全性")
+            structure = self._extract_score(scores_text, "Structure & Design|结构与设计")
+            error_handling = self._extract_score(scores_text, "Error Handling|错误处理")
+            documentation = self._extract_score(scores_text, "Documentation & Comments|文档与注释")
+            code_style = self._extract_score(scores_text, "Code Style|代码风格")
+            overall = self._extract_score(scores_text, "Final Overall Score|最终总分")
             
             # Update scores if found
-            if any([correctness, readability, maintainability, standards, performance, security, overall]):
+            if any([readability, efficiency, security, structure, error_handling, documentation, code_style, overall]):
                 return {
                     "file": file_name,
                     "scores": {
-                        "correctness": correctness or 0,
                         "readability": readability or 0,
-                        "maintainability": maintainability or 0,
-                        "standards_compliance": standards or 0,
-                        "performance": performance or 0,
+                        "efficiency": efficiency or 0,
                         "security": security or 0,
+                        "structure": structure or 0,
+                        "error_handling": error_handling or 0,
+                        "documentation": documentation or 0,
+                        "code_style": code_style or 0,
                         "overall": overall or 0
                     }
                 }
@@ -78,8 +81,8 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
     def _extract_score(self, text: str, dimension: str) -> float:
         """Extract a score for a specific dimension from text."""
         try:
-            # Find patterns like "Correctness: 4.5 /5" or "- Readability: 3.8/5"
-            pattern = rf'[-\s]*{dimension}:\s*(\d+(?:\.\d+)?)\s*\/?5'
+            # Find patterns like "Readability: 8.5 /10" or "- Security: 7.2/10"
+            pattern = rf'[-\s]*(?:{dimension}):\s*(\d+(?:\.\d+)?)\s*\/?10'
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 return float(match.group(1))
@@ -91,23 +94,25 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
         """Calculate the average scores across all files."""
         if not self._scores:
             return {
-                "avg_correctness": 0,
                 "avg_readability": 0,
-                "avg_maintainability": 0,
-                "avg_standards": 0,
-                "avg_performance": 0,
+                "avg_efficiency": 0,
                 "avg_security": 0,
+                "avg_structure": 0,
+                "avg_error_handling": 0,
+                "avg_documentation": 0,
+                "avg_code_style": 0,
                 "avg_overall": 0
             }
         
         total_files = len(self._scores)
         avg_scores = {
-            "avg_correctness": sum(s["scores"]["correctness"] for s in self._scores) / total_files,
             "avg_readability": sum(s["scores"]["readability"] for s in self._scores) / total_files,
-            "avg_maintainability": sum(s["scores"]["maintainability"] for s in self._scores) / total_files,
-            "avg_standards": sum(s["scores"]["standards_compliance"] for s in self._scores) / total_files,
-            "avg_performance": sum(s["scores"]["performance"] for s in self._scores) / total_files,
+            "avg_efficiency": sum(s["scores"]["efficiency"] for s in self._scores) / total_files,
             "avg_security": sum(s["scores"]["security"] for s in self._scores) / total_files,
+            "avg_structure": sum(s["scores"]["structure"] for s in self._scores) / total_files,
+            "avg_error_handling": sum(s["scores"]["error_handling"] for s in self._scores) / total_files,
+            "avg_documentation": sum(s["scores"]["documentation"] for s in self._scores) / total_files,
+            "avg_code_style": sum(s["scores"]["code_style"] for s in self._scores) / total_files,
             "avg_overall": sum(s["scores"]["overall"] for s in self._scores) / total_files
         }
         
@@ -115,15 +120,13 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
 
     def _get_quality_assessment(self, avg_overall: float) -> str:
         """Generate a quality assessment based on the average overall score."""
-        if avg_overall >= 4.5:
+        if avg_overall >= 9.0:
             return "Excellent code quality. The PR demonstrates outstanding adherence to best practices and coding standards."
-        elif avg_overall >= 4.0:
+        elif avg_overall >= 7.0:
             return "Very good code quality. The PR shows strong adherence to standards with only minor improvement opportunities."
-        elif avg_overall >= 3.5:
+        elif avg_overall >= 5.0:
             return "Good code quality. The PR meets most standards but has some areas for improvement."
         elif avg_overall >= 3.0:
-            return "Satisfactory code quality. The PR is acceptable but has several areas that could be improved."
-        elif avg_overall >= 2.0:
             return "Needs improvement. The PR has significant issues that should be addressed before merging."
         else:
             return "Poor code quality. The PR has major issues that must be fixed before it can be accepted."
@@ -138,8 +141,8 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             file_name = score["file"]
             s = score["scores"]
             file_score_rows.append(
-                f"| {file_name} | {s['correctness']:.2f} | {s['readability']:.2f} | {s['maintainability']:.2f} | "
-                f"{s['standards_compliance']:.2f} | {s['performance']:.2f} | {s['security']:.2f} | {s['overall']:.2f} |"
+                f"| {file_name} | {s['readability']:.1f} | {s['efficiency']:.1f} | {s['security']:.1f} | "
+                f"{s['structure']:.1f} | {s['error_handling']:.1f} | {s['documentation']:.1f} | {s['code_style']:.1f} | {s['overall']:.1f} |"
             )
         
         avg_scores = self._calculate_average_scores()
@@ -147,12 +150,13 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
         
         return self.template.PR_REVIEW_SUMMARY_TABLE.format(
             file_scores="\n".join(file_score_rows),
-            avg_correctness=avg_scores["avg_correctness"],
             avg_readability=avg_scores["avg_readability"],
-            avg_maintainability=avg_scores["avg_maintainability"],
-            avg_standards=avg_scores["avg_standards"],
-            avg_performance=avg_scores["avg_performance"],
+            avg_efficiency=avg_scores["avg_efficiency"],
             avg_security=avg_scores["avg_security"],
+            avg_structure=avg_scores["avg_structure"],
+            avg_error_handling=avg_scores["avg_error_handling"],
+            avg_documentation=avg_scores["avg_documentation"],
+            avg_code_style=avg_scores["avg_code_style"],
             avg_overall=avg_scores["avg_overall"],
             quality_assessment=quality_assessment
         )

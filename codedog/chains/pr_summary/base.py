@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
+import logging
 
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.callbacks.manager import (
@@ -174,8 +175,10 @@ class PRSummaryChain(Chain):
     async def _aprocess_result(
         self, pr_summary_output: Dict[str, Any], code_summaries: List[ChangeSummary]
     ) -> Dict[str, Any]:
+        raw_output_text = pr_summary_output.get("text", "[No text found in output]")
+        logging.warning(f"Raw LLM output for PR Summary: {raw_output_text}")
         return {
-            "pr_summary": pr_summary_output["text"],
+            "pr_summary": raw_output_text,
             "code_summaries": code_summaries,
         }
 
