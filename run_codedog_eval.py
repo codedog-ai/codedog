@@ -8,11 +8,11 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # 加载环境变量
-load_dotenv()
+load_dotenv(override=True)  # 覆盖已存在的环境变量，确保从.env文件加载最新的值
 
 from codedog.utils.git_log_analyzer import get_file_diffs_by_timeframe
 from codedog.utils.code_evaluator import DiffEvaluator, generate_evaluation_markdown
-from codedog.utils.langchain_utils import load_model_by_name
+from codedog.utils.langchain_utils import load_model_by_name, DeepSeekChatModel
 from codedog.utils.email_utils import send_report_email
 from langchain_community.callbacks.manager import get_openai_callback
 
@@ -85,19 +85,24 @@ async def main():
     
     # 计时和统计
     start_time = time.time()
+    total_cost = 0
+    total_tokens = 0
     
-    with get_openai_callback() as cb:
-        # 执行评价
-        print("正在评价代码提交...")
+    # 执行评价
+    print("正在评价代码提交...")
+    if isinstance(model, DeepSeekChatModel):
         evaluation_results = await evaluator.evaluate_commits(commits, commit_file_diffs)
-        
-        # 生成Markdown报告
-        report = generate_evaluation_markdown(evaluation_results)
-        
-        # 计算成本和时间
-        total_cost = cb.total_cost
-        total_tokens = cb.total_tokens
-        
+        total_tokens = model.total_tokens
+        total_cost = model.total_cost
+    else:
+        with get_openai_callback() as cb:
+            evaluation_results = await evaluator.evaluate_commits(commits, commit_file_diffs)
+            total_tokens = cb.total_tokens
+            total_cost = cb.total_cost
+    
+    # 生成Markdown报告
+    report = generate_evaluation_markdown(evaluation_results)
+    
     # 添加评价统计信息
     elapsed_time = time.time() - start_time
     telemetry_info = (

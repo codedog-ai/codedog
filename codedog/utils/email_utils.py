@@ -146,6 +146,13 @@ def send_report_email(
     except ValueError as e:
         print(f"Email configuration error: {str(e)}")
         return False
+    except smtplib.SMTPAuthenticationError:
+        print("SMTP Authentication Error: Invalid username or password.")
+        print("If using Gmail, make sure to:")
+        print("1. Enable 2-step verification for your Google account")
+        print("2. Generate an App Password at https://myaccount.google.com/apppasswords")
+        print("3. Use that App Password in your .env file, not your regular Gmail password")
+        return False
     except Exception as e:
         print(f"Unexpected error sending email: {str(e)}")
         return False 

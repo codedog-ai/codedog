@@ -16,7 +16,7 @@ Codedog leverages Large Language Models (LLMs) like GPT to automatically review 
 *   **Automated Code Review**: Uses LLMs to analyze code changes, provide feedback, and suggest improvements
 *   **Scoring System**: Evaluates code across multiple dimensions, including correctness, readability, and maintainability
 *   **Multiple LLM Support**: Works with OpenAI, Azure OpenAI, DeepSeek, and MindConnect R1 models
-*   **Email Notifications**: Sends code review reports via email
+*   **Email Notifications**: Sends code review reports via email (see [Email Setup Guide](docs/email_setup.md))
 *   **Commit-Triggered Reviews**: Automatically reviews code when commits are made
 *   **Developer Evaluation**: Evaluates a developer's code over a specific time period
 
@@ -122,7 +122,7 @@ NOTIFICATION_EMAILS="your_email@example.com,another_email@example.com"
 SMTP_SERVER="smtp.gmail.com"
 SMTP_PORT="587"
 SMTP_USERNAME="your_email@gmail.com"
-SMTP_PASSWORD="your_app_password"
+SMTP_PASSWORD="your_app_password"  # For Gmail, you must use an App Password, see docs/email_setup.md
 ```
 
 ## Running the Example (Quickstart)

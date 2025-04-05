@@ -120,8 +120,13 @@ def create_commit_pr_data(commit_hash: str, repo_path: Optional[str] = None) -> 
         # Get changed files
         files = get_commit_files(commit_hash, repo_path)
         
+        # Get repository name from path
+        repo_name = os.path.basename(os.path.abspath(cwd))
+        
         # Create PR-like structure
         pr_data = {
+            "pull_request_id": int(commit_hash[:8], 16),  # Convert first 8 chars of commit hash to integer
+            "repository_id": abs(hash(repo_name)) % (10 ** 8),  # Convert repo name to stable integer
             "number": commit_hash[:8],  # Use shortened commit hash as "PR number"
             "title": title,
             "body": body,
@@ -137,6 +142,8 @@ def create_commit_pr_data(commit_hash: str, repo_path: Optional[str] = None) -> 
         print(f"Error creating PR data from commit {commit_hash}: {e}")
         print(f"Error output: {e.stderr}")
         return {
+            "pull_request_id": int(commit_hash[:8], 16),
+            "repository_id": abs(hash(repo_name)) % (10 ** 8),
             "number": commit_hash[:8] if commit_hash else "unknown",
             "title": "Error retrieving commit data",
             "body": str(e),
