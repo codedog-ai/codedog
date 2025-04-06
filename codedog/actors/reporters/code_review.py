@@ -28,7 +28,7 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             "file": file_name,
             "scores": {
                 "readability": 0,
-                "efficiency": 0, 
+                "efficiency": 0,
                 "security": 0,
                 "structure": 0,
                 "error_handling": 0,
@@ -37,16 +37,16 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
                 "overall": 0
             }
         }
-        
+
         try:
             # Look for the scores section
             scores_section = re.search(r'#{1,3}\s*(?:SCORES|评分):\s*([\s\S]*?)(?=#{1,3}|$)', review_text)
             if not scores_section:
                 print(f"No scores section found for {file_name}")
                 return default_scores
-                
+
             scores_text = scores_section.group(1)
-            
+
             # Extract individual scores
             readability = self._extract_score(scores_text, "Readability|可读性")
             efficiency = self._extract_score(scores_text, "Efficiency & Performance|效率与性能")
@@ -55,11 +55,22 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             error_handling = self._extract_score(scores_text, "Error Handling|错误处理")
             documentation = self._extract_score(scores_text, "Documentation & Comments|文档与注释")
             code_style = self._extract_score(scores_text, "Code Style|代码风格")
+
+            # Extract overall score with a more flexible pattern
             overall = self._extract_score(scores_text, "Final Overall Score|最终总分")
-            
+            if overall == 0:  # If not found with standard pattern, try alternative patterns
+                try:
+                    # Try to match patterns like "**Final Overall Score: 8.1** /10"
+                    pattern = r'\*\*(?:Final Overall Score|最终总分):\s*(\d+(?:\.\d+)?)\*\*\s*\/10'
+                    match = re.search(pattern, scores_text, re.IGNORECASE)
+                    if match:
+                        overall = float(match.group(1))
+                except Exception as e:
+                    print(f"Error extracting overall score with alternative pattern: {e}")
+
             # Update scores if found
             if any([readability, efficiency, security, structure, error_handling, documentation, code_style, overall]):
-                return {
+                scores = {
                     "file": file_name,
                     "scores": {
                         "readability": readability or 0,
@@ -72,20 +83,29 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
                         "overall": overall or 0
                     }
                 }
-                
+                print(f"Extracted scores for {file_name}: {scores['scores']}")
+                return scores
+
         except Exception as e:
             print(f"Error extracting scores from review for {file_name}: {e}")
-        
+
         return default_scores
 
     def _extract_score(self, text: str, dimension: str) -> float:
         """Extract a score for a specific dimension from text."""
         try:
-            # Find patterns like "Readability: 8.5 /10" or "- Security: 7.2/10"
-            pattern = rf'[-\s]*(?:{dimension}):\s*(\d+(?:\.\d+)?)\s*\/?10'
+            # Find patterns like "Readability: 8.5 /10", "- Security: 7.2/10", or "Readability: **8.5** /10"
+            pattern = rf'[-\s]*(?:{dimension}):\s*(?:\*\*)?(\d+(?:\.\d+)?)(?:\*\*)?\s*\/?10'
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
-                return float(match.group(1))
+                score = float(match.group(1))
+                print(f"Found {dimension} score: {score}")
+                return score
+            else:
+                print(f"No match found for {dimension} using pattern: {pattern}")
+                # Print a small excerpt of the text for debugging
+                excerpt = text[:200] + "..." if len(text) > 200 else text
+                print(f"Text excerpt: {excerpt}")
         except Exception as e:
             print(f"Error extracting {dimension} score: {e}")
         return 0
@@ -103,7 +123,7 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
                 "avg_code_style": 0,
                 "avg_overall": 0
             }
-        
+
         total_files = len(self._scores)
         avg_scores = {
             "avg_readability": sum(s["scores"]["readability"] for s in self._scores) / total_files,
@@ -115,7 +135,7 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
             "avg_code_style": sum(s["scores"]["code_style"] for s in self._scores) / total_files,
             "avg_overall": sum(s["scores"]["overall"] for s in self._scores) / total_files
         }
-        
+
         return avg_scores
 
     def _get_quality_assessment(self, avg_overall: float) -> str:
@@ -135,7 +155,11 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
         """Generate a summary table of all file scores."""
         if not self._scores:
             return ""
-        
+
+        print(f"Generating summary table with {len(self._scores)} files")
+        for i, score in enumerate(self._scores):
+            print(f"File {i+1}: {score['file']} - Scores: {score['scores']}")
+
         file_score_rows = []
         for score in self._scores:
             file_name = score["file"]
@@ -144,10 +168,10 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
                 f"| {file_name} | {s['readability']:.1f} | {s['efficiency']:.1f} | {s['security']:.1f} | "
                 f"{s['structure']:.1f} | {s['error_handling']:.1f} | {s['documentation']:.1f} | {s['code_style']:.1f} | {s['overall']:.1f} |"
             )
-        
+
         avg_scores = self._calculate_average_scores()
         quality_assessment = self._get_quality_assessment(avg_scores["avg_overall"])
-        
+
         return self.template.PR_REVIEW_SUMMARY_TABLE.format(
             file_scores="\n".join(file_score_rows),
             avg_readability=avg_scores["avg_readability"],
@@ -163,14 +187,17 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
 
     def _generate_report(self):
         code_review_segs = []
-        
-        for code_review in self._code_reviews:
+        print(f"Processing {len(self._code_reviews)} code reviews")
+
+        for i, code_review in enumerate(self._code_reviews):
             # Extract scores if the review is not empty
             if hasattr(code_review, 'review') and code_review.review.strip():
                 file_name = code_review.file.full_name if hasattr(code_review, 'file') and hasattr(code_review.file, 'full_name') else "Unknown"
+                print(f"\nExtracting scores for review {i+1}: {file_name}")
                 score_data = self._extract_scores(code_review.review, file_name)
+                print(f"Extracted score data: {score_data}")
                 self._scores.append(score_data)
-            
+
             # Add the review text (without modification)
             code_review_segs.append(
                 self.template.REPORT_CODE_REVIEW_SEGMENT.format(
@@ -184,10 +211,10 @@ class CodeReviewMarkdownReporter(Reporter, Localization):
         review_content = self.template.REPORT_CODE_REVIEW.format(
             feedback="\n".join(code_review_segs) if code_review_segs else self.template.REPORT_CODE_REVIEW_NO_FEEDBACK,
         )
-        
+
         # Add summary table at the end if we have scores
         summary_table = self._generate_summary_table()
         if summary_table:
             review_content += "\n\n" + summary_table
-        
+
         return review_content
