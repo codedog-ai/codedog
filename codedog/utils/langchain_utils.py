@@ -51,9 +51,12 @@ class DeepSeekChatModel(BaseChatModel):
     temperature: float
     max_tokens: int
     top_p: float
-    timeout: int = 300  # 增加默认超时时间到300秒
+    timeout: int = 600  # 增加默认超时时间到600秒
+    max_retries: int = 3  # 最大重试次数
+    retry_delay: int = 5  # 重试间隔（秒）
     total_tokens: int = 0
     total_cost: float = 0.0
+    failed_requests: int = 0  # 失败请求计数
 
     def _calculate_cost(self, total_tokens: int) -> float:
         """Calculate cost based on token usage."""
@@ -187,45 +190,106 @@ class DeepSeekChatModel(BaseChatModel):
             api_base = self.api_base.rstrip('/')
             endpoint = f"{api_base}/v1/chat/completions"
 
-            # Make API request with timeout
-            try:
-                async with aiohttp.ClientSession() as session:
-                    async with session.post(endpoint, headers=headers, json=payload, timeout=aiohttp.ClientTimeout(total=self.timeout)) as response:
-                        response_text = await response.text()
+            # 实现重试机制
+            retries = 0
+            last_error = None
 
-                        try:
-                            response.raise_for_status()
-                        except aiohttp.ClientResponseError as e:
-                            log_error(e, f"DeepSeek API HTTP error (status {response.status})", response_text)
-                            raise
+            while retries < self.max_retries:
+                try:
+                    # 使用指数退避策略计算当前超时时间
+                    current_timeout = self.timeout * (1 + 0.5 * retries)  # 每次重试增加 50% 的超时时间
+                    logger.info(f"DeepSeek API request attempt {retries+1}/{self.max_retries} with timeout {current_timeout}s")
 
-                        try:
-                            response_data = await response.json()
-                        except json.JSONDecodeError as e:
-                            log_error(e, "Failed to decode JSON response", response_text)
-                            raise
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(
+                            endpoint,
+                            headers=headers,
+                            json=payload,
+                            timeout=aiohttp.ClientTimeout(total=current_timeout)
+                        ) as response:
+                            response_text = await response.text()
 
-                        # Extract response content
-                        if not response_data.get("choices"):
-                            error_msg = "No choices in response"
-                            log_error(ValueError(error_msg), "DeepSeek API response error", json.dumps(response_data, ensure_ascii=False))
-                            raise ValueError(error_msg)
+                            # 检查响应状态
+                            if response.status != 200:
+                                error_msg = f"DeepSeek API HTTP error (status {response.status}): {response_text}"
+                                logger.warning(error_msg)
+                                last_error = aiohttp.ClientResponseError(
+                                    request_info=response.request_info,
+                                    history=response.history,
+                                    status=response.status,
+                                    message=error_msg,
+                                    headers=response.headers
+                                )
+                                # 如果是服务器错误，重试
+                                if response.status >= 500:
+                                    retries += 1
+                                    if retries < self.max_retries:
+                                        wait_time = self.retry_delay * (2 ** retries)  # 指数退避
+                                        logger.info(f"Server error, retrying in {wait_time}s...")
+                                        await asyncio.sleep(wait_time)
+                                        continue
+                                # 如果是客户端错误，不重试
+                                raise last_error
 
-                        message = response_data["choices"][0]["message"]["content"]
+                            # 解析 JSON 响应
+                            try:
+                                response_data = json.loads(response_text)
+                            except json.JSONDecodeError as e:
+                                logger.warning(f"Failed to decode JSON response: {e}\nResponse: {response_text}")
+                                last_error = e
+                                retries += 1
+                                if retries < self.max_retries:
+                                    wait_time = self.retry_delay * (2 ** retries)
+                                    logger.info(f"JSON decode error, retrying in {wait_time}s...")
+                                    await asyncio.sleep(wait_time)
+                                    continue
+                                else:
+                                    raise last_error
 
-                        # Update token usage and cost
-                        if "usage" in response_data:
-                            tokens = response_data["usage"].get("total_tokens", 0)
-                            self.total_tokens += tokens
-                            self.total_cost += self._calculate_cost(tokens)
+                            # 提取响应内容
+                            if not response_data.get("choices"):
+                                error_msg = f"No choices in response: {json.dumps(response_data, ensure_ascii=False)}"
+                                logger.warning(error_msg)
+                                last_error = ValueError(error_msg)
+                                retries += 1
+                                if retries < self.max_retries:
+                                    wait_time = self.retry_delay * (2 ** retries)
+                                    logger.info(f"Invalid response format, retrying in {wait_time}s...")
+                                    await asyncio.sleep(wait_time)
+                                    continue
+                                else:
+                                    raise last_error
 
-                        # Create and return ChatResult
-                        generation = ChatGeneration(message=AIMessage(content=message))
+                            # 提取消息内容
+                            message = response_data["choices"][0]["message"]["content"]
+
+                            # 更新令牌使用和成本
+                            if "usage" in response_data:
+                                tokens = response_data["usage"].get("total_tokens", 0)
+                                self.total_tokens += tokens
+                                self.total_cost += self._calculate_cost(tokens)
+
+                            # 创建并返回 ChatResult
+                            generation = ChatGeneration(message=AIMessage(content=message))
+                            return ChatResult(generations=[generation])
+
+                except (aiohttp.ClientError, asyncio.TimeoutError, ConnectionError) as e:
+                    # 网络错误或超时错误，进行重试
+                    last_error = e
+                    logger.warning(f"Network error during DeepSeek API request: {str(e)}")
+                    retries += 1
+                    self.failed_requests += 1
+
+                    if retries < self.max_retries:
+                        wait_time = self.retry_delay * (2 ** retries)  # 指数退避
+                        logger.info(f"Network error, retrying in {wait_time}s... (attempt {retries}/{self.max_retries})")
+                        await asyncio.sleep(wait_time)
+                    else:
+                        logger.error(f"Failed after {self.max_retries} attempts: {str(last_error)}")
+                        # 返回一个错误消息
+                        error_message = f"Error calling DeepSeek API after {self.max_retries} attempts: {str(last_error)}"
+                        generation = ChatGeneration(message=AIMessage(content=error_message))
                         return ChatResult(generations=[generation])
-
-            except asyncio.TimeoutError as e:
-                log_error(e, f"DeepSeek API request timed out after {self.timeout} seconds")
-                raise
 
         except Exception as e:
             log_error(e, "DeepSeek API error")
@@ -238,7 +302,7 @@ class DeepSeekChatModel(BaseChatModel):
 # Define a custom class for DeepSeek R1 model
 class DeepSeekR1Model(DeepSeekChatModel):
     """DeepSeek R1 model wrapper for langchain"""
-    
+
     @property
     def _llm_type(self) -> str:
         """Return type of LLM."""
@@ -288,6 +352,28 @@ def load_gpt4_llm():
 
 
 @lru_cache(maxsize=1)
+def load_gpt4o_llm():
+    """Load GPT-4o Model. Make sure your key have access to GPT-4o API."""
+    if env.get("AZURE_OPENAI"):
+        llm = AzureChatOpenAI(
+            openai_api_type="azure",
+            api_key=env.get("AZURE_OPENAI_API_KEY", ""),
+            azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
+            api_version="2024-05-01-preview",
+            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-4o"),
+            model="gpt-4o",
+            temperature=0,
+        )
+    else:
+        llm = ChatOpenAI(
+            api_key=env.get("OPENAI_API_KEY"),
+            model="gpt-4o",
+            temperature=0,
+        )
+    return llm
+
+
+@lru_cache(maxsize=1)
 def load_deepseek_llm():
     """Load DeepSeek model"""
     llm = DeepSeekChatModel(
@@ -297,7 +383,9 @@ def load_deepseek_llm():
         temperature=float(env.get("DEEPSEEK_TEMPERATURE", "0")),
         max_tokens=int(env.get("DEEPSEEK_MAX_TOKENS", "4096")),
         top_p=float(env.get("DEEPSEEK_TOP_P", "0.95")),
-        timeout=int(env.get("DEEPSEEK_TIMEOUT", "60")),
+        timeout=int(env.get("DEEPSEEK_TIMEOUT", "600")),  # 默认超时时间增加到10分钟
+        max_retries=int(env.get("DEEPSEEK_MAX_RETRIES", "3")),  # 最大重试次数
+        retry_delay=int(env.get("DEEPSEEK_RETRY_DELAY", "5")),  # 重试间隔（秒）
     )
     return llm
 
@@ -312,7 +400,9 @@ def load_deepseek_r1_llm():
         temperature=float(env.get("DEEPSEEK_TEMPERATURE", "0")),
         max_tokens=int(env.get("DEEPSEEK_MAX_TOKENS", "4096")),
         top_p=float(env.get("DEEPSEEK_TOP_P", "0.95")),
-        timeout=int(env.get("DEEPSEEK_TIMEOUT", "60")),
+        timeout=int(env.get("DEEPSEEK_TIMEOUT", "600")),  # 默认超时时间增加到10分钟
+        max_retries=int(env.get("DEEPSEEK_MAX_RETRIES", "3")),  # 最大重试次数
+        retry_delay=int(env.get("DEEPSEEK_RETRY_DELAY", "5")),  # 重试间隔（秒）
     )
     return llm
 
@@ -322,10 +412,12 @@ def load_model_by_name(model_name: str) -> BaseChatModel:
     model_loaders = {
         "gpt-3.5": load_gpt_llm,
         "gpt-4": load_gpt4_llm,
+        "gpt-4o": load_gpt4o_llm,  # 添加 GPT-4o 支持
+        "4o": load_gpt4o_llm,      # 别名，方便使用
         "deepseek": load_deepseek_llm,
         "deepseek-r1": load_deepseek_r1_llm,
     }
     if model_name not in model_loaders:
         raise ValueError(f"Unknown model name: {model_name}. Available models: {list(model_loaders.keys())}")
-    
+
     return model_loaders[model_name]()
