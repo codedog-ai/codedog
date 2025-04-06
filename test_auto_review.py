@@ -12,14 +12,17 @@ def hello_world():
 
 def calculate_sum(a, b):
     """计算两个数的和
-    
+
     Args:
         a: 第一个数
         b: 第二个数
-        
+
     Returns:
         两个数的和
     """
+    # 添加类型检查
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        raise TypeError("参数必须是数字类型")
     return a + b
 
 if __name__ == "__main__":
