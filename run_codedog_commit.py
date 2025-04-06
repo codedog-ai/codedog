@@ -17,6 +17,7 @@ from langchain_community.callbacks.manager import get_openai_callback
 from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains import CodeReviewChain, PRSummaryChain
 from codedog.models import PullRequest, ChangeFile, ChangeStatus, Repository
+from codedog.models.diff import DiffContent
 from codedog.processors.pull_request_processor import PullRequestProcessor
 from codedog.utils.langchain_utils import load_model_by_name
 from codedog.utils.email_utils import send_report_email
@@ -93,7 +94,14 @@ def create_change_files(commit_hash: str, repo_path: Optional[str] = None) -> Li
         suffix = file_path.split('.')[-1] if '.' in file_path else ""
 
         # Get diff content
-        diff_content = get_file_diff(commit_hash, file_path, repo_path)
+        diff_content_str = get_file_diff(commit_hash, file_path, repo_path)
+
+        # Create DiffContent object
+        diff_content = DiffContent(
+            add_count=diff_content_str.count('\n+') - diff_content_str.count('\n+++'),
+            remove_count=diff_content_str.count('\n-') - diff_content_str.count('\n---'),
+            content=diff_content_str
+        )
 
         # Create ChangeFile object
         change_file = ChangeFile(
@@ -291,7 +299,7 @@ def main():
         commit_hash = result.stdout.strip()
 
     # Get email addresses from args, env var, or use the default address
-    default_email = "xiejun06@qq.com"  # Default email address
+    default_email = "kratosxie@gmail.com"  # Default email address
     email_from_args = args.email or os.environ.get("NOTIFICATION_EMAILS", "")
 
     # If no email is specified in args or env, use the default
