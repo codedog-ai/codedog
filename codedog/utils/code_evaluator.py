@@ -17,6 +17,12 @@ import tiktoken  # 用于精确计算token数量
 # 导入 grimoire 模板
 from codedog.templates.grimoire_en import CODE_SUGGESTION
 from codedog.templates.grimoire_cn import GrimoireCn
+# 导入优化的代码评审prompt
+from codedog.templates.optimized_code_review_prompt import (
+    SYSTEM_PROMPT,
+    CODE_REVIEW_PROMPT,
+    LANGUAGE_SPECIFIC_CONSIDERATIONS
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -328,23 +334,11 @@ class DiffEvaluator:
         if self.save_diffs:
             os.makedirs("diffs", exist_ok=True)
 
-        # System prompt
-        self.system_prompt = """你是一个经验丰富的代码审阅者。
-请根据我提供的代码差异，进行代码评价，你将针对以下方面给出1-10分制的评分：
+        # System prompt - 使用优化的系统提示
+        self.system_prompt = SYSTEM_PROMPT
 
-1. 可读性 (Readability)：代码的命名、格式和注释质量
-2. 效率与性能 (Efficiency)：代码执行效率和资源利用情况
-3. 安全性 (Security)：代码的安全实践和潜在漏洞防范
-4. 结构与设计 (Structure)：代码组织、模块化和架构设计
-5. 错误处理 (Error Handling)：对异常情况的处理方式
-6. 文档与注释 (Documentation)：文档的完整性和注释的有效性
-7. 代码风格 (Code Style)：符合语言规范和项目风格指南的程度
-
-每个指标的评分标准：
-- 1-3分：较差，存在明显问题
-- 4-6分：一般，基本可接受但有改进空间
-- 7-10分：优秀，符合最佳实践
-
+        # 添加JSON输出指令
+        self.json_output_instruction = """
 请以JSON格式返回评价结果，包含7个评分字段和详细评价意见：
 
 ```json
@@ -361,7 +355,7 @@ class DiffEvaluator:
 }
 ```
 
-总评分计算方式：所有7个指标的平均值（取一位小数）。
+总评分计算方式：所有7个指标的加权平均值（取一位小数）。
 """
 
     @retry(
@@ -581,10 +575,36 @@ class DiffEvaluator:
 
                 # 发送请求到模型
                 async with self.request_semaphore:
-                    # 创建消息
+                    # 创建消息 - 使用优化的prompt
+                    # 获取文件名和语言
+                    file_name = "unknown"
+                    language = "unknown"
+
+                    # 尝试从diff内容中提取文件名
+                    file_name_match = re.search(r'diff --git a/(.*?) b/', diff_content)
+                    if file_name_match:
+                        file_name = file_name_match.group(1)
+                        # 猜测语言
+                        language = self._guess_language(file_name)
+
+                    # 使用优化的代码评审prompt
+                    review_prompt = CODE_REVIEW_PROMPT.format(
+                        file_name=file_name,
+                        language=language.lower(),
+                        code_content=diff_content
+                    )
+
+                    # 添加语言特定的考虑因素
+                    language_key = language.lower()
+                    if language_key in LANGUAGE_SPECIFIC_CONSIDERATIONS:
+                        review_prompt += "\n\n" + LANGUAGE_SPECIFIC_CONSIDERATIONS[language_key]
+
+                    # 添加JSON输出指令
+                    review_prompt += "\n\n" + self.json_output_instruction
+
                     messages = [
                         SystemMessage(content=self.system_prompt),
-                        HumanMessage(content=f"请评价以下代码差异：\n\n```\n{diff_content}\n```")
+                        HumanMessage(content=review_prompt)
                     ]
 
                     # 调用模型
@@ -1109,10 +1129,24 @@ class DiffEvaluator:
 
                 # 发送请求到模型
                 async with self.request_semaphore:
-                    # 创建消息 - 使用简化的提示，以减少令牌消耗
+                    # 创建消息 - 使用优化的prompt
+                    # 获取文件名和语言
+                    file_name = "unknown"
+                    language = "unknown"
+
+                    # 尝试从diff内容中提取文件名
+                    file_name_match = re.search(r'diff --git a/(.*?) b/', chunk)
+                    if file_name_match:
+                        file_name = file_name_match.group(1)
+                        # 猜测语言
+                        language = self._guess_language(file_name)
+
+                    # 使用简化的代码评审prompt，以减少令牌消耗
+                    review_prompt = f"请评价以下代码：\n\n文件名：{file_name}\n语言：{language}\n\n```{language.lower()}\n{chunk}\n```\n\n请给出1-10分的评分和简要评价。返回JSON格式的结果。"
+
                     messages = [
-                        SystemMessage(content="请对以下代码差异进行评价，给出1-10分的评分和简要评价。返回JSON格式的结果。"),
-                        HumanMessage(content=f"请评价以下代码差异：\n\n```\n{chunk}\n```")
+                        SystemMessage(content=self.system_prompt),
+                        HumanMessage(content=review_prompt)
                     ]
 
                     # 调用模型
