@@ -36,7 +36,7 @@ CodeDog can automatically review your code commits and send the review results v
 
    b) **Default Email**:
    
-   If you don't configure any email settings, the system will automatically send review results to `xiejun06@qq.com`.
+   If you don't configure any email settings, the system will automatically send review results to `kratosxie@gmail.com`.
 
 3. **Configure LLM Models**
 
