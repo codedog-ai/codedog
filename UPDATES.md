@@ -54,9 +54,16 @@
    python run_codedog.py eval "开发者名称" --start-date YYYY-MM-DD --end-date YYYY-MM-DD
    ```
 
-2. **审查PR**：
+2. **审查PR/MR**：
    ```bash
+   # GitHub PR审查
    python run_codedog.py pr "仓库名称" PR编号
+
+   # GitLab MR审查
+   python run_codedog.py pr "仓库名称" MR编号 --platform gitlab
+
+   # 自托管GitLab实例
+   python run_codedog.py pr "仓库名称" MR编号 --platform gitlab --gitlab-url "https://your.gitlab.instance.com"
    ```
 
 3. **设置Git钩子**：
@@ -74,4 +81,4 @@
 1. 实现更好的文本分块和处理，以处理大型代码差异
 2. 针对不同文件类型的更专业评分标准
 3. 进一步改进报告呈现，添加可视化图表
-4. 与CI/CD系统的更深入集成 
+4. 与CI/CD系统的更深入集成
