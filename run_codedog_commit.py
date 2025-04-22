@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from typing import List, Optional
 
 # Load environment variables from .env file
+# This will load GitHub or GitLab tokens from the .env file
 load_dotenv()
 
 from langchain_community.callbacks.manager import get_openai_callback
@@ -27,7 +28,7 @@ import subprocess
 
 def parse_args():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description="CodeDog - Automatic commit code review")
+    parser = argparse.ArgumentParser(description="CodeDog - Automatic commit code review for GitHub and GitLab repositories")
     parser.add_argument("--commit", help="Commit hash to review (defaults to HEAD)")
     parser.add_argument("--repo", help="Path to git repository (defaults to current directory)")
     parser.add_argument("--email", help="Email addresses to send the report to (comma-separated)")
@@ -181,7 +182,23 @@ def generate_commit_review(commit_hash: str, repo_path: Optional[str] = None,
                           code_review_model: str = None,
                           pr_summary_model: str = None,
                           verbose: bool = False) -> str:
-    """Generate a code review for a commit."""
+    """Generate a code review for a commit.
+
+    This function works with both GitHub and GitLab repositories by analyzing local Git commits.
+    It doesn't require direct API access to GitHub or GitLab as it works with the local repository.
+
+    Args:
+        commit_hash: The commit hash to review
+        repo_path: Path to git repository (defaults to current directory)
+        email_addresses: List of email addresses to send the report to
+        output_file: Output file path (defaults to codedog_commit_<hash>.md)
+        code_review_model: Model to use for code review
+        pr_summary_model: Model to use for PR summary
+        verbose: Enable verbose output
+
+    Returns:
+        str: The generated review report in markdown format
+    """
     start_time = time.time()
 
     # Set default models from environment variables
@@ -283,7 +300,10 @@ def generate_commit_review(commit_hash: str, repo_path: Optional[str] = None,
 
 
 def main():
-    """Main function to parse arguments and run the commit review."""
+    """Main function to parse arguments and run the commit review.
+
+    This works with both GitHub and GitLab repositories by analyzing local Git commits.
+    """
     args = parse_args()
 
     # Get commit hash (default to HEAD if not provided)
