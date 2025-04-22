@@ -138,7 +138,14 @@ The `README.md` in the project root (and `codedog/__init__.py`) contains a quick
 
 4.  **Run the Script**: Execute the script within the Poetry environment:
     ```bash
-    poetry run python run_codedog.py
+    # For GitHub PR review
+    poetry run python run_codedog.py pr "owner/repo" 123
+
+    # For GitLab MR review
+    poetry run python run_codedog.py pr "owner/repo" 123 --platform gitlab
+
+    # For GitLab MR review with custom GitLab instance
+    poetry run python run_codedog.py pr "owner/repo" 123 --platform gitlab --gitlab-url "https://your.gitlab.instance.com"
     ```
 
 This will:
@@ -147,6 +154,30 @@ This will:
 *   Use the configured LLMs to generate code summaries and a PR summary.
 *   Use the configured LLM to generate code review suggestions.
 *   Print a formatted Markdown report to the console.
+
+## GitLab Integration
+
+Codedog fully supports GitLab integration for reviewing merge requests. To use GitLab integration:
+
+1. **Set up GitLab Token**: Generate a personal access token with `api` scope from your GitLab account settings.
+
+2. **Configure Environment Variables**: Add the following to your `.env` file:
+   ```
+   GITLAB_TOKEN="your_gitlab_personal_access_token"
+   GITLAB_URL="https://gitlab.com"  # Or your self-hosted GitLab URL
+   ```
+
+3. **Run GitLab MR Review**: Use the following command to review a GitLab merge request:
+   ```bash
+   python run_codedog.py pr "owner/repo" 123 --platform gitlab
+   ```
+
+   Replace `owner/repo` with your GitLab project path and `123` with your merge request IID.
+
+4. **Self-hosted GitLab**: If you're using a self-hosted GitLab instance, specify the URL:
+   ```bash
+   python run_codedog.py pr "owner/repo" 123 --platform gitlab --gitlab-url "https://your.gitlab.instance.com"
+   ```
 
 ## Running Tests
 
