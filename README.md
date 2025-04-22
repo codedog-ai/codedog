@@ -157,7 +157,7 @@ This will:
 
 ## GitLab Integration
 
-Codedog fully supports GitLab integration for reviewing merge requests. To use GitLab integration:
+Codedog fully supports GitLab integration for reviewing merge requests. This feature allows you to analyze code quality in GitLab merge requests just like GitHub pull requests. To use GitLab integration:
 
 1. **Set up GitLab Token**: Generate a personal access token with `api` scope from your GitLab account settings.
 
