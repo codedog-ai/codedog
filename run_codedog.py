@@ -115,7 +115,7 @@ async def evaluate_developer_code(
     print(f"Evaluating {author}'s code commits from {start_date} to {end_date}...")
 
     # Get commits and diffs
-    commits, commit_file_diffs = get_file_diffs_by_timeframe(
+    commits, commit_file_diffs, code_stats = get_file_diffs_by_timeframe(
         author,
         start_date,
         end_date,
@@ -156,6 +156,11 @@ async def evaluate_developer_code(
         f"- **Evaluation Time**: {elapsed_time:.2f} seconds\n"
         f"- **Tokens Used**: {total_tokens}\n"
         f"- **Cost**: ${total_cost:.4f}\n"
+        f"\n## Code Statistics\n\n"
+        f"- **Total Files Modified**: {code_stats.get('total_files', 0)}\n"
+        f"- **Lines Added**: {code_stats.get('total_added_lines', 0)}\n"
+        f"- **Lines Deleted**: {code_stats.get('total_deleted_lines', 0)}\n"
+        f"- **Effective Lines**: {code_stats.get('total_effective_lines', 0)}\n"
     )
 
     report += telemetry_info
