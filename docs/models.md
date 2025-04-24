@@ -27,6 +27,33 @@ python run_codedog_eval.py "开发者名称" --model gpt-4o
 CODE_REVIEW_MODEL=gpt-4o
 ```
 
+### 使用完整的模型名称
+
+您也可以直接使用 OpenAI 的完整模型名称：
+
+```bash
+python run_codedog_eval.py "开发者名称" --model gpt-4-turbo
+python run_codedog_eval.py "开发者名称" --model gpt-3.5-turbo-16k
+python run_codedog_eval.py "开发者名称" --model gpt-4o-mini
+```
+
+系统会自动识别这些模型名称并使用适当的配置。
+
+### 自定义模型版本
+
+您可以在 `.env` 文件中设置特定的模型版本：
+
+```
+# 指定 GPT-3.5 的具体版本
+GPT35_MODEL="gpt-3.5-turbo-16k"
+
+# 指定 GPT-4 的具体版本
+GPT4_MODEL="gpt-4-turbo"
+
+# 指定 GPT-4o 的具体版本
+GPT4O_MODEL="gpt-4o-mini"
+```
+
 ## GPT-4o 模型
 
 GPT-4o 是 OpenAI 的最新模型，具有以下优势：

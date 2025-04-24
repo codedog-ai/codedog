@@ -1,1 +1,5 @@
-modelcontextprotocol-github>=0.1.0 
+modelcontextprotocol-github>=0.1.0
+PyGithub>=2.1.1
+python-gitlab>=4.4.0
+aiohttp>=3.9.3
+python-dateutil>=2.8.2 

@@ -64,12 +64,15 @@ def parse_args():
     # Commit review command
     commit_parser = subparsers.add_parser("commit", help="Review a specific commit")
     commit_parser.add_argument("commit_hash", help="Commit hash to review")
-    commit_parser.add_argument("--repo", help="Git repository path, defaults to current directory")
+    commit_parser.add_argument("--repo", help="Git repository path or name (e.g. owner/repo for remote repositories)")
     commit_parser.add_argument("--include", help="Included file extensions, comma separated, e.g. .py,.js")
     commit_parser.add_argument("--exclude", help="Excluded file extensions, comma separated, e.g. .md,.txt")
     commit_parser.add_argument("--model", help="Review model, defaults to CODE_REVIEW_MODEL env var or gpt-3.5")
     commit_parser.add_argument("--email", help="Email addresses to send the report to (comma-separated)")
     commit_parser.add_argument("--output", help="Report output path, defaults to codedog_commit_<hash>_<date>.md")
+    commit_parser.add_argument("--platform", choices=["github", "gitlab", "local"], default="local",
+                         help="Platform to use (github, gitlab, or local, defaults to local)")
+    commit_parser.add_argument("--gitlab-url", help="GitLab URL (defaults to https://gitlab.com or GITLAB_URL env var)")
 
     return parser.parse_args()
 
@@ -104,6 +107,142 @@ async def code_review(retriever, review_chain):
         {"pull_request": retriever.pull_request}, include_run_info=True
     )
     return result
+
+
+def get_remote_commit_diff(
+    platform: str,
+    repository_name: str,
+    commit_hash: str,
+    include_extensions: Optional[List[str]] = None,
+    exclude_extensions: Optional[List[str]] = None,
+    gitlab_url: Optional[str] = None,
+) -> Dict[str, Dict[str, Any]]:
+    """
+    Get commit diff from remote repositories (GitHub or GitLab).
+
+    Args:
+        platform (str): Platform to use (github or gitlab)
+        repository_name (str): Repository name (e.g. owner/repo)
+        commit_hash (str): Commit hash to review
+        include_extensions (Optional[List[str]], optional): File extensions to include. Defaults to None.
+        exclude_extensions (Optional[List[str]], optional): File extensions to exclude. Defaults to None.
+        gitlab_url (Optional[str], optional): GitLab URL. Defaults to None.
+
+    Returns:
+        Dict[str, Dict[str, Any]]: Dictionary mapping file paths to their diffs and statistics
+    """
+    if platform.lower() == "github":
+        # Initialize GitHub client
+        github_client = Github()  # Will automatically load GITHUB_TOKEN from environment
+        print(f"Analyzing GitHub repository {repository_name} for commit {commit_hash}")
+
+        try:
+            # Get repository
+            repo = github_client.get_repo(repository_name)
+
+            # Get commit
+            commit = repo.get_commit(commit_hash)
+
+            # Extract file diffs
+            file_diffs = {}
+            for file in commit.files:
+                # Filter by file extensions
+                _, ext = os.path.splitext(file.filename)
+                if include_extensions and ext not in include_extensions:
+                    continue
+                if exclude_extensions and ext in exclude_extensions:
+                    continue
+
+                if file.patch:
+                    file_diffs[file.filename] = {
+                        "diff": f"diff --git a/{file.filename} b/{file.filename}\n{file.patch}",
+                        "status": file.status,
+                        "additions": file.additions,
+                        "deletions": file.deletions,
+                    }
+
+            return file_diffs
+
+        except Exception as e:
+            error_msg = f"Failed to retrieve GitHub commit: {str(e)}"
+            print(error_msg)
+            return {}
+
+    elif platform.lower() == "gitlab":
+        # Initialize GitLab client
+        gitlab_token = os.environ.get("GITLAB_TOKEN", "")
+        if not gitlab_token:
+            error_msg = "GITLAB_TOKEN environment variable is not set"
+            print(error_msg)
+            return {}
+
+        # Use provided GitLab URL or fall back to environment variable or default
+        gitlab_url = gitlab_url or os.environ.get("GITLAB_URL", "https://gitlab.com")
+
+        gitlab_client = Gitlab(url=gitlab_url, private_token=gitlab_token)
+        print(f"Analyzing GitLab repository {repository_name} for commit {commit_hash}")
+
+        try:
+            # Get repository
+            project = gitlab_client.projects.get(repository_name)
+
+            # Get commit
+            commit = project.commits.get(commit_hash)
+
+            # Get commit diff
+            diff = commit.diff()
+
+            # Extract file diffs
+            file_diffs = {}
+            for file_diff in diff:
+                file_path = file_diff.get('new_path', '')
+                old_path = file_diff.get('old_path', '')
+                diff_content = file_diff.get('diff', '')
+
+                # Skip if no diff content
+                if not diff_content:
+                    continue
+
+                # Filter by file extensions
+                _, ext = os.path.splitext(file_path)
+                if include_extensions and ext not in include_extensions:
+                    continue
+                if exclude_extensions and ext in exclude_extensions:
+                    continue
+
+                # Determine file status
+                if file_diff.get('new_file', False):
+                    status = 'A'  # Added
+                elif file_diff.get('deleted_file', False):
+                    status = 'D'  # Deleted
+                else:
+                    status = 'M'  # Modified
+
+                # Format diff content
+                formatted_diff = f"diff --git a/{old_path} b/{file_path}\n{diff_content}"
+
+                # Count additions and deletions
+                additions = diff_content.count('\n+')
+                deletions = diff_content.count('\n-')
+
+                file_diffs[file_path] = {
+                    "diff": formatted_diff,
+                    "status": status,
+                    "additions": additions,
+                    "deletions": deletions,
+                }
+
+            return file_diffs
+
+        except Exception as e:
+            error_msg = f"Failed to retrieve GitLab commit: {str(e)}"
+            print(error_msg)
+            return {}
+
+    else:
+        error_msg = f"Unsupported platform: {platform}. Use 'github' or 'gitlab'."
+        print(error_msg)
+        return {}
 
 
 def get_remote_commits(
@@ -258,26 +397,195 @@ def get_remote_commits(
                     if not filtered_diff:
                         continue
 
-                    # Create CommitInfo object
+                    # Get file content for each modified file
+                    file_diffs = {}
+                    for file_diff in filtered_diff:
+                        file_path = file_diff.get('new_path', '')
+                        old_path = file_diff.get('old_path', '')
+                        diff_content = file_diff.get('diff', '')
+
+                        # Skip if no diff content
+                        if not diff_content:
+                            continue
+
+                        # Try to get the file content
+                        try:
+                            # For new files, get the content from the current commit
+                            if file_diff.get('new_file', False):
+                                try:
+                                    # Get the file content and handle both string and bytes
+                                    file_obj = project.files.get(file_path=file_path, ref=commit.id)
+                                    if hasattr(file_obj, 'content'):
+                                        # Raw content from API
+                                        file_content = file_obj.content
+                                    elif hasattr(file_obj, 'decode'):
+                                        # Decode if it's bytes
+                                        try:
+                                            file_content = file_obj.decode()
+                                        except TypeError:
+                                            # If decode fails, try to get content directly
+                                            file_content = file_obj.content if hasattr(file_obj, 'content') else str(file_obj)
+                                    else:
+                                        # Fallback to string representation
+                                        file_content = str(file_obj)
+
+                                    # Format as a proper diff with the entire file as added
+                                    formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- /dev/null\n+++ b/{file_path}\n"
+                                    formatted_diff += "\n".join([f"+{line}" for line in file_content.split('\n')])
+                                    file_diffs[file_path] = formatted_diff
+                                except Exception as e:
+                                    print(f"Warning: Could not get content for new file {file_path}: {str(e)}")
+                                    # Try to get the raw file content directly from the API
+                                    try:
+                                        import base64
+                                        raw_file = project.repository_files.get(file_path=file_path, ref=commit.id)
+                                        if raw_file and hasattr(raw_file, 'content'):
+                                            # Decode base64 content if available
+                                            try:
+                                                decoded_content = base64.b64decode(raw_file.content).decode('utf-8', errors='replace')
+                                                formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- /dev/null\n+++ b/{file_path}\n"
+                                                formatted_diff += "\n".join([f"+{line}" for line in decoded_content.split('\n')])
+                                                file_diffs[file_path] = formatted_diff
+                                                continue
+                                            except Exception as decode_err:
+                                                print(f"Warning: Could not decode content for {file_path}: {str(decode_err)}")
+                                    except Exception as api_err:
+                                        print(f"Warning: Could not get raw file content for {file_path}: {str(api_err)}")
+
+                                    # Use diff content as fallback
+                                    file_diffs[file_path] = diff_content
+                            # For deleted files, get the content from the parent commit
+                            elif file_diff.get('deleted_file', False):
+                                try:
+                                    # Get parent commit
+                                    parent_commits = project.commits.get(commit.id).parent_ids
+                                    if parent_commits:
+                                        # Get the file content and handle both string and bytes
+                                        try:
+                                            file_obj = project.files.get(file_path=old_path, ref=parent_commits[0])
+                                            if hasattr(file_obj, 'content'):
+                                                # Raw content from API
+                                                file_content = file_obj.content
+                                            elif hasattr(file_obj, 'decode'):
+                                                # Decode if it's bytes
+                                                try:
+                                                    file_content = file_obj.decode()
+                                                except TypeError:
+                                                    # If decode fails, try to get content directly
+                                                    file_content = file_obj.content if hasattr(file_obj, 'content') else str(file_obj)
+                                            else:
+                                                # Fallback to string representation
+                                                file_content = str(file_obj)
+
+                                            # Format as a proper diff with the entire file as deleted
+                                            formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ /dev/null\n"
+                                            formatted_diff += "\n".join([f"-{line}" for line in file_content.split('\n')])
+                                            file_diffs[file_path] = formatted_diff
+                                        except Exception as file_err:
+                                            # Try to get the raw file content directly from the API
+                                            try:
+                                                import base64
+                                                raw_file = project.repository_files.get(file_path=old_path, ref=parent_commits[0])
+                                                if raw_file and hasattr(raw_file, 'content'):
+                                                    # Decode base64 content if available
+                                                    try:
+                                                        decoded_content = base64.b64decode(raw_file.content).decode('utf-8', errors='replace')
+                                                        formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ /dev/null\n"
+                                                        formatted_diff += "\n".join([f"-{line}" for line in decoded_content.split('\n')])
+                                                        file_diffs[file_path] = formatted_diff
+                                                    except Exception as decode_err:
+                                                        print(f"Warning: Could not decode content for deleted file {old_path}: {str(decode_err)}")
+                                                        file_diffs[file_path] = diff_content
+                                                else:
+                                                    file_diffs[file_path] = diff_content
+                                            except Exception as api_err:
+                                                print(f"Warning: Could not get raw file content for deleted file {old_path}: {str(api_err)}")
+                                                file_diffs[file_path] = diff_content
+                                    else:
+                                        file_diffs[file_path] = diff_content
+                                except Exception as e:
+                                    print(f"Warning: Could not get content for deleted file {old_path}: {str(e)}")
+                                    file_diffs[file_path] = diff_content
+                            # For modified files, use the diff content
+                            else:
+                                # Check if diff_content is empty or minimal
+                                if not diff_content or len(diff_content.strip()) < 10:
+                                    # Try to get the full file content for better context
+                                    try:
+                                        # Get the file content and handle both string and bytes
+                                        file_obj = project.files.get(file_path=file_path, ref=commit.id)
+                                        if hasattr(file_obj, 'content'):
+                                            # Raw content from API
+                                            file_content = file_obj.content
+                                        elif hasattr(file_obj, 'decode'):
+                                            # Decode if it's bytes
+                                            try:
+                                                file_content = file_obj.decode()
+                                            except TypeError:
+                                                # If decode fails, try to get content directly
+                                                file_content = file_obj.content if hasattr(file_obj, 'content') else str(file_obj)
+                                        else:
+                                            # Fallback to string representation
+                                            file_content = str(file_obj)
+
+                                        # Format as a proper diff with the entire file
+                                        formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n"
+                                        formatted_diff += "\n".join([f"+{line}" for line in file_content.split('\n')])
+                                        file_diffs[file_path] = formatted_diff
+                                    except Exception as e:
+                                        print(f"Warning: Could not get content for modified file {file_path}: {str(e)}")
+                                        # Try to get the raw file content directly from the API
+                                        try:
+                                            import base64
+                                            raw_file = project.repository_files.get(file_path=file_path, ref=commit.id)
+                                            if raw_file and hasattr(raw_file, 'content'):
+                                                # Decode base64 content if available
+                                                try:
+                                                    decoded_content = base64.b64decode(raw_file.content).decode('utf-8', errors='replace')
+                                                    formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n"
+                                                    formatted_diff += "\n".join([f"+{line}" for line in decoded_content.split('\n')])
+                                                    file_diffs[file_path] = formatted_diff
+                                                except Exception as decode_err:
+                                                    print(f"Warning: Could not decode content for {file_path}: {str(decode_err)}")
+                                                    # Enhance the diff format with what we have
+                                                    formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n{diff_content}"
+                                                    file_diffs[file_path] = formatted_diff
+                                            else:
+                                                # Enhance the diff format with what we have
+                                                formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n{diff_content}"
+                                                file_diffs[file_path] = formatted_diff
+                                        except Exception as api_err:
+                                            print(f"Warning: Could not get raw file content for {file_path}: {str(api_err)}")
+                                            # Enhance the diff format with what we have
+                                            formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n{diff_content}"
+                                            file_diffs[file_path] = formatted_diff
+                                else:
+                                    # Enhance the diff format
+                                    formatted_diff = f"diff --git a/{old_path} b/{file_path}\n--- a/{old_path}\n+++ b/{file_path}\n{diff_content}"
+                                    file_diffs[file_path] = formatted_diff
+                        except Exception as e:
+                            print(f"Warning: Error processing diff for {file_path}: {str(e)}")
+                            file_diffs[file_path] = diff_content
+
+                    # Skip if no valid diffs
+                    if not file_diffs:
+                        continue
+
+                    # Create CommitInfo object with enhanced diff content
                     commit_info = CommitInfo(
                         hash=commit.id,
                         author=commit.author_name,
                         date=datetime.strptime(commit.created_at, "%Y-%m-%dT%H:%M:%S.%f%z"),
                         message=commit.message,
-                        files=[file_diff.get('new_path', '') for file_diff in filtered_diff],
-                        diff="\n".join([f"diff --git a/{file_diff.get('old_path', '')} b/{file_diff.get('new_path', '')}\n{file_diff.get('diff', '')}" for file_diff in filtered_diff]),
-                        added_lines=sum(file_diff.get('diff', '').count('\n+') for file_diff in filtered_diff),
-                        deleted_lines=sum(file_diff.get('diff', '').count('\n-') for file_diff in filtered_diff),
-                        effective_lines=sum(file_diff.get('diff', '').count('\n+') - file_diff.get('diff', '').count('\n-') for file_diff in filtered_diff)
+                        files=list(file_diffs.keys()),
+                        diff="\n\n".join(file_diffs.values()),
+                        added_lines=sum(diff.count('\n+') for diff in file_diffs.values()),
+                        deleted_lines=sum(diff.count('\n-') for diff in file_diffs.values()),
+                        effective_lines=sum(diff.count('\n+') - diff.count('\n-') for diff in file_diffs.values())
                     )
                     commits.append(commit_info)
 
-                    # Extract file diffs
-                    file_diffs = {}
-                    for file_diff in filtered_diff:
-                        file_path = file_diff.get('new_path', '')
-                        file_diffs[file_path] = file_diff.get('diff', '')
-
+                    # Store file diffs for this commit
                     commit_file_diffs[commit.id] = file_diffs
 
             # Calculate code stats
@@ -556,8 +864,22 @@ async def review_commit(
     model_name: str = "gpt-3.5",
     output_file: Optional[str] = None,
     email_addresses: Optional[List[str]] = None,
+    platform: str = "local",
+    gitlab_url: Optional[str] = None,
 ):
-    """Review a specific commit."""
+    """Review a specific commit.
+
+    Args:
+        commit_hash: The hash of the commit to review
+        repo_path: Git repository path or name (e.g. owner/repo for remote repositories)
+        include_extensions: List of file extensions to include (e.g. ['.py', '.js'])
+        exclude_extensions: List of file extensions to exclude (e.g. ['.md', '.txt'])
+        model_name: Name of the model to use for review
+        output_file: Path to save the report to
+        email_addresses: List of email addresses to send the report to
+        platform: Platform to use (github, gitlab, or local)
+        gitlab_url: GitLab URL (for GitLab platform only)
+    """
     # Generate default output file name if not provided
     if not output_file:
         date_slug = datetime.now().strftime("%Y%m%d")
@@ -568,11 +890,32 @@ async def review_commit(
 
     print(f"Reviewing commit {commit_hash}...")
 
-    # Get commit diff
-    try:
-        commit_diff = get_commit_diff(commit_hash, repo_path, include_extensions, exclude_extensions)
-    except Exception as e:
-        print(f"Error getting commit diff: {str(e)}")
+    # Get commit diff based on platform
+    commit_diff = {}
+
+    if platform.lower() == "local":
+        # Use local git repository
+        try:
+            commit_diff = get_commit_diff(commit_hash, repo_path, include_extensions, exclude_extensions)
+        except Exception as e:
+            print(f"Error getting commit diff: {str(e)}")
+            return
+    elif platform.lower() in ["github", "gitlab"]:
+        # Use remote repository
+        if not repo_path or "/" not in repo_path:
+            print(f"Error: Repository name must be in the format 'owner/repo' for {platform} platform")
+            return
+
+        commit_diff = get_remote_commit_diff(
+            platform=platform,
+            repository_name=repo_path,
+            commit_hash=commit_hash,
+            include_extensions=include_extensions,
+            exclude_extensions=exclude_extensions,
+            gitlab_url=gitlab_url,
+        )
+    else:
+        print(f"Error: Unsupported platform '{platform}'. Use 'local', 'github', or 'gitlab'.")
         return
 
     if not commit_diff:
@@ -751,6 +1094,8 @@ def main():
             model_name=model_name,
             output_file=args.output,
             email_addresses=email_addresses,
+            platform=args.platform,
+            gitlab_url=args.gitlab_url,
         ))
 
         if report:
@@ -765,7 +1110,9 @@ def main():
         print("Example: python run_codedog.py pr owner/repo 123 --platform gitlab    # GitLab MR review")
         print("Example: python run_codedog.py setup-hooks                           # Set up git hooks")
         print("Example: python run_codedog.py eval username --start-date 2023-01-01 --end-date 2023-01-31  # Evaluate code")
-        print("Example: python run_codedog.py commit abc123def                      # Review specific commit")
+        print("Example: python run_codedog.py commit abc123def                      # Review local commit")
+        print("Example: python run_codedog.py commit abc123def --repo owner/repo --platform github  # Review GitHub commit")
+        print("Example: python run_codedog.py commit abc123def --repo owner/repo --platform gitlab  # Review GitLab commit")
 
 
 if __name__ == "__main__":
