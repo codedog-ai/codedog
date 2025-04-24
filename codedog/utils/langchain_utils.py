@@ -312,20 +312,27 @@ class DeepSeekR1Model(DeepSeekChatModel):
 @lru_cache(maxsize=1)
 def load_gpt_llm() -> BaseChatModel:
     """Load GPT 3.5 Model"""
+    # Get the specific GPT-3.5 model name from environment variable or use default
+    gpt35_model = env.get("GPT35_MODEL", "gpt-3.5-turbo")
+
     if env.get("AZURE_OPENAI"):
+        # For Azure, use the deployment ID from environment
+        deployment_id = env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo")
+
         llm = AzureChatOpenAI(
             openai_api_type="azure",
             api_key=env.get("AZURE_OPENAI_API_KEY", ""),
             azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
             api_version="2024-05-01-preview",
-            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
-            model="gpt-3.5-turbo",
+            azure_deployment=deployment_id,
+            model=gpt35_model,
             temperature=0,
         )
     else:
         llm = ChatOpenAI(
             api_key=env.get("OPENAI_API_KEY"),
-            model="gpt-3.5-turbo",
+            model=gpt35_model,
+            temperature=0,
         )
     return llm
 
@@ -333,20 +340,27 @@ def load_gpt_llm() -> BaseChatModel:
 @lru_cache(maxsize=1)
 def load_gpt4_llm():
     """Load GPT 4 Model. Make sure your key have access to GPT 4 API. call this function won't check it."""
+    # Get the specific GPT-4 model name from environment variable or use default
+    gpt4_model = env.get("GPT4_MODEL", "gpt-4")
+
     if env.get("AZURE_OPENAI"):
+        # For Azure, use the GPT-4 deployment ID if available
+        deployment_id = env.get("AZURE_OPENAI_GPT4_DEPLOYMENT_ID", env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-4"))
+
         llm = AzureChatOpenAI(
             openai_api_type="azure",
             api_key=env.get("AZURE_OPENAI_API_KEY", ""),
             azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
             api_version="2024-05-01-preview",
-            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-35-turbo"),
-            model="gpt-4",
+            azure_deployment=deployment_id,
+            model=gpt4_model,
             temperature=0,
         )
     else:
         llm = ChatOpenAI(
             api_key=env.get("OPENAI_API_KEY"),
-            model="gpt-4",
+            model=gpt4_model,
+            temperature=0,
         )
     return llm
 
@@ -354,20 +368,26 @@ def load_gpt4_llm():
 @lru_cache(maxsize=1)
 def load_gpt4o_llm():
     """Load GPT-4o Model. Make sure your key have access to GPT-4o API."""
+    # Get the specific GPT-4o model name from environment variable or use default
+    gpt4o_model = env.get("GPT4O_MODEL", "gpt-4o")
+
     if env.get("AZURE_OPENAI"):
+        # For Azure, use the GPT-4o deployment ID if available
+        deployment_id = env.get("AZURE_OPENAI_GPT4O_DEPLOYMENT_ID", env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-4o"))
+
         llm = AzureChatOpenAI(
             openai_api_type="azure",
             api_key=env.get("AZURE_OPENAI_API_KEY", ""),
             azure_endpoint=env.get("AZURE_OPENAI_API_BASE", ""),
             api_version="2024-05-01-preview",
-            azure_deployment=env.get("AZURE_OPENAI_DEPLOYMENT_ID", "gpt-4o"),
-            model="gpt-4o",
+            azure_deployment=deployment_id,
+            model=gpt4o_model,
             temperature=0,
         )
     else:
         llm = ChatOpenAI(
             api_key=env.get("OPENAI_API_KEY"),
-            model="gpt-4o",
+            model=gpt4o_model,
             temperature=0,
         )
     return llm
@@ -408,16 +428,52 @@ def load_deepseek_r1_llm():
 
 
 def load_model_by_name(model_name: str) -> BaseChatModel:
-    """Load a model by name"""
+    """Load a model by name
+
+    Args:
+        model_name: The name of the model to load. Can be:
+            - "gpt-3.5" or any string starting with "gpt-3" for GPT-3.5 models
+            - "gpt-4" or any string starting with "gpt-4" (except gpt-4o) for GPT-4 models
+            - "gpt-4o" or "4o" for GPT-4o models
+            - "deepseek" for DeepSeek models
+            - "deepseek-r1" for DeepSeek R1 models
+            - Any full OpenAI model name (e.g., "gpt-3.5-turbo-16k", "gpt-4-turbo", etc.)
+
+    Returns:
+        BaseChatModel: The loaded model
+
+    Raises:
+        ValueError: If the model name is not recognized
+    """
+    # Define standard model loaders
     model_loaders = {
         "gpt-3.5": load_gpt_llm,
         "gpt-4": load_gpt4_llm,
-        "gpt-4o": load_gpt4o_llm,  # 添加 GPT-4o 支持
-        "4o": load_gpt4o_llm,      # 别名，方便使用
+        "gpt-4o": load_gpt4o_llm,
+        "4o": load_gpt4o_llm,
         "deepseek": load_deepseek_llm,
         "deepseek-r1": load_deepseek_r1_llm,
     }
-    if model_name not in model_loaders:
-        raise ValueError(f"Unknown model name: {model_name}. Available models: {list(model_loaders.keys())}")
 
-    return model_loaders[model_name]()
+    # Check for exact matches first
+    if model_name in model_loaders:
+        return model_loaders[model_name]()
+
+    # Handle OpenAI model names with pattern matching
+    if model_name.startswith("gpt-"):
+        # Handle GPT-4o models
+        if "4o" in model_name.lower():
+            return load_gpt4o_llm()
+        # Handle GPT-4 models
+        elif model_name.startswith("gpt-4"):
+            return load_gpt4_llm()
+        # Handle GPT-3 models
+        elif model_name.startswith("gpt-3"):
+            return load_gpt_llm()
+        # For any other GPT models, default to GPT-3.5
+        else:
+            logger.warning(f"Unrecognized GPT model name: {model_name}, defaulting to GPT-3.5")
+            return load_gpt_llm()
+
+    # If we get here, the model name is not recognized
+    raise ValueError(f"Unknown model name: {model_name}. Available models: {list(model_loaders.keys())} or any OpenAI model name starting with 'gpt-'.")

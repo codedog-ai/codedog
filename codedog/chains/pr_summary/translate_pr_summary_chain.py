@@ -7,7 +7,7 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain.chains import LLMChain
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 from langchain_core.prompts import BasePromptTemplate
-from langchain_core.pydantic_v1 import Field
+from pydantic import Field
 
 from codedog.chains.pr_summary.base import PRSummaryChain
 from codedog.chains.pr_summary.prompts import CODE_SUMMARY_PROMPT, PR_SUMMARY_PROMPT

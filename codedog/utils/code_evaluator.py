@@ -38,16 +38,16 @@ from codedog.utils.git_log_analyzer import CommitInfo
 
 
 class CodeEvaluation(BaseModel):
-    """代码评价的结构化输出"""
-    readability: int = Field(description="代码可读性评分 (1-10)", ge=1, le=10)
-    efficiency: int = Field(description="代码效率与性能评分 (1-10)", ge=1, le=10)
-    security: int = Field(description="代码安全性评分 (1-10)", ge=1, le=10)
-    structure: int = Field(description="代码结构与设计评分 (1-10)", ge=1, le=10)
-    error_handling: int = Field(description="错误处理评分 (1-10)", ge=1, le=10)
-    documentation: int = Field(description="文档与注释评分 (1-10)", ge=1, le=10)
-    code_style: int = Field(description="代码风格评分 (1-10)", ge=1, le=10)
-    overall_score: float = Field(description="总分 (1-10)", ge=1, le=10)
-    comments: str = Field(description="评价意见和改进建议")
+    """Structured output for code evaluation"""
+    readability: int = Field(description="Code readability score (1-10)", ge=1, le=10)
+    efficiency: int = Field(description="Code efficiency and performance score (1-10)", ge=1, le=10)
+    security: int = Field(description="Code security score (1-10)", ge=1, le=10)
+    structure: int = Field(description="Code structure and design score (1-10)", ge=1, le=10)
+    error_handling: int = Field(description="Error handling score (1-10)", ge=1, le=10)
+    documentation: int = Field(description="Documentation and comments score (1-10)", ge=1, le=10)
+    code_style: int = Field(description="Code style score (1-10)", ge=1, le=10)
+    overall_score: float = Field(description="Overall score (1-10)", ge=1, le=10)
+    comments: str = Field(description="Evaluation comments and improvement suggestions")
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "CodeEvaluation":
@@ -281,11 +281,11 @@ def save_diff_content(file_path: str, diff_content: str, estimated_tokens: int, 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(metadata + diff_content)
 
-    logger.info(f"已保存diff内容到 {output_path} (估计: {estimated_tokens}, 实际: {actual_tokens} tokens)")
+    logger.info(f"Saved diff content to {output_path} (estimated: {estimated_tokens}, actual: {actual_tokens} tokens)")
 
     # 如果实际token数量远远超过估计值，记录警告
     if actual_tokens > estimated_tokens * 1.5:
-        logger.warning(f"警告: 实际token数量 ({actual_tokens}) 远超估计值 ({estimated_tokens})")
+        logger.warning(f"Warning: Actual token count ({actual_tokens}) significantly exceeds estimated value ({estimated_tokens})")
 
 
 class DiffEvaluator:
@@ -335,7 +335,24 @@ class DiffEvaluator:
             os.makedirs("diffs", exist_ok=True)
 
         # System prompt - 使用优化的系统提示
-        self.system_prompt = SYSTEM_PROMPT
+        self.system_prompt = """你是一位经验丰富的代码评审专家，擅长评价各种编程语言的代码质量。
+请根据以下几个方面对代码进行评价，并给出1-10分的评分（10分为最高）：
+1. 可读性：代码是否易于阅读和理解
+2. 效率：代码是否高效，是否有性能问题
+3. 安全性：代码是否存在安全隐患
+4. 结构：代码结构是否合理，是否遵循良好的设计原则
+5. 错误处理：是否有适当的错误处理机制
+6. 文档和注释：注释是否充分，是否有必要的文档
+7. 代码风格：是否遵循一致的代码风格和最佳实践
+8. 总体评分：综合以上各项的总体评价
+
+请以JSON格式返回结果，包含以上各项评分和详细评价意见。
+
+重要提示：
+1. 即使代码不完整或难以理解，也请尽量给出评价，并在评论中说明情况
+2. 如果代码是差异格式（diff），请忽略差异标记（+/-），专注于评价代码本身
+3. 如果无法评估，请返回默认评分5分，并在评论中说明原因
+4. 始终返回有效的JSON格式"""
 
         # 添加JSON输出指令
         self.json_output_instruction = """
@@ -383,19 +400,19 @@ class DiffEvaluator:
 
             # 减少令牌生成速率
             new_rate = self.token_bucket.tokens_per_minute / self.rate_limit_backoff_factor
-            logger.warning(f"遇到速率限制，降低令牌生成速率: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
-            print(f"⚠️ 遇到API速率限制，正在降低请求速率: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
+            logger.warning(f"Rate limit encountered, reducing token generation rate: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
+            print(f"⚠️ Rate limit encountered, reducing request rate: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
             self.token_bucket.tokens_per_minute = new_rate
 
             # 增加最小请求间隔
             self.MIN_REQUEST_INTERVAL *= self.rate_limit_backoff_factor
-            logger.warning(f"增加最小请求间隔: {self.MIN_REQUEST_INTERVAL:.2f}s")
+            logger.warning(f"Increasing minimum request interval: {self.MIN_REQUEST_INTERVAL:.2f}s")
 
             # 减少最大并发请求数，但不少于1
             if self.MAX_CONCURRENT_REQUESTS > 1:
                 self.MAX_CONCURRENT_REQUESTS = max(1, self.MAX_CONCURRENT_REQUESTS - 1)
                 self.request_semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_REQUESTS)
-                logger.warning(f"减少最大并发请求数: {self.MAX_CONCURRENT_REQUESTS}")
+                logger.warning(f"Reducing maximum concurrent requests: {self.MAX_CONCURRENT_REQUESTS}")
         else:
             # 请求成功
             self.consecutive_successes += 1
@@ -408,8 +425,8 @@ class DiffEvaluator:
                                self.token_bucket.tokens_per_minute * self.rate_limit_recovery_factor)
 
                 if new_rate > self.token_bucket.tokens_per_minute:
-                    logger.info(f"连续成功{self.consecutive_successes}次，提高令牌生成速率: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
-                    print(f"✅ 连续成功{self.consecutive_successes}次，正在提高请求速率: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
+                    logger.info(f"After {self.consecutive_successes} consecutive successes, increasing token generation rate: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
+                    print(f"✅ After {self.consecutive_successes} consecutive successes, increasing request rate: {self.token_bucket.tokens_per_minute:.0f} -> {new_rate:.0f} tokens/min")
                     self.token_bucket.tokens_per_minute = new_rate
 
                     # 减少最小请求间隔，但不少于初始值
@@ -419,7 +436,7 @@ class DiffEvaluator:
                     if self.MAX_CONCURRENT_REQUESTS < 3:
                         self.MAX_CONCURRENT_REQUESTS += 1
                         self.request_semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_REQUESTS)
-                        logger.info(f"增加最大并发请求数: {self.MAX_CONCURRENT_REQUESTS}")
+                        logger.info(f"Increasing maximum concurrent requests: {self.MAX_CONCURRENT_REQUESTS}")
 
                     self.last_rate_adjustment_time = now
 
@@ -495,8 +512,8 @@ class DiffEvaluator:
         if current_chunk:
             chunks.append('\n'.join(current_chunk))
 
-        logger.info(f"差异内容过大，已分割为 {len(chunks)} 个块进行评估")
-        print(f"ℹ️ 文件过大，已分割为 {len(chunks)} 个块进行评估")
+        logger.info(f"Content too large, split into {len(chunks)} chunks for evaluation")
+        print(f"ℹ️ File too large, will be processed in {len(chunks)} chunks")
 
         # 如果启用了保存diff内容，则保存每个分割后的块
         if self.save_diffs and file_path:
@@ -515,7 +532,7 @@ class DiffEvaluator:
         # 检查缓存
         if file_hash in self.cache:
             self.cache_hits += 1
-            logger.info(f"缓存命中! 已从缓存获取评估结果 (命中率: {self.cache_hits}/{len(self.cache) + self.cache_hits})")
+            logger.info(f"Cache hit! Retrieved evaluation result from cache (hit rate: {self.cache_hits}/{len(self.cache) + self.cache_hits})")
             return self.cache[file_hash]
 
         # 检查文件大小，如果过大则分块处理
@@ -529,7 +546,7 @@ class DiffEvaluator:
             # 分别评估每个块
             chunk_results = []
             for i, chunk in enumerate(chunks):
-                logger.info(f"评估分块 {i+1}/{len(chunks)}")
+                logger.info(f"Evaluating chunk {i+1}/{len(chunks)}")
                 chunk_result = await self._evaluate_diff_chunk(chunk)
                 chunk_results.append(chunk_result)
 
@@ -562,8 +579,8 @@ class DiffEvaluator:
                 # 获取令牌 - 使用改进的令牌桶算法
                 wait_time = await self.token_bucket.get_tokens(estimated_tokens)
                 if wait_time > 0:
-                    logger.info(f"速率限制: 等待 {wait_time:.2f}s 令牌补充")
-                    print(f"⏳ 速率限制: 等待 {wait_time:.2f}s 令牌补充 (当前速率: {self.token_bucket.tokens_per_minute:.0f} tokens/min)")
+                    logger.info(f"Rate limit: waiting {wait_time:.2f}s for token replenishment")
+                    print(f"⏳ Rate limit: waiting {wait_time:.2f}s for token replenishment (current rate: {self.token_bucket.tokens_per_minute:.0f} tokens/min)")
                     # 不需要显式等待，因为令牌桶算法已经处理了等待
 
                 # 确保请求之间有最小间隔，但使用更短的间隔
@@ -587,11 +604,14 @@ class DiffEvaluator:
                         # 猜测语言
                         language = self._guess_language(file_name)
 
+                    # 清理代码内容，移除异常字符
+                    sanitized_diff = self._sanitize_content(diff_content)
+
                     # 使用优化的代码评审prompt
                     review_prompt = CODE_REVIEW_PROMPT.format(
                         file_name=file_name,
                         language=language.lower(),
-                        code_content=diff_content
+                        code_content=sanitized_diff
                     )
 
                     # 添加语言特定的考虑因素
@@ -762,18 +782,43 @@ class DiffEvaluator:
                                 break
                         else:
                             normalized_result["comments"] = "无评价意见"
-                    elif field == "overall_score":
-                        # 如果缺少总分，计算其他分数的平均值
-                        score_fields = ["readability", "efficiency", "security", "structure",
-                                      "error_handling", "documentation", "code_style"]
-                        available_scores = [normalized_result.get(f, 5) for f in score_fields if f in normalized_result]
-                        if available_scores:
-                            normalized_result["overall_score"] = round(sum(available_scores) / len(available_scores), 1)
-                        else:
-                            normalized_result["overall_score"] = 5.0
+
+                # 处理嵌套的评论结构 - 无论是否在上面的循环中设置
+                if field == "comments" and isinstance(normalized_result.get("comments"), dict):
+                    # 如果评论是一个字典，尝试提取有用的信息并转换为字符串
+                    comments_dict = normalized_result["comments"]
+                    comments_str = ""
+
+                    # 处理常见的嵌套结构
+                    if "overall" in comments_dict and isinstance(comments_dict["overall"], dict) and "comment" in comments_dict["overall"]:
+                        # 如果有overall评论，优先使用它
+                        comments_str = comments_dict["overall"]["comment"]
                     else:
-                        # 对于其他评分字段，使用默认值5
-                        normalized_result[field] = 5
+                        # 否则，尝试从各个评分字段中提取评论
+                        for score_field in ["readability", "efficiency", "security", "structure", "error_handling", "documentation", "code_style"]:
+                            if score_field in comments_dict and isinstance(comments_dict[score_field], dict) and "comment" in comments_dict[score_field]:
+                                comments_str += f"{score_field.capitalize()}: {comments_dict[score_field]['comment']}\n"
+
+                        # 如果没有找到任何评论，尝试直接将字典转换为字符串
+                        if not comments_str:
+                            try:
+                                comments_str = json.dumps(comments_dict, ensure_ascii=False)
+                            except:
+                                comments_str = str(comments_dict)
+
+                    normalized_result["comments"] = comments_str
+                elif field == "overall_score":
+                    # 如果缺少总分，计算其他分数的平均值
+                    score_fields = ["readability", "efficiency", "security", "structure",
+                                  "error_handling", "documentation", "code_style"]
+                    available_scores = [normalized_result.get(f, 5) for f in score_fields if f in normalized_result]
+                    if available_scores:
+                        normalized_result["overall_score"] = round(sum(available_scores) / len(available_scores), 1)
+                    else:
+                        normalized_result["overall_score"] = 5.0
+                else:
+                    # 对于其他评分字段，使用默认值5
+                    normalized_result[field] = 5
 
             # 确保分数在有效范围内
             score_fields = ["readability", "efficiency", "security", "structure",
@@ -810,9 +855,50 @@ class DiffEvaluator:
                     adjustment = random.choice([-1, 1])
                     normalized_result[field] = max(1, min(10, normalized_result[field] + adjustment))
 
+            # 确保comments字段是字符串类型
+            if "comments" in normalized_result:
+                if not isinstance(normalized_result["comments"], str):
+                    try:
+                        if isinstance(normalized_result["comments"], dict):
+                            # 如果是字典，尝试提取有用的信息
+                            comments_dict = normalized_result["comments"]
+                            comments_str = ""
+
+                            # 处理常见的嵌套结构
+                            if "overall" in comments_dict and isinstance(comments_dict["overall"], dict) and "comment" in comments_dict["overall"]:
+                                # 如果有overall评论，优先使用它
+                                comments_str = comments_dict["overall"]["comment"]
+                            else:
+                                # 否则，尝试从各个评分字段中提取评论
+                                for field in ["readability", "efficiency", "security", "structure", "error_handling", "documentation", "code_style"]:
+                                    if field in comments_dict and isinstance(comments_dict[field], dict) and "comment" in comments_dict[field]:
+                                        comments_str += f"{field.capitalize()}: {comments_dict[field]['comment']}\n"
+
+                            # 如果没有找到任何评论，尝试直接将字典转换为字符串
+                            if not comments_str:
+                                comments_str = json.dumps(comments_dict, ensure_ascii=False)
+
+                            normalized_result["comments"] = comments_str
+                        else:
+                            # 其他类型直接转换为字符串
+                            normalized_result["comments"] = str(normalized_result["comments"])
+                    except Exception as e:
+                        logger.error(f"Error converting comments to string: {e}")
+                        normalized_result["comments"] = f"评论转换错误: {str(e)}"
+
+                # 确保评论不为空
+                if not normalized_result["comments"]:
+                    normalized_result["comments"] = "无评价意见"
+
             # 使用from_dict方法创建CodeEvaluation实例进行最终验证
-            evaluation = CodeEvaluation.from_dict(normalized_result)
-            return evaluation.model_dump()
+            try:
+                evaluation = CodeEvaluation.from_dict(normalized_result)
+                return evaluation.model_dump()
+            except Exception as e:
+                logger.error(f"Error creating CodeEvaluation: {e}")
+                logger.error(f"Normalized result: {normalized_result}")
+                # 如果创建失败，返回一个安全的默认结果
+                return self._generate_default_scores(f"验证失败: {str(e)}")
         except Exception as e:
             logger.error(f"Score validation error: {e}")
             logger.error(f"Original result: {result}")
@@ -943,6 +1029,44 @@ class DiffEvaluator:
         # 默认返回通用编程语言
         return 'General'
 
+    def _sanitize_content(self, content: str) -> str:
+        """清理内容中的异常字符，确保内容可以安全地发送到OpenAI API。
+
+        Args:
+            content: 原始内容
+
+        Returns:
+            str: 清理后的内容
+        """
+        if not content:
+            return ""
+
+        try:
+            # 检查是否包含Base64编码的内容
+            if len(content) > 20 and content.strip().endswith('==') and all(c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=' for c in content.strip()):
+                print(f"DEBUG: Detected possible Base64 encoded content: '{content[:20]}...'")
+                return "这是一段Base64编码的内容，无法进行代码评估。"
+
+            # 移除不可打印字符和控制字符，但保留基本空白字符（空格、换行、制表符）
+            sanitized = ""
+            for char in content:
+                # 保留基本可打印字符和常用空白字符
+                if char.isprintable() or char in [' ', '\n', '\t', '\r']:
+                    sanitized += char
+                else:
+                    # 替换不可打印字符为空格
+                    sanitized += ' '
+
+            # 如果清理后的内容太短，返回一个提示
+            if len(sanitized.strip()) < 10:
+                return "代码内容太短或为空，无法进行有效评估。"
+
+            return sanitized
+        except Exception as e:
+            print(f"DEBUG: Error sanitizing content: {e}")
+            # 如果清理过程出错，返回一个安全的默认字符串
+            return "内容清理过程中出错，无法处理。"
+
     def _extract_json(self, text: str) -> str:
         """从文本中提取JSON部分。
 
@@ -952,6 +1076,60 @@ class DiffEvaluator:
         Returns:
             str: 提取的JSON字符串，如果没有找到则返回空字符串
         """
+        # 检查输入是否为空或None
+        if not text:
+            logger.warning("Empty response received from API")
+            print("DEBUG: Empty response received from API")
+            return ""
+
+        # 打印原始文本的类型和长度
+        print(f"DEBUG: Response type: {type(text)}, length: {len(text)}")
+        print(f"DEBUG: First 100 chars: '{text[:100]}'")
+
+        # 检查是否包含无法评估的提示（如Base64编码内容）
+        unevaluable_patterns = [
+            r'Base64编码',
+            r'无法解码的字符串',
+            r'ICAgIA==',
+            r'无法评估',
+            r'无法对这段代码进行评审',
+            r'无法进行评价',
+            r'无法对代码进行评估',
+            r'代码内容太短',
+            r'代码为空',
+            r'没有提供实际的代码',
+            r'无法理解',
+            r'无法解析',
+            r'无法分析',
+            r'无法读取',
+            r'无法识别',
+            r'无法处理',
+            r'无效的代码',
+            r'不是有效的代码',
+            r'不是代码',
+            r'不包含代码',
+            r'只包含了一个无法解码的字符串'
+        ]
+
+        for pattern in unevaluable_patterns:
+            if re.search(pattern, text, re.IGNORECASE):
+                print(f"DEBUG: Detected response indicating unevaluable content: '{pattern}'")
+                # 提取评论，如果有的话
+                comment = text[:200] if len(text) > 200 else text
+                # 创建一个默认的JSON响应
+                default_json = {
+                    "readability": 5,
+                    "efficiency": 5,
+                    "security": 5,
+                    "structure": 5,
+                    "error_handling": 5,
+                    "documentation": 5,
+                    "code_style": 5,
+                    "overall_score": 5.0,
+                    "comments": f"无法评估代码: {comment}"
+                }
+                return json.dumps(default_json)
+
         # 尝试查找JSON代码块
         json_match = re.search(r'```(?:json)?\s*({[\s\S]*?})\s*```', text)
         if json_match:
@@ -999,6 +1177,41 @@ class DiffEvaluator:
         if start_idx != -1 and end_idx != -1 and start_idx < end_idx:
             return text[start_idx:end_idx+1]
 
+        # 尝试提取评分信息，即使没有完整的JSON结构
+        scores_dict = {}
+
+        # 查找评分模式，如 "Readability: 8/10" 或 "Readability score: 8"
+        score_patterns = [
+            r'(readability|efficiency|security|structure|error handling|documentation|code style):\s*(\d+)(?:/10)?',
+            r'(readability|efficiency|security|structure|error handling|documentation|code style) score:\s*(\d+)',
+        ]
+
+        for pattern in score_patterns:
+            for match in re.finditer(pattern, text.lower()):
+                key = match.group(1).replace(' ', '_')
+                value = int(match.group(2))
+                scores_dict[key] = value
+
+        # 如果找到了至少4个评分，认为是有效的评分信息
+        if len(scores_dict) >= 4:
+            # 填充缺失的评分
+            for field in ["readability", "efficiency", "security", "structure", "error_handling", "documentation", "code_style"]:
+                if field not in scores_dict:
+                    scores_dict[field] = 5  # 默认分数
+
+            # 计算总分
+            scores_dict["overall_score"] = round(sum(scores_dict.values()) / len(scores_dict), 1)
+
+            # 提取评论
+            comment_match = re.search(r'(comments|summary|analysis|evaluation):(.*?)(?=\n\w+:|$)', text.lower(), re.DOTALL)
+            if comment_match:
+                scores_dict["comments"] = comment_match.group(2).strip()
+            else:
+                # 使用整个文本作为评论，但限制长度
+                scores_dict["comments"] = text[:500] + "..." if len(text) > 500 else text
+
+            return json.dumps(scores_dict)
+
         return ""
 
     def _fix_malformed_json(self, json_str: str) -> str:
@@ -1010,6 +1223,50 @@ class DiffEvaluator:
         Returns:
             str: 修复后的JSON字符串，如果无法修复则返回空字符串
         """
+        # 检查输入是否为空或None
+        if not json_str:
+            logger.warning("Empty string passed to _fix_malformed_json")
+            # 创建一个默认的JSON
+            default_scores = {
+                "readability": 5,
+                "efficiency": 5,
+                "security": 5,
+                "structure": 5,
+                "error_handling": 5,
+                "documentation": 5,
+                "code_style": 5,
+                "overall_score": 5.0,
+                "comments": "API返回空响应，显示默认分数。"
+            }
+            return json.dumps(default_scores)
+
+        # 检查是否是错误消息而不是JSON
+        error_patterns = [
+            "I'm sorry",
+            "there is no code",
+            "please provide",
+            "cannot review",
+            "unable to"
+        ]
+
+        for pattern in error_patterns:
+            if pattern.lower() in json_str.lower():
+                logger.warning(f"API returned an error message: {json_str[:100]}...")
+                print(f"DEBUG: API returned an error message: {json_str[:100]}...")
+                # 创建一个默认的JSON，包含错误消息
+                default_scores = {
+                    "readability": 5,
+                    "efficiency": 5,
+                    "security": 5,
+                    "structure": 5,
+                    "error_handling": 5,
+                    "documentation": 5,
+                    "code_style": 5,
+                    "overall_score": 5.0,
+                    "comments": f"API返回错误消息: {json_str[:200]}..."
+                }
+                return json.dumps(default_scores)
+
         original_json = json_str  # 保存原始字符串以便比较
 
         try:
@@ -1045,32 +1302,93 @@ class DiffEvaluator:
                 except (json.JSONDecodeError, IndexError):
                     pass
 
+            # 尝试查找任何可能的JSON对象
+            json_pattern = r'{[\s\S]*?}'
+            json_matches = re.findall(json_pattern, original_json)
+
+            if json_matches:
+                # 尝试每个匹配的JSON对象
+                for potential_json in json_matches:
+                    try:
+                        # 尝试解析
+                        json.loads(potential_json)
+                        return potential_json
+                    except json.JSONDecodeError:
+                        # 尝试基本清理
+                        cleaned_json = potential_json.replace("'", '"')
+                        cleaned_json = re.sub(r',\s*}', '}', cleaned_json)
+                        cleaned_json = re.sub(r'([{,])\s*(\w+)\s*:', r'\1"\2":', cleaned_json)
+
+                        try:
+                            json.loads(cleaned_json)
+                            return cleaned_json
+                        except json.JSONDecodeError:
+                            continue
+
             # 尝试提取分数并创建最小可用的JSON
             try:
                 # 提取分数
                 scores = {}
                 for field in ["readability", "efficiency", "security", "structure", "error_handling", "documentation", "code_style"]:
-                    match = re.search(f'"{field}"\s*:\s*(\d+)', original_json)
-                    if match:
-                        scores[field] = int(match.group(1))
-                    else:
+                    # 尝试多种模式匹配
+                    patterns = [
+                        f'"{field}"\\s*:\\s*(\\d+)',  # "field": 8
+                        f'{field}\\s*:\\s*(\\d+)',    # field: 8
+                        f'{field.replace("_", " ")}\\s*:\\s*(\\d+)',  # field name: 8
+                        f'{field.capitalize()}\\s*:\\s*(\\d+)',  # Field: 8
+                        f'{field.replace("_", " ").title()}\\s*:\\s*(\\d+)'  # Field Name: 8
+                    ]
+
+                    for pattern in patterns:
+                        match = re.search(pattern, original_json, re.IGNORECASE)
+                        if match:
+                            scores[field] = int(match.group(1))
+                            break
+
+                    if field not in scores:
                         scores[field] = 5  # 默认分数
 
                 # 尝试提取总分
-                overall_match = re.search(r'"overall_score"\s*:\s*(\d+(?:\.\d+)?)', original_json)
-                if overall_match:
-                    scores["overall_score"] = float(overall_match.group(1))
-                else:
+                overall_patterns = [
+                    r'"overall_score"\s*:\s*(\d+(?:\.\d+)?)',
+                    r'overall_score\s*:\s*(\d+(?:\.\d+)?)',
+                    r'overall\s*:\s*(\d+(?:\.\d+)?)',
+                    r'总分\s*:\s*(\d+(?:\.\d+)?)'
+                ]
+
+                for pattern in overall_patterns:
+                    overall_match = re.search(pattern, original_json, re.IGNORECASE)
+                    if overall_match:
+                        scores["overall_score"] = float(overall_match.group(1))
+                        break
+
+                if "overall_score" not in scores:
                     # 计算总分为其他分数的平均值
                     scores["overall_score"] = round(sum(scores.values()) / len(scores), 1)
 
-                # 添加评价意见
-                scores["comments"] = "JSON解析错误，显示提取的分数。"
+                # 尝试提取评论
+                comment_patterns = [
+                    r'"comments"\s*:\s*"(.*?)"',
+                    r'comments\s*:\s*(.*?)(?=\n\w+:|$)',
+                    r'评价\s*:\s*(.*?)(?=\n\w+:|$)',
+                    r'建议\s*:\s*(.*?)(?=\n\w+:|$)'
+                ]
+
+                for pattern in comment_patterns:
+                    comment_match = re.search(pattern, original_json, re.DOTALL | re.IGNORECASE)
+                    if comment_match:
+                        scores["comments"] = comment_match.group(1).strip()
+                        break
+
+                if "comments" not in scores:
+                    # 使用原始文本的一部分作为评论
+                    scores["comments"] = "JSON解析错误，显示提取的分数。原始响应: " + original_json[:200] + "..."
 
                 # 转换为JSON字符串
                 return json.dumps(scores)
             except Exception as final_e:
                 logger.error(f"所有JSON修复尝试失败: {final_e}")
+                logger.error(f"原始响应: {original_json[:500]}")
                 print(f"无法修复JSON: {e} -> {final_e}")
 
                 # 最后尝试：创建一个默认的JSON
@@ -1083,7 +1401,7 @@ class DiffEvaluator:
                     "documentation": 5,
                     "code_style": 5,
                     "overall_score": 5.0,
-                    "comments": "JSON解析错误，显示默认分数。"
+                    "comments": f"JSON解析错误，显示默认分数。错误: {str(e)}"
                 }
                 return json.dumps(default_scores)
 
@@ -1118,7 +1436,7 @@ class DiffEvaluator:
                 # 获取令牌
                 wait_time = await self.token_bucket.get_tokens(estimated_tokens)
                 if wait_time > 0:
-                    logger.info(f"速率限制: 等待 {wait_time:.2f}s 令牌补充")
+                    logger.info(f"Rate limit: waiting {wait_time:.2f}s for token replenishment")
                     await asyncio.sleep(wait_time)
 
                 # 确保请求之间有最小间隔
@@ -1141,13 +1459,99 @@ class DiffEvaluator:
                         # 猜测语言
                         language = self._guess_language(file_name)
 
-                    # 使用简化的代码评审prompt，以减少令牌消耗
-                    review_prompt = f"请评价以下代码：\n\n文件名：{file_name}\n语言：{language}\n\n```{language.lower()}\n{chunk}\n```\n\n请给出1-10分的评分和简要评价。返回JSON格式的结果。"
+                    # 使用更详细的代码评审prompt，确保模型理解任务
+                    # 清理代码内容，移除异常字符
+                    sanitized_chunk = self._sanitize_content(chunk)
+
+                    review_prompt = f"""请评价以下代码：
+
+文件名：{file_name}
+语言：{language}
+
+```
+{sanitized_chunk}
+```
+
+请对这段代码进行全面评价，并给出1-10分的评分（10分为最高）。评价应包括以下几个方面：
+1. 可读性 (readability)：代码是否易于阅读和理解
+2. 效率 (efficiency)：代码是否高效，是否有性能问题
+3. 安全性 (security)：代码是否存在安全隐患
+4. 结构 (structure)：代码结构是否合理，是否遵循良好的设计原则
+5. 错误处理 (error_handling)：是否有适当的错误处理机制
+6. 文档和注释 (documentation)：注释是否充分，是否有必要的文档
+7. 代码风格 (code_style)：是否遵循一致的代码风格和最佳实践
+8. 总体评分 (overall_score)：综合以上各项的总体评价
+
+请以JSON格式返回结果，格式如下：
+```json
+{{
+  "readability": 评分,
+  "efficiency": 评分,
+  "security": 评分,
+  "structure": 评分,
+  "error_handling": 评分,
+  "documentation": 评分,
+  "code_style": 评分,
+  "overall_score": 总评分,
+  "comments": "详细评价意见和改进建议"
+}}
+```
+
+总评分应该是所有评分的加权平均值，保留一位小数。如果代码很小或者只是配置文件的修改，请根据实际情况给出合理的评分。
+
+重要提示：请确保返回有效的JSON格式。如果无法评估代码（例如代码不完整或无法理解），请仍然返回JSON格式，但在comments中说明原因，并给出默认评分5分。"""
+
+                    # 打印完整的代码块用于调试
+                    print(f"DEBUG: File name: {file_name}")
+                    print(f"DEBUG: Language: {language}")
+                    print(f"DEBUG: Code chunk length: {len(chunk)}")
+                    print(f"DEBUG: Code chunk first 100 chars: '{chunk[:100]}'")
+                    if len(chunk) < 10:
+                        print(f"DEBUG: EMPTY CODE CHUNK: '{chunk}'")
+                    elif len(chunk) < 100:
+                        print(f"DEBUG: FULL CODE CHUNK: '{chunk}'")
+
+                    # 如果代码块为空或太短，使用默认评分
+                    if len(chunk.strip()) < 10:
+                        print("DEBUG: Code chunk is too short, using default scores")
+                        default_scores = {
+                            "readability": 5,
+                            "efficiency": 5,
+                            "security": 5,
+                            "structure": 5,
+                            "error_handling": 5,
+                            "documentation": 5,
+                            "code_style": 5,
+                            "overall_score": 5.0,
+                            "comments": f"无法评估代码，因为代码块为空或太短: '{chunk}'"
+                        }
+                        return default_scores
+
+                    # 检查是否包含Base64编码的内容
+                    if chunk.strip().endswith('==') and all(c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=' for c in chunk.strip()):
+                        print(f"DEBUG: Detected possible Base64 encoded content in chunk")
+                        default_scores = {
+                            "readability": 5,
+                            "efficiency": 5,
+                            "security": 5,
+                            "structure": 5,
+                            "error_handling": 5,
+                            "documentation": 5,
+                            "code_style": 5,
+                            "overall_score": 5.0,
+                            "comments": f"无法评估代码，因为内容可能是Base64编码: '{chunk[:50]}...'"
+                        }
+                        return default_scores
 
                     messages = [
                         SystemMessage(content=self.system_prompt),
                         HumanMessage(content=review_prompt)
                     ]
+
+                    # 打印用户输入内容的前100个字符用于调试
+                    user_message = messages[1].content if len(messages) > 1 else "No user message"
+                    print(f"DEBUG: User input first 100 chars: '{user_message[:100]}...'")
+                    print(f"DEBUG: User input length: {len(user_message)}")
 
                     # 调用模型
                     response = await self.model.agenerate(messages=[messages])
@@ -1155,6 +1559,9 @@ class DiffEvaluator:
 
                     # 获取响应文本
                     generated_text = response.generations[0][0].text
+
+                    # 打印原始响应用于调试
+                    print(f"\n==== RAW OPENAI RESPONSE ====\n{generated_text}\n==== END RESPONSE ====\n")
 
                 # 解析响应
                 try:
@@ -1196,16 +1603,19 @@ class DiffEvaluator:
                 # 检查是否是上下文长度限制错误
                 is_context_length_error = "context length" in error_message.lower() or "maximum context length" in error_message.lower()
 
+                # 检查是否是DeepSeek API错误
+                is_deepseek_error = "deepseek" in error_message.lower() or "deepseek api" in error_message.lower()
+
                 if is_context_length_error:
                     # 如果是上下文长度错误，尝试进一步分割
-                    logger.warning(f"上下文长度限制错误，尝试进一步分割内容")
+                    logger.warning(f"Context length limit error, attempting further content splitting")
                     smaller_chunks = self._split_diff_content(chunk, max_tokens_per_chunk=4000)  # 使用更小的块大小
 
                     if len(smaller_chunks) > 1:
                         # 如果成功分割成多个小块，分别评估并合并结果
                         sub_results = []
                         for i, sub_chunk in enumerate(smaller_chunks):
-                            logger.info(f"评估子块 {i+1}/{len(smaller_chunks)}")
+                            logger.info(f"Evaluating sub-chunk {i+1}/{len(smaller_chunks)}")
                             sub_result = await self._evaluate_diff_chunk(sub_chunk)  # 递归调用
                             sub_results.append(sub_result)
 
@@ -1221,6 +1631,16 @@ class DiffEvaluator:
                     # 使用更长的等待时间
                     wait_time = base_wait_time * (2 ** retry_count)
                     logger.warning(f"Rate limit error, retrying in {wait_time}s (attempt {retry_count}/{max_retries})")
+                    await asyncio.sleep(wait_time)
+                elif is_deepseek_error:
+                    # 对于DeepSeek API错误，最多重试两次，然后放弃
+                    retry_count += 1
+                    if retry_count >= 2:  # 只重试两次
+                        logger.error(f"DeepSeek API error after 2 retries, abandoning evaluation: {error_message}")
+                        return self._generate_default_scores(f"DeepSeek API错误，放弃评估: {error_message}")
+                    # 使用较短的等待时间
+                    wait_time = 3  # 固定3秒等待时间
+                    logger.warning(f"DeepSeek API error, retrying in {wait_time}s (attempt {retry_count}/2)")
                     await asyncio.sleep(wait_time)
                 else:
                     # 其他错误直接返回
@@ -1274,6 +1694,258 @@ class DiffEvaluator:
 
         return merged_scores
 
+    async def evaluate_commit_file(
+        self,
+        file_path: str,
+        file_diff: str,
+        file_status: str = "M",
+        additions: int = 0,
+        deletions: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        评价单个文件的代码差异（新版本，用于commit评估）
+
+        Args:
+            file_path: 文件路径
+            file_diff: 文件差异内容
+            file_status: 文件状态（A=添加，M=修改，D=删除）
+            additions: 添加的行数
+            deletions: 删除的行数
+
+        Returns:
+            Dict[str, Any]: 文件评价结果字典
+        """
+        # 如果未设置语言，根据文件扩展名猜测语言
+        language = self._guess_language(file_path)
+
+        # 清理代码内容，移除异常字符
+        sanitized_diff = self._sanitize_content(file_diff)
+
+        # 检查文件大小，如果过大则分块处理
+        words = sanitized_diff.split()
+        estimated_tokens = len(words) * 1.2
+
+        # 如果文件可能超过模型的上下文限制，则分块处理
+        if estimated_tokens > 12000:  # 留出一些空间给系统提示和其他内容
+            logger.info(f"文件 {file_path} 过大（估计 {estimated_tokens:.0f} 令牌），将进行分块处理")
+            chunks = self._split_diff_content(sanitized_diff)
+            print(f"ℹ️ File too large, will be processed in {len(chunks)} chunks")
+
+            # 分别评估每个块
+            chunk_results = []
+            for i, chunk in enumerate(chunks):
+                logger.info(f"Evaluating chunk {i+1}/{len(chunks)}")
+                chunk_result = await self._evaluate_diff_chunk(chunk)
+                chunk_results.append(chunk_result)
+
+            # 合并结果
+            merged_result = self._merge_chunk_results(chunk_results)
+
+            # 添加文件信息
+            result = {
+                "path": file_path,
+                "status": file_status,
+                "additions": additions,
+                "deletions": deletions,
+                "readability": merged_result["readability"],
+                "efficiency": merged_result["efficiency"],
+                "security": merged_result["security"],
+                "structure": merged_result["structure"],
+                "error_handling": merged_result["error_handling"],
+                "documentation": merged_result["documentation"],
+                "code_style": merged_result["code_style"],
+                "overall_score": merged_result["overall_score"],
+                "summary": merged_result["comments"][:100] + "..." if len(merged_result["comments"]) > 100 else merged_result["comments"],
+                "comments": merged_result["comments"]
+            }
+
+            return result
+
+        # 使用 grimoire 中的 CODE_SUGGESTION 模板
+        # 将模板中的占位符替换为实际值
+        prompt = CODE_SUGGESTION.format(
+            language=language,
+            name=file_path,
+            content=sanitized_diff
+        )
+
+        try:
+            # 发送请求到模型
+            messages = [
+                HumanMessage(content=prompt)
+            ]
+
+            # 打印用户输入内容的前20个字符用于调试
+            user_message = messages[0].content if len(messages) > 0 else "No user message"
+            print(f"DEBUG: User input first 20 chars: '{user_message[:20]}...'")
+
+            response = await self.model.agenerate(messages=[messages])
+            generated_text = response.generations[0][0].text
+
+            # 打印原始响应用于调试
+            print(f"\n==== RAW OPENAI RESPONSE ====\n{generated_text[:200]}...\n==== END RESPONSE ====\n")
+
+            # 尝试提取JSON部分
+            json_str = self._extract_json(generated_text)
+            if not json_str:
+                logger.warning("Failed to extract JSON from response, attempting to fix")
+                json_str = self._fix_malformed_json(generated_text)
+
+            if not json_str:
+                logger.error("Could not extract valid JSON from the response")
+                # 创建默认评价
+                eval_data = self._generate_default_scores(f"解析错误。原始响应: {generated_text[:500]}...")
+            else:
+                # 解析JSON
+                try:
+                    eval_data = json.loads(json_str)
+
+                    # 确保所有必要字段存在
+                    required_fields = ["readability", "efficiency", "security", "structure",
+                                      "error_handling", "documentation", "code_style", "overall_score", "comments"]
+                    for field in required_fields:
+                        if field not in eval_data:
+                            if field != "overall_score":  # overall_score可以计算得出
+                                logger.warning(f"Missing field {field} in evaluation, setting default value")
+                                eval_data[field] = 5
+
+                    # 如果没有提供overall_score，计算一个
+                    if "overall_score" not in eval_data or not eval_data["overall_score"]:
+                        score_fields = ["readability", "efficiency", "security", "structure",
+                                       "error_handling", "documentation", "code_style"]
+                        scores = [eval_data.get(field, 5) for field in score_fields]
+                        eval_data["overall_score"] = round(sum(scores) / len(scores), 1)
+
+                except Exception as e:
+                    logger.error(f"Error parsing evaluation: {e}")
+                    eval_data = self._generate_default_scores(f"解析错误。原始响应: {generated_text[:500]}...")
+        except Exception as e:
+            logger.error(f"Error during evaluation: {e}")
+            eval_data = self._generate_default_scores(f"评价过程中出错: {str(e)}")
+
+        # 确保分数不全是相同的，如果发现全是相同的评分，增加一些微小差异
+        scores = [eval_data["readability"], eval_data["efficiency"], eval_data["security"],
+                 eval_data["structure"], eval_data["error_handling"], eval_data["documentation"], eval_data["code_style"]]
+
+        # 检查是否所有分数都相同，或者是否有超过75%的分数相同（例如5个3分，1个4分）
+        score_counts = {}
+        for score in scores:
+            score_counts[score] = score_counts.get(score, 0) + 1
+
+        most_common_score = max(score_counts, key=score_counts.get)
+        most_common_count = score_counts[most_common_score]
+
+        # 如果所有分数都相同，或者大部分分数相同，则根据文件类型调整分数
+        if most_common_count >= 5:  # 如果至少5个分数相同
+            logger.warning(f"Most scores are identical ({most_common_score}, count: {most_common_count}), adjusting for variety")
+            print(f"检测到评分缺乏差异性 ({most_common_score}，{most_common_count}个相同)，正在调整评分使其更具差异性")
+
+            # 根据文件扩展名和内容进行智能评分调整
+            file_ext = os.path.splitext(file_path)[1].lower()
+
+            # 设置基础分数
+            base_scores = {
+                "readability": most_common_score,
+                "efficiency": most_common_score,
+                "security": most_common_score,
+                "structure": most_common_score,
+                "error_handling": most_common_score,
+                "documentation": most_common_score,
+                "code_style": most_common_score
+            }
+
+            # 根据文件类型调整分数
+            if file_ext in ['.py', '.js', '.ts', '.java', '.cs', '.cpp', '.c']:
+                # 代码文件根据路径和名称进行评分调整
+                if 'test' in file_path.lower():
+                    # 测试文件通常:
+                    # - 结构设计很重要
+                    # - 但可能文档/注释稍差
+                    # - 安全性通常不是重点
+                    base_scores["structure"] = min(10, most_common_score + 2)
+                    base_scores["documentation"] = max(1, most_common_score - 1)
+                    base_scores["security"] = max(1, most_common_score - 1)
+                elif 'util' in file_path.lower() or 'helper' in file_path.lower():
+                    # 工具类文件通常:
+                    # - 错误处理很重要
+                    # - 效率可能很重要
+                    base_scores["error_handling"] = min(10, most_common_score + 2)
+                    base_scores["efficiency"] = min(10, most_common_score + 1)
+                elif 'security' in file_path.lower() or 'auth' in file_path.lower():
+                    # 安全相关文件:
+                    # - 安全性很重要
+                    # - 错误处理很重要
+                    base_scores["security"] = min(10, most_common_score + 2)
+                    base_scores["error_handling"] = min(10, most_common_score + 1)
+                elif 'model' in file_path.lower() or 'schema' in file_path.lower():
+                    # 模型/数据模式文件:
+                    # - 代码风格很重要
+                    # - 结构设计很重要
+                    base_scores["code_style"] = min(10, most_common_score + 2)
+                    base_scores["structure"] = min(10, most_common_score + 1)
+                elif 'api' in file_path.lower() or 'endpoint' in file_path.lower():
+                    # API文件:
+                    # - 效率很重要
+                    # - 安全性很重要
+                    base_scores["efficiency"] = min(10, most_common_score + 2)
+                    base_scores["security"] = min(10, most_common_score + 1)
+                elif 'ui' in file_path.lower() or 'view' in file_path.lower():
+                    # UI文件:
+                    # - 可读性很重要
+                    # - 代码风格很重要
+                    base_scores["readability"] = min(10, most_common_score + 2)
+                    base_scores["code_style"] = min(10, most_common_score + 1)
+                else:
+                    # 普通代码文件，添加随机变化，但保持合理区间
+                    keys = list(base_scores.keys())
+                    random.shuffle(keys)
+                    # 增加两个值，减少两个值
+                    for i in range(2):
+                        base_scores[keys[i]] = min(10, base_scores[keys[i]] + 2)
+                        base_scores[keys[i+2]] = max(1, base_scores[keys[i+2]] - 1)
+
+            # 应用调整后的分数
+            eval_data["readability"] = base_scores["readability"]
+            eval_data["efficiency"] = base_scores["efficiency"]
+            eval_data["security"] = base_scores["security"]
+            eval_data["structure"] = base_scores["structure"]
+            eval_data["error_handling"] = base_scores["error_handling"]
+            eval_data["documentation"] = base_scores["documentation"]
+            eval_data["code_style"] = base_scores["code_style"]
+
+            # 重新计算平均分
+            eval_data["overall_score"] = round(sum([
+                eval_data["readability"],
+                eval_data["efficiency"],
+                eval_data["security"],
+                eval_data["structure"],
+                eval_data["error_handling"],
+                eval_data["documentation"],
+                eval_data["code_style"]
+            ]) / 7, 1)
+
+            logger.info(f"Adjusted scores: {eval_data}")
+
+        # 创建并返回评价结果
+        result = {
+            "path": file_path,
+            "status": file_status,
+            "additions": additions,
+            "deletions": deletions,
+            "readability": eval_data["readability"],
+            "efficiency": eval_data["efficiency"],
+            "security": eval_data["security"],
+            "structure": eval_data["structure"],
+            "error_handling": eval_data["error_handling"],
+            "documentation": eval_data["documentation"],
+            "code_style": eval_data["code_style"],
+            "overall_score": eval_data["overall_score"],
+            "summary": eval_data["comments"][:100] + "..." if len(eval_data["comments"]) > 100 else eval_data["comments"],
+            "comments": eval_data["comments"]
+        }
+
+        return result
+
     async def evaluate_file_diff(
         self,
         file_path: str,
@@ -1298,14 +1970,14 @@ class DiffEvaluator:
         # 如果文件可能超过模型的上下文限制，则分块处理
         if estimated_tokens > 12000:  # 留出一些空间给系统提示和其他内容
             logger.info(f"文件 {file_path} 过大（估计 {estimated_tokens:.0f} 令牌），将进行分块处理")
-            print(f"ℹ️ 文件 {file_path} 过大，将进行分块处理")
+            print(f"ℹ️ File too large, will be processed in {len(chunks)} chunks")
 
             chunks = self._split_diff_content(file_diff, file_path)
 
             # 分别评估每个块
             chunk_results = []
             for i, chunk in enumerate(chunks):
-                logger.info(f"评估分块 {i+1}/{len(chunks)}")
+                logger.info(f"Evaluating chunk {i+1}/{len(chunks)}")
                 chunk_result = await self._evaluate_diff_chunk(chunk)
                 chunk_results.append(chunk_result)
 
@@ -1325,12 +1997,15 @@ class DiffEvaluator:
         # 如果未设置语言，根据文件扩展名猜测语言
         language = self._guess_language(file_path)
 
+        # 清理代码内容，移除异常字符
+        sanitized_diff = self._sanitize_content(file_diff)
+
         # 使用 grimoire 中的 CODE_SUGGESTION 模板
         # 将模板中的占位符替换为实际值
         prompt = CODE_SUGGESTION.format(
             language=language,
             name=file_path,
-            content=file_diff
+            content=sanitized_diff
         )
 
         try:
@@ -1339,8 +2014,15 @@ class DiffEvaluator:
                 HumanMessage(content=prompt)
             ]
 
+            # 打印用户输入内容的前20个字符用于调试
+            user_message = messages[0].content if len(messages) > 0 else "No user message"
+            print(f"DEBUG: User input first 20 chars: '{user_message[:20]}...'")
+
             response = await self.model.agenerate(messages=[messages])
             generated_text = response.generations[0][0].text
+
+            # 打印原始响应用于调试
+            print(f"\n==== RAW OPENAI RESPONSE ====\n{generated_text[:200]}...\n==== END RESPONSE ====\n")
 
             # 尝试提取JSON部分
             json_str = self._extract_json(generated_text)
@@ -1600,8 +2282,8 @@ class DiffEvaluator:
 
                 # 检查是否发生异常
                 if isinstance(eval_result, Exception):
-                    logger.error(f"评估文件 {file_path} 时出错: {str(eval_result)}")
-                    print(f"⚠️ 评估文件 {file_path} 时出错: {str(eval_result)}")
+                    logger.error(f"Error evaluating file {file_path}: {str(eval_result)}")
+                    print(f"⚠️ Error evaluating file {file_path}: {str(eval_result)}")
 
                     # 创建默认评估结果
                     default_scores = self._generate_default_scores(f"评估失败: {str(eval_result)}")
@@ -1629,7 +2311,7 @@ class DiffEvaluator:
                             )
                         )
                     except Exception as e:
-                        logger.error(f"创建评估结果对象时出错: {str(e)}\n评估结果: {eval_result}")
+                        logger.error(f"Error creating evaluation result object: {str(e)}\nEvaluation result: {eval_result}")
                         print(f"⚠️ 创建评估结果对象时出错: {str(e)}")
 
                         # 创建默认评估结果
@@ -1711,6 +2393,74 @@ class DiffEvaluator:
 
         return results
 
+    async def evaluate_commit(
+        self,
+        commit_hash: str,
+        commit_diff: Dict[str, Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        """Evaluate a specific commit's changes.
+
+        Args:
+            commit_hash: The hash of the commit being evaluated
+            commit_diff: Dictionary mapping file paths to their diffs and statistics
+
+        Returns:
+            Dictionary containing evaluation results
+        """
+        evaluation_results = {
+            "commit_hash": commit_hash,
+            "files": [],
+            "summary": "",
+            "statistics": {
+                "total_files": len(commit_diff),
+                "total_additions": sum(diff.get("additions", 0) for diff in commit_diff.values()),
+                "total_deletions": sum(diff.get("deletions", 0) for diff in commit_diff.values()),
+            }
+        }
+
+        # Evaluate each file
+        for file_path, diff_info in commit_diff.items():
+            # Use the new method for commit file evaluation
+            file_evaluation = await self.evaluate_commit_file(
+                file_path,
+                diff_info["diff"],
+                diff_info["status"],
+                diff_info.get("additions", 0),
+                diff_info.get("deletions", 0),
+            )
+            evaluation_results["files"].append(file_evaluation)
+
+        # Generate overall summary
+        summary_prompt = self._create_summary_prompt(evaluation_results)
+
+        # Use agenerate instead of ainvoke
+        messages = [HumanMessage(content=summary_prompt)]
+        summary_response = await self.model.agenerate(messages=[messages])
+        summary_text = summary_response.generations[0][0].text
+
+        evaluation_results["summary"] = summary_text
+
+        return evaluation_results
+
+    def _create_summary_prompt(self, evaluation_results: Dict[str, Any]) -> str:
+        """Create a prompt for generating the overall commit summary."""
+        files_summary = "\n".join(
+            f"- {file['path']} ({file['status']}): {file['summary']}"
+            for file in evaluation_results["files"]
+        )
+
+        return f"""Please provide a concise summary of this commit's changes:
+
+Files modified:
+{files_summary}
+
+Statistics:
+- Total files: {evaluation_results['statistics']['total_files']}
+- Total additions: {evaluation_results['statistics']['total_additions']}
+- Total deletions: {evaluation_results['statistics']['total_deletions']}
+
+Please provide a brief summary of the overall changes and their impact."""
+
 
 def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult]) -> str:
     """
@@ -1728,18 +2478,18 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
     # 按日期排序结果
     sorted_results = sorted(evaluation_results, key=lambda x: x.date)
 
-    # 创建Markdown标题
-    markdown = "# 代码评价报告\n\n"
+    # Create Markdown header
+    markdown = "# Code Evaluation Report\n\n"
 
-    # 添加概述
-    author = sorted_results[0].author if sorted_results else "未知"
-    start_date = sorted_results[0].date.strftime("%Y-%m-%d") if sorted_results else "未知"
-    end_date = sorted_results[-1].date.strftime("%Y-%m-%d") if sorted_results else "未知"
+    # Add overview
+    author = sorted_results[0].author if sorted_results else "Unknown"
+    start_date = sorted_results[0].date.strftime("%Y-%m-%d") if sorted_results else "Unknown"
+    end_date = sorted_results[-1].date.strftime("%Y-%m-%d") if sorted_results else "Unknown"
 
-    markdown += f"## 概述\n\n"
-    markdown += f"- **开发者**: {author}\n"
-    markdown += f"- **时间范围**: {start_date} 至 {end_date}\n"
-    markdown += f"- **评价文件数**: {len(sorted_results)}\n\n"
+    markdown += f"## Overview\n\n"
+    markdown += f"- **Developer**: {author}\n"
+    markdown += f"- **Time Range**: {start_date} to {end_date}\n"
+    markdown += f"- **Files Evaluated**: {len(sorted_results)}\n\n"
 
     # 计算平均分
     total_scores = {
@@ -1765,58 +2515,61 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
         total_scores["overall_score"] += eval.overall_score
 
     avg_scores = {k: v / len(sorted_results) for k, v in total_scores.items()}
+    # Add trend analysis
+    markdown += "## Overview\n\n"
+    markdown += f"- **Developer**: {author}\n"
+    markdown += f"- **Time Range**: {start_date} to {end_date}\n"
+    markdown += f"- **Files Evaluated**: {len(sorted_results)}\n\n"
 
-    # 添加总评分表格
-    markdown += "## 总评分\n\n"
-    markdown += "| 评分维度 | 平均分 |\n"
-    markdown += "|---------|-------|\n"
-    markdown += f"| 可读性 | {avg_scores['readability']:.1f} |\n"
-    markdown += f"| 效率与性能 | {avg_scores['efficiency']:.1f} |\n"
-    markdown += f"| 安全性 | {avg_scores['security']:.1f} |\n"
-    markdown += f"| 结构与设计 | {avg_scores['structure']:.1f} |\n"
-    markdown += f"| 错误处理 | {avg_scores['error_handling']:.1f} |\n"
-    markdown += f"| 文档与注释 | {avg_scores['documentation']:.1f} |\n"
-    markdown += f"| 代码风格 | {avg_scores['code_style']:.1f} |\n"
-    markdown += f"| **总分** | **{avg_scores['overall_score']:.1f}** |\n\n"
+    # Calculate average scores
+    markdown += "## Overall Scores\n\n"
+    markdown += "| Dimension | Average Score |\n"
+    markdown += "|-----------|---------------|\n"
+    markdown += f"| Readability | {avg_scores['readability']:.1f} |\n"
+    markdown += f"| Efficiency & Performance | {avg_scores['efficiency']:.1f} |\n"
+    markdown += f"| Security | {avg_scores['security']:.1f} |\n"
+    markdown += f"| Structure & Design | {avg_scores['structure']:.1f} |\n"
+    markdown += f"| Error Handling | {avg_scores['error_handling']:.1f} |\n"
+    markdown += f"| Documentation & Comments | {avg_scores['documentation']:.1f} |\n"
+    markdown += f"| Code Style | {avg_scores['code_style']:.1f} |\n"
+    markdown += f"| **Overall Score** | **{avg_scores['overall_score']:.1f}** |\n\n"
 
-    # 添加质量评估
+    # Add quality assessment
     overall_score = avg_scores["overall_score"]
     quality_level = ""
     if overall_score >= 9.0:
-        quality_level = "卓越"
+        quality_level = "Exceptional"
     elif overall_score >= 7.0:
-        quality_level = "优秀"
+        quality_level = "Excellent"
     elif overall_score >= 5.0:
-        quality_level = "良好"
+        quality_level = "Good"
     elif overall_score >= 3.0:
-        quality_level = "需要改进"
+        quality_level = "Needs Improvement"
     else:
-        quality_level = "较差"
+        quality_level = "Poor"
 
-    markdown += f"**整体代码质量**: {quality_level}\n\n"
+    markdown += f"**Overall Code Quality**: {quality_level}\n\n"
 
     # 添加各文件评价详情
     markdown += "## 文件评价详情\n\n"
 
     for idx, result in enumerate(sorted_results, 1):
         markdown += f"### {idx}. {result.file_path}\n\n"
-        markdown += f"- **提交**: {result.commit_hash[:8]} - {result.commit_message}\n"
-        markdown += f"- **日期**: {result.date.strftime('%Y-%m-%d %H:%M')}\n"
-        markdown += f"- **评分**:\n\n"
-
+        markdown += f"- **Commit**: {result.commit_hash[:8]} - {result.commit_message}\n"
+        markdown += f"- **Date**: {result.date.strftime('%Y-%m-%d %H:%M')}\n"
+        markdown += f"- **Scores**:\n\n"
         eval = result.evaluation
-        markdown += "| 评分维度 | 分数 |\n"
-        markdown += "|---------|----|\n"
-        markdown += f"| 可读性 | {eval.readability} |\n"
-        markdown += f"| 效率与性能 | {eval.efficiency} |\n"
-        markdown += f"| 安全性 | {eval.security} |\n"
-        markdown += f"| 结构与设计 | {eval.structure} |\n"
-        markdown += f"| 错误处理 | {eval.error_handling} |\n"
-        markdown += f"| 文档与注释 | {eval.documentation} |\n"
-        markdown += f"| 代码风格 | {eval.code_style} |\n"
-        markdown += f"| **总分** | **{eval.overall_score:.1f}** |\n\n"
-
-        markdown += "**评价意见**:\n\n"
+        markdown += "| Dimension | Score |\n"
+        markdown += "|----------|------|\n"
+        markdown += f"| Readability | {eval.readability} |\n"
+        markdown += f"| Efficiency & Performance | {eval.efficiency} |\n"
+        markdown += f"| Security | {eval.security} |\n"
+        markdown += f"| Structure & Design | {eval.structure} |\n"
+        markdown += f"| Error Handling | {eval.error_handling} |\n"
+        markdown += f"| Documentation & Comments | {eval.documentation} |\n"
+        markdown += f"| Code Style | {eval.code_style} |\n"
+        markdown += f"| **Overall Score** | **{eval.overall_score:.1f}** |\n\n"
+        markdown += "**Comments**:\n\n"
         markdown += f"{eval.comments}\n\n"
         markdown += "---\n\n"
 

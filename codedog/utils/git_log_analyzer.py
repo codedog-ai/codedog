@@ -3,7 +3,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any
 
 
 @dataclass
@@ -348,3 +348,101 @@ def calculate_total_code_stats(commits: List[CommitInfo]) -> Dict[str, int]:
         "total_effective_lines": total_effective,
         "total_files": total_files
     }
+
+
+def get_commit_diff(
+    commit_hash: str,
+    repo_path: Optional[str] = None,
+    include_extensions: Optional[List[str]] = None,
+    exclude_extensions: Optional[List[str]] = None,
+) -> Dict[str, Dict[str, Any]]:
+    """Get the diff for a specific commit.
+
+    Args:
+        commit_hash: The hash of the commit to analyze
+        repo_path: Path to the git repository (defaults to current directory)
+        include_extensions: List of file extensions to include (e.g. ['.py', '.js'])
+        exclude_extensions: List of file extensions to exclude (e.g. ['.md', '.txt'])
+
+    Returns:
+        Dictionary mapping file paths to their diffs and statistics
+    """
+    if repo_path is None:
+        repo_path = os.getcwd()
+
+    # Verify repository path exists
+    if not os.path.exists(repo_path):
+        raise FileNotFoundError(f"Repository path does not exist: {repo_path}")
+
+    # Verify it's a git repository
+    git_dir = os.path.join(repo_path, ".git")
+    if not os.path.exists(git_dir):
+        raise ValueError(f"Not a git repository: {repo_path}")
+
+    # Get commit diff
+    cmd = ["git", "show", "--name-status", "--numstat", "--pretty=format:", commit_hash]
+    result = subprocess.run(cmd, cwd=repo_path, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        raise ValueError(f"Failed to get commit diff: {result.stderr}")
+
+    # Parse the diff output
+    file_diffs = {}
+    current_file = None
+    current_diff = []
+
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+
+        # Check if line starts with a file status (e.g., "M\tfile.py")
+        if line.startswith(("A\t", "M\t", "D\t")):
+            if current_file and current_diff:
+                file_diffs[current_file] = {
+                    "diff": "\n".join(current_diff),
+                    "status": current_status,
+                    "additions": current_additions,
+                    "deletions": current_deletions,
+                }
+            current_diff = []
+            current_status = line[0]
+            current_file = line[2:]
+            current_additions = 0
+            current_deletions = 0
+
+        # Parse numstat line (e.g., "3\t2\tfile.py")
+        elif line[0].isdigit():
+            additions, deletions, filename = line.split("\t")
+            current_additions = int(additions)
+            current_deletions = int(deletions)
+
+        # Add to current diff
+        else:
+            current_diff.append(line)
+
+    # Add the last file
+    if current_file and current_diff:
+        file_diffs[current_file] = {
+            "diff": "\n".join(current_diff),
+            "status": current_status,
+            "additions": current_additions,
+            "deletions": current_deletions,
+        }
+
+    # Filter by file extensions
+    if include_extensions or exclude_extensions:
+        filtered_diffs = {}
+        for file_path, diff in file_diffs.items():
+            file_ext = os.path.splitext(file_path)[1].lower()
+            
+            # Skip if extension is in exclude list
+            if exclude_extensions and file_ext in exclude_extensions:
+                continue
+                
+            # Include if extension is in include list or no include list specified
+            if not include_extensions or file_ext in include_extensions:
+                filtered_diffs[file_path] = diff
+                
+        file_diffs = filtered_diffs
+
+    return file_diffs
