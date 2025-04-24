@@ -18,12 +18,11 @@ from langchain_community.callbacks.manager import get_openai_callback
 
 from codedog.actors.reporters.pull_request import PullRequestReporter
 from codedog.chains import CodeReviewChain, PRSummaryChain
-from codedog.models import CommitInfo
 from codedog.retrievers import GithubRetriever, GitlabRetriever
 from codedog.utils.langchain_utils import load_model_by_name
 from codedog.utils.email_utils import send_report_email
 from codedog.utils.git_hooks import install_git_hooks
-from codedog.utils.git_log_analyzer import get_file_diffs_by_timeframe, get_commit_diff
+from codedog.utils.git_log_analyzer import get_file_diffs_by_timeframe, get_commit_diff, CommitInfo
 from codedog.utils.code_evaluator import DiffEvaluator, generate_evaluation_markdown
 
 
