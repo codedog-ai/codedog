@@ -697,6 +697,9 @@ class DiffEvaluator:
     def _validate_scores(self, result: Dict[str, Any]) -> Dict[str, Any]:
         """Validate and normalize scores with enhanced format handling."""
         try:
+            # 记录原始结果
+            logger.info(f"Validating scores from result: {result}")
+
             # 检查并处理不同格式的评分结果
             normalized_result = {}
 
@@ -705,6 +708,13 @@ class DiffEvaluator:
                 "readability", "efficiency", "security", "structure",
                 "error_handling", "documentation", "code_style", "overall_score", "comments", "estimated_hours"
             ]
+
+            # 记录是否所有字段都存在
+            missing_fields = [field for field in required_fields if field not in result]
+            if missing_fields:
+                logger.warning(f"Missing fields in result: {missing_fields}")
+            else:
+                logger.info("All required fields are present in the result")
 
             # 处理可能的不同格式
             # 格式1: {"readability": 8, "efficiency": 7, ...}
@@ -910,7 +920,14 @@ class DiffEvaluator:
 
     def _generate_default_scores(self, error_message: str) -> Dict[str, Any]:
         """Generate default scores when evaluation fails."""
-        return {
+        logger.warning(f"Generating default scores due to error: {error_message[:200]}...")
+
+        # 记录调用栈，以便了解是从哪里调用的
+        import traceback
+        stack_trace = traceback.format_stack()
+        logger.debug(f"Default scores generated from:\n{''.join(stack_trace[-5:-1])}")
+
+        default_scores = {
             "readability": 5,
             "efficiency": 5,
             "security": 5,
@@ -922,6 +939,9 @@ class DiffEvaluator:
             "estimated_hours": 0.0,
             "comments": error_message
         }
+
+        logger.info(f"Default scores generated: {default_scores}")
+        return default_scores
 
     def _estimate_default_hours(self, additions: int, deletions: int) -> float:
         """Estimate default working hours based on additions and deletions.
@@ -1120,8 +1140,12 @@ class DiffEvaluator:
             return ""
 
         # 打印原始文本的类型和长度
+        logger.info(f"Response type: {type(text)}, length: {len(text)}")
         print(f"DEBUG: Response type: {type(text)}, length: {len(text)}")
         print(f"DEBUG: First 100 chars: '{text[:100]}'")
+
+        # 记录完整响应用于调试
+        logger.debug(f"Complete model response: {text}")
 
         # 检查是否包含无法评估的提示（如Base64编码内容）
         unevaluable_patterns = [
@@ -1276,6 +1300,7 @@ class DiffEvaluator:
                 "estimated_hours": 0.0,
                 "comments": "API返回空响应，显示默认分数。"
             }
+            logger.warning("Returning default scores due to empty response")
             return json.dumps(default_scores)
 
         # 检查是否是错误消息而不是JSON
@@ -1679,10 +1704,19 @@ class DiffEvaluator:
                     retry_count += 1
                     if retry_count >= 2:  # 只重试两次
                         logger.error(f"DeepSeek API error after 2 retries, abandoning evaluation: {error_message}")
-                        return self._generate_default_scores(f"DeepSeek API错误，放弃评估: {error_message}")
+                        logger.error(f"Original error: {e}")
+                        logger.error(f"Last response (if any): {generated_text[:500] if generated_text else 'No response'}")
+
+                        # 创建一个详细的错误消息
+                        error_detail = f"DeepSeek API错误，放弃评估: {error_message}\n"
+                        error_detail += f"原始错误: {e}\n"
+                        error_detail += f"最后响应: {generated_text[:200] if generated_text else '无响应'}"
+
+                        return self._generate_default_scores(error_detail)
                     # 使用较短的等待时间
                     wait_time = 3  # 固定3秒等待时间
                     logger.warning(f"DeepSeek API error, retrying in {wait_time}s (attempt {retry_count}/2)")
+                    logger.warning(f"Error details: {error_message}")
                     await asyncio.sleep(wait_time)
                 else:
                     # 其他错误直接返回
