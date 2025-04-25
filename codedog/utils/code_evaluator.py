@@ -47,6 +47,7 @@ class CodeEvaluation(BaseModel):
     documentation: int = Field(description="Documentation and comments score (1-10)", ge=1, le=10)
     code_style: int = Field(description="Code style score (1-10)", ge=1, le=10)
     overall_score: float = Field(description="Overall score (1-10)", ge=1, le=10)
+    estimated_hours: float = Field(description="Estimated working hours for an experienced programmer (5-10+ years)", default=0.0)
     comments: str = Field(description="Evaluation comments and improvement suggestions")
 
     @classmethod
@@ -619,6 +620,9 @@ class DiffEvaluator:
                     if language_key in LANGUAGE_SPECIFIC_CONSIDERATIONS:
                         review_prompt += "\n\n" + LANGUAGE_SPECIFIC_CONSIDERATIONS[language_key]
 
+                    # 添加工作时间估计请求
+                    review_prompt += "\n\nIn addition to the code evaluation, please also estimate how many effective working hours an experienced programmer (5-10+ years) would need to complete these code changes. Include this estimate in your JSON response as 'estimated_hours'."
+
                     # 添加JSON输出指令
                     review_prompt += "\n\n" + self.json_output_instruction
 
@@ -699,7 +703,7 @@ class DiffEvaluator:
             # 定义所有必需的字段
             required_fields = [
                 "readability", "efficiency", "security", "structure",
-                "error_handling", "documentation", "code_style", "overall_score", "comments"
+                "error_handling", "documentation", "code_style", "overall_score", "comments", "estimated_hours"
             ]
 
             # 处理可能的不同格式
@@ -915,8 +919,41 @@ class DiffEvaluator:
             "documentation": 5,
             "code_style": 5,
             "overall_score": 5.0,
+            "estimated_hours": 0.0,
             "comments": error_message
         }
+
+    def _estimate_default_hours(self, additions: int, deletions: int) -> float:
+        """Estimate default working hours based on additions and deletions.
+
+        Args:
+            additions: Number of added lines
+            deletions: Number of deleted lines
+
+        Returns:
+            float: Estimated working hours
+        """
+        # Base calculation: 1 hour per 100 lines of code (additions + deletions)
+        total_changes = additions + deletions
+
+        # Base time: minimum 0.25 hours (15 minutes) for any change
+        base_time = 0.25
+
+        if total_changes <= 10:
+            # Very small changes: 15-30 minutes
+            return base_time
+        elif total_changes <= 50:
+            # Small changes: 30 minutes to 1 hour
+            return base_time + (total_changes - 10) * 0.015  # ~0.6 hours for 50 lines
+        elif total_changes <= 200:
+            # Medium changes: 1-3 hours
+            return 0.6 + (total_changes - 50) * 0.016  # ~3 hours for 200 lines
+        elif total_changes <= 500:
+            # Large changes: 3-6 hours
+            return 3.0 + (total_changes - 200) * 0.01  # ~6 hours for 500 lines
+        else:
+            # Very large changes: 6+ hours
+            return 6.0 + (total_changes - 500) * 0.008  # +0.8 hours per 100 lines beyond 500
 
     def _guess_language(self, file_path: str) -> str:
         """根据文件扩展名猜测编程语言。
@@ -1236,6 +1273,7 @@ class DiffEvaluator:
                 "documentation": 5,
                 "code_style": 5,
                 "overall_score": 5.0,
+                "estimated_hours": 0.0,
                 "comments": "API返回空响应，显示默认分数。"
             }
             return json.dumps(default_scores)
@@ -1263,6 +1301,7 @@ class DiffEvaluator:
                     "documentation": 5,
                     "code_style": 5,
                     "overall_score": 5.0,
+                    "estimated_hours": 0.0,
                     "comments": f"API返回错误消息: {json_str[:200]}..."
                 }
                 return json.dumps(default_scores)
@@ -1401,6 +1440,7 @@ class DiffEvaluator:
                     "documentation": 5,
                     "code_style": 5,
                     "overall_score": 5.0,
+                    "estimated_hours": 0.0,
                     "comments": f"JSON解析错误，显示默认分数。错误: {str(e)}"
                 }
                 return json.dumps(default_scores)
@@ -1523,6 +1563,7 @@ class DiffEvaluator:
                             "documentation": 5,
                             "code_style": 5,
                             "overall_score": 5.0,
+                            "estimated_hours": 0.25,  # Minimum 15 minutes for any change
                             "comments": f"无法评估代码，因为代码块为空或太短: '{chunk}'"
                         }
                         return default_scores
@@ -1539,6 +1580,7 @@ class DiffEvaluator:
                             "documentation": 5,
                             "code_style": 5,
                             "overall_score": 5.0,
+                            "estimated_hours": 0.25,  # Minimum 15 minutes for any change
                             "comments": f"无法评估代码，因为内容可能是Base64编码: '{chunk[:50]}...'"
                         }
                         return default_scores
@@ -1677,6 +1719,12 @@ class DiffEvaluator:
         overall_scores = [result.get("overall_score", 5.0) for result in chunk_results]
         merged_scores["overall_score"] = round(sum(overall_scores) / len(overall_scores), 1)
 
+        # 计算估计工作时间 - 累加所有块的工作时间
+        estimated_hours = sum(result.get("estimated_hours", 0.0) for result in chunk_results)
+        # 应用一个折扣因子，因为并行处理多个块通常比顺序处理更有效率
+        discount_factor = 0.8 if len(chunk_results) > 1 else 1.0
+        merged_scores["estimated_hours"] = round(estimated_hours * discount_factor, 1)
+
         # 合并评价意见
         comments = []
         for i, result in enumerate(chunk_results):
@@ -1713,33 +1761,45 @@ class DiffEvaluator:
             deletions: 删除的行数
 
         Returns:
-            Dict[str, Any]: 文件评价结果字典
+            Dict[str, Any]: 文件评价结果字典，包含估计的工作时间
         """
+        logger.info(f"Evaluating file: {file_path} (status: {file_status}, additions: {additions}, deletions: {deletions})")
+        logger.debug(f"File diff size: {len(file_diff)} characters")
         # 如果未设置语言，根据文件扩展名猜测语言
         language = self._guess_language(file_path)
+        logger.info(f"Detected language for {file_path}: {language}")
 
         # 清理代码内容，移除异常字符
         sanitized_diff = self._sanitize_content(file_diff)
+        logger.debug(f"Sanitized diff size: {len(sanitized_diff)} characters")
 
         # 检查文件大小，如果过大则分块处理
         words = sanitized_diff.split()
         estimated_tokens = len(words) * 1.2
+        logger.info(f"Estimated tokens for {file_path}: {estimated_tokens:.0f}")
 
         # 如果文件可能超过模型的上下文限制，则分块处理
         if estimated_tokens > 12000:  # 留出一些空间给系统提示和其他内容
-            logger.info(f"文件 {file_path} 过大（估计 {estimated_tokens:.0f} 令牌），将进行分块处理")
+            logger.info(f"File {file_path} is too large (estimated {estimated_tokens:.0f} tokens), will be processed in chunks")
             chunks = self._split_diff_content(sanitized_diff)
+            logger.info(f"Split file into {len(chunks)} chunks")
             print(f"ℹ️ File too large, will be processed in {len(chunks)} chunks")
 
             # 分别评估每个块
             chunk_results = []
             for i, chunk in enumerate(chunks):
-                logger.info(f"Evaluating chunk {i+1}/{len(chunks)}")
+                logger.info(f"Evaluating chunk {i+1}/{len(chunks)} of {file_path}")
+                logger.debug(f"Chunk {i+1} size: {len(chunk)} characters, ~{len(chunk.split())} words")
+                start_time = time.time()
                 chunk_result = await self._evaluate_diff_chunk(chunk)
+                end_time = time.time()
+                logger.info(f"Chunk {i+1} evaluation completed in {end_time - start_time:.2f} seconds")
                 chunk_results.append(chunk_result)
 
             # 合并结果
+            logger.info(f"Merging {len(chunk_results)} chunk results for {file_path}")
             merged_result = self._merge_chunk_results(chunk_results)
+            logger.info(f"Merged result: overall score {merged_result.get('overall_score', 'N/A')}")
 
             # 添加文件信息
             result = {
@@ -1768,6 +1828,8 @@ class DiffEvaluator:
             name=file_path,
             content=sanitized_diff
         )
+        logger.info(f"Preparing prompt for {file_path} with language: {language}")
+        logger.debug(f"Prompt size: {len(prompt)} characters")
 
         try:
             # 发送请求到模型
@@ -1777,48 +1839,86 @@ class DiffEvaluator:
 
             # 打印用户输入内容的前20个字符用于调试
             user_message = messages[0].content if len(messages) > 0 else "No user message"
+            logger.debug(f"User input first 20 chars: '{user_message[:20]}...'")
             print(f"DEBUG: User input first 20 chars: '{user_message[:20]}...'")
 
+            logger.info(f"Sending request to model for {file_path}")
+            start_time = time.time()
             response = await self.model.agenerate(messages=[messages])
+            end_time = time.time()
+            logger.info(f"Model response received in {end_time - start_time:.2f} seconds")
+
             generated_text = response.generations[0][0].text
+            logger.debug(f"Response size: {len(generated_text)} characters")
 
             # 打印原始响应用于调试
+            logger.debug(f"Raw model response (first 200 chars): {generated_text[:200]}...")
             print(f"\n==== RAW OPENAI RESPONSE ====\n{generated_text[:200]}...\n==== END RESPONSE ====\n")
 
             # 尝试提取JSON部分
+            logger.info(f"Extracting JSON from response for {file_path}")
             json_str = self._extract_json(generated_text)
             if not json_str:
-                logger.warning("Failed to extract JSON from response, attempting to fix")
+                logger.warning(f"Failed to extract JSON from response for {file_path}, attempting to fix")
                 json_str = self._fix_malformed_json(generated_text)
+                if json_str:
+                    logger.info("Successfully fixed malformed JSON")
+                else:
+                    logger.warning("Failed to fix malformed JSON")
 
             if not json_str:
-                logger.error("Could not extract valid JSON from the response")
+                logger.error(f"Could not extract valid JSON from the response for {file_path}")
                 # 创建默认评价
+                logger.info("Generating default scores")
                 eval_data = self._generate_default_scores(f"解析错误。原始响应: {generated_text[:500]}...")
+                logger.debug(f"Default scores: {eval_data}")
             else:
                 # 解析JSON
                 try:
+                    logger.info(f"Parsing JSON for {file_path}")
+                    logger.debug(f"JSON string: {json_str[:200]}...")
                     eval_data = json.loads(json_str)
+                    logger.info(f"Successfully parsed JSON for {file_path}")
 
                     # 确保所有必要字段存在
                     required_fields = ["readability", "efficiency", "security", "structure",
                                       "error_handling", "documentation", "code_style", "overall_score", "comments"]
+                    missing_fields = []
                     for field in required_fields:
                         if field not in eval_data:
                             if field != "overall_score":  # overall_score可以计算得出
-                                logger.warning(f"Missing field {field} in evaluation, setting default value")
+                                missing_fields.append(field)
+                                logger.warning(f"Missing field {field} in evaluation for {file_path}, setting default value")
                                 eval_data[field] = 5
+
+                    if missing_fields:
+                        logger.warning(f"Missing fields in evaluation for {file_path}: {', '.join(missing_fields)}")
 
                     # 如果没有提供overall_score，计算一个
                     if "overall_score" not in eval_data or not eval_data["overall_score"]:
+                        logger.info(f"Calculating overall score for {file_path}")
                         score_fields = ["readability", "efficiency", "security", "structure",
                                        "error_handling", "documentation", "code_style"]
                         scores = [eval_data.get(field, 5) for field in score_fields]
                         eval_data["overall_score"] = round(sum(scores) / len(scores), 1)
+                        logger.info(f"Calculated overall score: {eval_data['overall_score']}")
+
+                    # Log all scores
+                    logger.info(f"Evaluation scores for {file_path}: " +
+                               f"readability={eval_data.get('readability', 'N/A')}, " +
+                               f"efficiency={eval_data.get('efficiency', 'N/A')}, " +
+                               f"security={eval_data.get('security', 'N/A')}, " +
+                               f"structure={eval_data.get('structure', 'N/A')}, " +
+                               f"error_handling={eval_data.get('error_handling', 'N/A')}, " +
+                               f"documentation={eval_data.get('documentation', 'N/A')}, " +
+                               f"code_style={eval_data.get('code_style', 'N/A')}, " +
+                               f"overall_score={eval_data.get('overall_score', 'N/A')}")
 
                 except Exception as e:
-                    logger.error(f"Error parsing evaluation: {e}")
+                    logger.error(f"Error parsing evaluation for {file_path}: {e}", exc_info=True)
+                    logger.debug(f"JSON string that caused the error: {json_str[:500]}...")
                     eval_data = self._generate_default_scores(f"解析错误。原始响应: {generated_text[:500]}...")
+                    logger.debug(f"Default scores: {eval_data}")
         except Exception as e:
             logger.error(f"Error during evaluation: {e}")
             eval_data = self._generate_default_scores(f"评价过程中出错: {str(e)}")
@@ -1926,6 +2026,14 @@ class DiffEvaluator:
 
             logger.info(f"Adjusted scores: {eval_data}")
 
+        # Calculate estimated hours if not provided
+        if "estimated_hours" not in eval_data or not eval_data["estimated_hours"]:
+            estimated_hours = self._estimate_default_hours(additions, deletions)
+            logger.info(f"Calculated default estimated hours for {file_path}: {estimated_hours}")
+        else:
+            estimated_hours = eval_data["estimated_hours"]
+            logger.info(f"Using model-provided estimated hours for {file_path}: {estimated_hours}")
+
         # 创建并返回评价结果
         result = {
             "path": file_path,
@@ -1940,6 +2048,7 @@ class DiffEvaluator:
             "documentation": eval_data["documentation"],
             "code_style": eval_data["code_style"],
             "overall_score": eval_data["overall_score"],
+            "estimated_hours": estimated_hours,
             "summary": eval_data["comments"][:100] + "..." if len(eval_data["comments"]) > 100 else eval_data["comments"],
             "comments": eval_data["comments"]
         }
@@ -2008,6 +2117,9 @@ class DiffEvaluator:
             content=sanitized_diff
         )
 
+        # Add request for estimated working hours
+        prompt += "\n\nIn addition to the code evaluation, please also estimate how many effective working hours an experienced programmer (5-10+ years) would need to complete these code changes. Include this estimate in your JSON response as 'estimated_hours'."
+
         try:
             # 发送请求到模型
             messages = [
@@ -2065,10 +2177,23 @@ class DiffEvaluator:
                         scores = [eval_data.get(field, 5) for field in score_fields]
                         eval_data["overall_score"] = round(sum(scores) / len(scores), 1)
 
+                    # Calculate estimated hours if not provided
+                    if "estimated_hours" not in eval_data or not eval_data["estimated_hours"]:
+                        # Get additions and deletions from the diff
+                        additions = len(re.findall(r'^\+', file_diff, re.MULTILINE))
+                        deletions = len(re.findall(r'^-', file_diff, re.MULTILINE))
+                        eval_data["estimated_hours"] = self._estimate_default_hours(additions, deletions)
+                        logger.info(f"Calculated default estimated hours: {eval_data['estimated_hours']}")
+
                     # 创建评价对象
                     evaluation = CodeEvaluation(**eval_data)
                 except Exception as e:
                     logger.error(f"Error parsing evaluation: {e}")
+                    # Get additions and deletions from the diff
+                    additions = len(re.findall(r'^\+', file_diff, re.MULTILINE))
+                    deletions = len(re.findall(r'^-', file_diff, re.MULTILINE))
+                    estimated_hours = self._estimate_default_hours(additions, deletions)
+
                     evaluation = CodeEvaluation(
                         readability=5,
                         efficiency=5,
@@ -2078,10 +2203,16 @@ class DiffEvaluator:
                         documentation=5,
                         code_style=5,
                         overall_score=5.0,
+                        estimated_hours=estimated_hours,
                         comments=f"解析错误。原始响应: {generated_text[:500]}..."
                     )
         except Exception as e:
             logger.error(f"Error during evaluation: {e}")
+            # Get additions and deletions from the diff
+            additions = len(re.findall(r'^\+', file_diff, re.MULTILINE))
+            deletions = len(re.findall(r'^-', file_diff, re.MULTILINE))
+            estimated_hours = self._estimate_default_hours(additions, deletions)
+
             evaluation = CodeEvaluation(
                 readability=5,
                 efficiency=5,
@@ -2091,6 +2222,7 @@ class DiffEvaluator:
                 documentation=5,
                 code_style=5,
                 overall_score=5.0,
+                estimated_hours=estimated_hours,
                 comments=f"评价过程中出错: {str(e)}"
             )
 
@@ -2393,6 +2525,190 @@ class DiffEvaluator:
 
         return results
 
+    async def evaluate_commit_as_whole(
+        self,
+        commit_hash: str,
+        commit_diff: Dict[str, Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        """Evaluate all diffs in a commit together as a whole.
+
+        This method combines all file diffs into a single evaluation to get a holistic view
+        of the commit and estimate the effective working hours needed.
+
+        Args:
+            commit_hash: The hash of the commit being evaluated
+            commit_diff: Dictionary mapping file paths to their diffs and statistics
+
+        Returns:
+            Dictionary containing evaluation results including estimated working hours
+        """
+        logger.info(f"Starting whole-commit evaluation for {commit_hash}")
+
+        # Combine all diffs into a single string with file headers
+        combined_diff = ""
+        total_additions = 0
+        total_deletions = 0
+
+        for file_path, diff_info in commit_diff.items():
+            file_diff = diff_info["diff"]
+            status = diff_info["status"]
+            additions = diff_info.get("additions", 0)
+            deletions = diff_info.get("deletions", 0)
+
+            total_additions += additions
+            total_deletions += deletions
+
+            # Add file header
+            combined_diff += f"\n\n### File: {file_path} (Status: {status}, +{additions}, -{deletions})\n\n"
+            combined_diff += file_diff
+
+        logger.info(f"Combined {len(commit_diff)} files into a single evaluation")
+        logger.debug(f"Combined diff size: {len(combined_diff)} characters")
+
+        # Clean the combined diff content
+        sanitized_diff = self._sanitize_content(combined_diff)
+
+        # Check if the combined diff is too large
+        words = sanitized_diff.split()
+        estimated_tokens = len(words) * 1.2
+        logger.info(f"Estimated tokens for combined diff: {estimated_tokens:.0f}")
+
+        # Create a prompt for evaluating the entire commit
+        language = "multiple"  # Since we're evaluating multiple files
+
+        # Create a prompt that specifically asks for working hours estimation
+        prompt = f"""Act as a senior code reviewer with 10+ years of experience. I will provide you with a complete diff of a commit that includes multiple files.
+
+Please analyze the entire commit as a whole and provide:
+
+1. A comprehensive evaluation of the code changes
+2. An estimate of how many effective working hours an experienced programmer (5-10+ years) would need to complete these code changes
+3. Scores for the following aspects (1-10 scale):
+   - Readability
+   - Efficiency
+   - Security
+   - Structure
+   - Error Handling
+   - Documentation
+   - Code Style
+   - Overall Score
+
+Here's the complete diff for commit {commit_hash}:
+
+```
+{sanitized_diff}
+```
+
+Please format your response as JSON with the following fields:
+- readability: (score 1-10)
+- efficiency: (score 1-10)
+- security: (score 1-10)
+- structure: (score 1-10)
+- error_handling: (score 1-10)
+- documentation: (score 1-10)
+- code_style: (score 1-10)
+- overall_score: (score 1-10)
+- estimated_hours: (number of hours)
+- comments: (your detailed analysis)
+"""
+
+        logger.info("Preparing to evaluate combined diff")
+        logger.debug(f"Prompt size: {len(prompt)} characters")
+
+        try:
+            # Send request to model
+            messages = [HumanMessage(content=prompt)]
+
+            logger.info("Sending request to model for combined diff evaluation")
+            start_time = time.time()
+            response = await self.model.agenerate(messages=[messages])
+            end_time = time.time()
+            logger.info(f"Model response received in {end_time - start_time:.2f} seconds")
+
+            generated_text = response.generations[0][0].text
+            logger.debug(f"Response size: {len(generated_text)} characters")
+
+            # Extract JSON from response
+            logger.info("Extracting JSON from response")
+            json_str = self._extract_json(generated_text)
+            if not json_str:
+                logger.warning("Failed to extract JSON from response, attempting to fix")
+                json_str = self._fix_malformed_json(generated_text)
+
+            if not json_str:
+                logger.error("Could not extract valid JSON from the response")
+                # Create default evaluation
+                eval_data = self._generate_default_scores("Failed to parse response")
+                eval_data["estimated_hours"] = self._estimate_default_hours(total_additions, total_deletions)
+            else:
+                # Parse JSON
+                try:
+                    eval_data = json.loads(json_str)
+
+                    # Ensure all necessary fields exist
+                    required_fields = ["readability", "efficiency", "security", "structure",
+                                      "error_handling", "documentation", "code_style", "overall_score", "comments"]
+                    for field in required_fields:
+                        if field not in eval_data:
+                            if field != "overall_score":  # overall_score can be calculated
+                                logger.warning(f"Missing field {field} in evaluation, setting default value")
+                                eval_data[field] = 5
+
+                    # If overall_score is not provided, calculate it
+                    if "overall_score" not in eval_data or not eval_data["overall_score"]:
+                        score_fields = ["readability", "efficiency", "security", "structure",
+                                       "error_handling", "documentation", "code_style"]
+                        scores = [eval_data.get(field, 5) for field in score_fields]
+                        eval_data["overall_score"] = round(sum(scores) / len(scores), 1)
+
+                    # If estimated_hours is not provided, calculate a default
+                    if "estimated_hours" not in eval_data or not eval_data["estimated_hours"]:
+                        logger.warning("Missing estimated_hours in evaluation, calculating default")
+                        eval_data["estimated_hours"] = self._estimate_default_hours(total_additions, total_deletions)
+
+                    # Log all scores
+                    logger.info(f"Whole commit evaluation scores: " +
+                               f"readability={eval_data.get('readability', 'N/A')}, " +
+                               f"efficiency={eval_data.get('efficiency', 'N/A')}, " +
+                               f"security={eval_data.get('security', 'N/A')}, " +
+                               f"structure={eval_data.get('structure', 'N/A')}, " +
+                               f"error_handling={eval_data.get('error_handling', 'N/A')}, " +
+                               f"documentation={eval_data.get('documentation', 'N/A')}, " +
+                               f"code_style={eval_data.get('code_style', 'N/A')}, " +
+                               f"overall_score={eval_data.get('overall_score', 'N/A')}, " +
+                               f"estimated_hours={eval_data.get('estimated_hours', 'N/A')}")
+
+                except Exception as e:
+                    logger.error(f"Error parsing evaluation: {e}", exc_info=True)
+                    eval_data = self._generate_default_scores(f"解析错误。原始响应: {generated_text[:500]}...")
+                    eval_data["estimated_hours"] = self._estimate_default_hours(total_additions, total_deletions)
+
+        except Exception as e:
+            logger.error(f"Error during evaluation: {e}", exc_info=True)
+            eval_data = self._generate_default_scores(f"评价过程中出错: {str(e)}")
+            eval_data["estimated_hours"] = self._estimate_default_hours(total_additions, total_deletions)
+
+        return eval_data
+
+    def _estimate_default_hours(self, additions: int, deletions: int) -> float:
+        """Estimate default working hours based on additions and deletions.
+
+        This is a fallback method when the model doesn't provide an estimate.
+
+        Args:
+            additions: Number of lines added
+            deletions: Number of lines deleted
+
+        Returns:
+            float: Estimated working hours
+        """
+        # Simple heuristic:
+        # - Each 50 lines of additions takes about 1 hour for an experienced developer
+        # - Each 100 lines of deletions takes about 0.5 hour
+        # - Minimum 0.5 hours, maximum 40 hours (1 week)
+        estimated_hours = (additions / 50) + (deletions / 200)
+        return max(0.5, min(40, round(estimated_hours, 1)))
+
     async def evaluate_commit(
         self,
         commit_hash: str,
@@ -2407,20 +2723,35 @@ class DiffEvaluator:
         Returns:
             Dictionary containing evaluation results
         """
+        logger.info(f"Starting evaluation for commit {commit_hash}")
+        logger.info(f"Found {len(commit_diff)} files to evaluate")
+
+        # Log file statistics
+        total_additions = sum(diff.get("additions", 0) for diff in commit_diff.values())
+        total_deletions = sum(diff.get("deletions", 0) for diff in commit_diff.values())
+        logger.info(f"Commit statistics: {len(commit_diff)} files, {total_additions} additions, {total_deletions} deletions")
+
+        # Initialize evaluation results
         evaluation_results = {
             "commit_hash": commit_hash,
             "files": [],
             "summary": "",
             "statistics": {
                 "total_files": len(commit_diff),
-                "total_additions": sum(diff.get("additions", 0) for diff in commit_diff.values()),
-                "total_deletions": sum(diff.get("deletions", 0) for diff in commit_diff.values()),
+                "total_additions": total_additions,
+                "total_deletions": total_deletions,
             }
         }
+        logger.debug(f"Initialized evaluation results structure for commit {commit_hash}")
 
         # Evaluate each file
-        for file_path, diff_info in commit_diff.items():
+        logger.info(f"Starting file-by-file evaluation for commit {commit_hash}")
+        for i, (file_path, diff_info) in enumerate(commit_diff.items()):
+            logger.info(f"Evaluating file {i+1}/{len(commit_diff)}: {file_path}")
+            logger.debug(f"File info: status={diff_info['status']}, additions={diff_info.get('additions', 0)}, deletions={diff_info.get('deletions', 0)}")
+
             # Use the new method for commit file evaluation
+            start_time = time.time()
             file_evaluation = await self.evaluate_commit_file(
                 file_path,
                 diff_info["diff"],
@@ -2428,17 +2759,52 @@ class DiffEvaluator:
                 diff_info.get("additions", 0),
                 diff_info.get("deletions", 0),
             )
+            end_time = time.time()
+            logger.info(f"File {file_path} evaluated in {end_time - start_time:.2f} seconds with score: {file_evaluation.get('overall_score', 'N/A')}")
+
             evaluation_results["files"].append(file_evaluation)
+            logger.debug(f"Added evaluation for {file_path} to results")
+
+        # Evaluate the entire commit as a whole to get estimated working hours
+        logger.info("Evaluating entire commit as a whole")
+        whole_commit_evaluation = await self.evaluate_commit_as_whole(commit_hash, commit_diff)
+
+        # Add the estimated working hours to the evaluation results
+        evaluation_results["estimated_hours"] = whole_commit_evaluation.get("estimated_hours", 0)
+        logger.info(f"Estimated working hours: {evaluation_results['estimated_hours']}")
+
+        # Add whole commit evaluation scores
+        evaluation_results["whole_commit_evaluation"] = {
+            "readability": whole_commit_evaluation.get("readability", 5),
+            "efficiency": whole_commit_evaluation.get("efficiency", 5),
+            "security": whole_commit_evaluation.get("security", 5),
+            "structure": whole_commit_evaluation.get("structure", 5),
+            "error_handling": whole_commit_evaluation.get("error_handling", 5),
+            "documentation": whole_commit_evaluation.get("documentation", 5),
+            "code_style": whole_commit_evaluation.get("code_style", 5),
+            "overall_score": whole_commit_evaluation.get("overall_score", 5),
+            "comments": whole_commit_evaluation.get("comments", "No comments available.")
+        }
 
         # Generate overall summary
+        logger.info(f"Generating overall summary for commit {commit_hash}")
         summary_prompt = self._create_summary_prompt(evaluation_results)
+        logger.debug(f"Summary prompt size: {len(summary_prompt)} characters")
 
         # Use agenerate instead of ainvoke
         messages = [HumanMessage(content=summary_prompt)]
+        logger.info("Sending summary request to model")
+        start_time = time.time()
         summary_response = await self.model.agenerate(messages=[messages])
+        end_time = time.time()
+        logger.info(f"Summary response received in {end_time - start_time:.2f} seconds")
+
         summary_text = summary_response.generations[0][0].text
+        logger.debug(f"Summary text size: {len(summary_text)} characters")
+        logger.debug(f"Summary text (first 100 chars): {summary_text[:100]}...")
 
         evaluation_results["summary"] = summary_text
+        logger.info(f"Evaluation for commit {commit_hash} completed successfully")
 
         return evaluation_results
 
@@ -2449,6 +2815,28 @@ class DiffEvaluator:
             for file in evaluation_results["files"]
         )
 
+        # Include whole commit evaluation if available
+        whole_commit_evaluation = ""
+        if "whole_commit_evaluation" in evaluation_results:
+            eval_data = evaluation_results["whole_commit_evaluation"]
+            whole_commit_evaluation = f"""
+Whole Commit Evaluation:
+- Readability: {eval_data.get('readability', 'N/A')}/10
+- Efficiency: {eval_data.get('efficiency', 'N/A')}/10
+- Security: {eval_data.get('security', 'N/A')}/10
+- Structure: {eval_data.get('structure', 'N/A')}/10
+- Error Handling: {eval_data.get('error_handling', 'N/A')}/10
+- Documentation: {eval_data.get('documentation', 'N/A')}/10
+- Code Style: {eval_data.get('code_style', 'N/A')}/10
+- Overall Score: {eval_data.get('overall_score', 'N/A')}/10
+- Comments: {eval_data.get('comments', 'No comments available.')}
+"""
+
+        # Include estimated working hours if available
+        estimated_hours = ""
+        if "estimated_hours" in evaluation_results:
+            estimated_hours = f"- Estimated working hours (for 5-10+ years experienced developer): {evaluation_results['estimated_hours']} hours\n"
+
         return f"""Please provide a concise summary of this commit's changes:
 
 Files modified:
@@ -2458,8 +2846,10 @@ Statistics:
 - Total files: {evaluation_results['statistics']['total_files']}
 - Total additions: {evaluation_results['statistics']['total_additions']}
 - Total deletions: {evaluation_results['statistics']['total_deletions']}
-
-Please provide a brief summary of the overall changes and their impact."""
+{estimated_hours}
+{whole_commit_evaluation}
+Please provide a brief summary of the overall changes and their impact.
+If estimated working hours are provided, please comment on whether this estimate seems reasonable given the scope of changes."""
 
 
 def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult]) -> str:
@@ -2501,6 +2891,7 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
         "documentation": 0,
         "code_style": 0,
         "overall_score": 0,
+        "estimated_hours": 0,
     }
 
     for result in sorted_results:
@@ -2514,12 +2905,23 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
         total_scores["code_style"] += eval.code_style
         total_scores["overall_score"] += eval.overall_score
 
+        # Add estimated hours if available
+        if hasattr(eval, 'estimated_hours') and eval.estimated_hours:
+            total_scores["estimated_hours"] += eval.estimated_hours
+
     avg_scores = {k: v / len(sorted_results) for k, v in total_scores.items()}
     # Add trend analysis
     markdown += "## Overview\n\n"
     markdown += f"- **Developer**: {author}\n"
     markdown += f"- **Time Range**: {start_date} to {end_date}\n"
-    markdown += f"- **Files Evaluated**: {len(sorted_results)}\n\n"
+    markdown += f"- **Files Evaluated**: {len(sorted_results)}\n"
+
+    # Add total estimated working hours if available
+    if total_scores["estimated_hours"] > 0:
+        markdown += f"- **Total Estimated Working Hours**: {total_scores['estimated_hours']:.1f} hours\n"
+        markdown += f"- **Average Estimated Hours per File**: {avg_scores['estimated_hours']:.1f} hours\n"
+
+    markdown += "\n"
 
     # Calculate average scores
     markdown += "## Overall Scores\n\n"
@@ -2532,7 +2934,13 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
     markdown += f"| Error Handling | {avg_scores['error_handling']:.1f} |\n"
     markdown += f"| Documentation & Comments | {avg_scores['documentation']:.1f} |\n"
     markdown += f"| Code Style | {avg_scores['code_style']:.1f} |\n"
-    markdown += f"| **Overall Score** | **{avg_scores['overall_score']:.1f}** |\n\n"
+    markdown += f"| **Overall Score** | **{avg_scores['overall_score']:.1f}** |\n"
+
+    # Add average estimated working hours if available
+    if avg_scores["estimated_hours"] > 0:
+        markdown += f"| **Avg. Estimated Hours/File** | **{avg_scores['estimated_hours']:.1f}** |\n"
+
+    markdown += "\n"
 
     # Add quality assessment
     overall_score = avg_scores["overall_score"]
@@ -2568,8 +2976,13 @@ def generate_evaluation_markdown(evaluation_results: List[FileEvaluationResult])
         markdown += f"| Error Handling | {eval.error_handling} |\n"
         markdown += f"| Documentation & Comments | {eval.documentation} |\n"
         markdown += f"| Code Style | {eval.code_style} |\n"
-        markdown += f"| **Overall Score** | **{eval.overall_score:.1f}** |\n\n"
-        markdown += "**Comments**:\n\n"
+        markdown += f"| **Overall Score** | **{eval.overall_score:.1f}** |\n"
+
+        # Add estimated working hours if available
+        if hasattr(eval, 'estimated_hours') and eval.estimated_hours:
+            markdown += f"| **Estimated Working Hours** | **{eval.estimated_hours:.1f}** |\n"
+
+        markdown += "\n**Comments**:\n\n"
         markdown += f"{eval.comments}\n\n"
         markdown += "---\n\n"
 
