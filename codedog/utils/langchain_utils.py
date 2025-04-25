@@ -263,11 +263,17 @@ class DeepSeekChatModel(BaseChatModel):
                             # 提取消息内容
                             message = response_data["choices"][0]["message"]["content"]
 
+                            # 记录完整的响应内容用于调试
+                            logger.info(f"DeepSeek API response received successfully")
+                            logger.debug(f"DeepSeek API complete response: {json.dumps(response_data, ensure_ascii=False)}")
+                            logger.debug(f"DeepSeek API message content: {message}")
+
                             # 更新令牌使用和成本
                             if "usage" in response_data:
                                 tokens = response_data["usage"].get("total_tokens", 0)
                                 self.total_tokens += tokens
                                 self.total_cost += self._calculate_cost(tokens)
+                                logger.info(f"DeepSeek API token usage: {tokens}, total cost: ${self.total_cost:.6f}")
 
                             # 创建并返回 ChatResult
                             generation = ChatGeneration(message=AIMessage(content=message))
